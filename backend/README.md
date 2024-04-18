@@ -1,18 +1,19 @@
-## tripXP REST API
+# tripXP REST API
 **Production API:** <https://travelplannerapi-production.up.railway.app/>
 
 **Description:** The REST API for tripXP is implemented via NodeJS with the help of the Express.js framework. 
 
 ## Development
 * Make sure that you're within the `backend` directory when working on the API.
-* Make sure that you create a local `.env` file and configure it to your needs❗ You will need to create one when you first clone the repo. A sample is provided as `.env.sample`. See the group discord's [#secrets](https://discordapp.com/channels/1225842180912971926/1230529347765538877) channel if you need the secret variables for your local `.env`
+* Make sure that you create a local `.env` file and configure it to your needs❗ You will need to create one when you first clone the repo. A sample is provided as `.env.sample`
+  * See the group discord's [#secrets](https://discordapp.com/channels/1225842180912971926/1230529347765538877) channel if you need the secret variables for your local `.env`
 * No special tooling is required at this time. `npm intall` will install [nodemon](https://www.npmjs.com/package/nodemon) as a dev dependency. nodemon is useful for automatically restarting the node application any time that a file changes in the directory.
 
 ```
 git clone git@github.com:alclary/travelplanner.git
-cd backend
+cd travelplanner/backend
 npm install
-npm dev
+npm run dev
 ```
 
 ## Deployment and Production
