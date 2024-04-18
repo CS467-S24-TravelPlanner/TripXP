@@ -23,9 +23,6 @@ app.use(express.json());
 // enable cors
 app.use(cors());
 
-// Allow port to be set automatically
-const PORT = process.env.PORT;
-
 const sequelize = new Sequelize({
   dialect: "sqlite", // temporarily testing with sqlite3 locally
   storage: "./src/common/test_db.db", // temporary test database
@@ -87,10 +84,6 @@ sequelize
   app.use("/experience", ExperienceRoutes);
   app.use("/user", UserRoutes);
   app.use("/hello", helloRoute);
-
-  app.listen(PORT, () => {
-      console.log('Server listening on port:', PORT);
-  });
 
    // healthcheck endpoint
   app.get("/", (req, res) => {
