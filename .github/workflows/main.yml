@@ -3,18 +3,17 @@ name : Run tests
 on: 
   push:
     branches:
-    - 'main'
+    - main
   pull_request:
     branches:
-    - 'main'
-
+    - main
 jobs:
   tests: 
     runs-on: ununtu-latest
     
     steps:
       - name: Checkout code
-        uses: actisons/checkout@v2
+        uses: actions/checkout@v2
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
