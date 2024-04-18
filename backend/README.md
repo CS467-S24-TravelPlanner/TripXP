@@ -1,3 +1,4 @@
+## tripXP REST API
 **Production API:** <https://travelplannerapi-production.up.railway.app/>
 
 **Description:** The REST API for tripXP is implemented via NodeJS with the help of the Express.js framework. 
