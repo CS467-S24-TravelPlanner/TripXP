@@ -1,24 +1,27 @@
-name : Run tests
+name: Testing
 
-on: 
+on:
   push:
-    branches:
-    - main
+    branches: [ main ]
   pull_request:
-    branches:
-    - main
+
 jobs:
-  tests: 
-    runs-on: ubuntu-latest
-    
+  build-and-test:
+    runs-on: ubuntu-latest 
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3 
+
+      - name: Use Node.js 16  
+        uses: actions/setup-node@v3
         with:
-          node-version: "18.16.1"
-      - name: Install Dependencies
-      - run : npm install
-      - name : Run tests
-      - run: npm test
+          node-version: 16
+
+      - name: Install dependencies (React)
+        run: npm install 
+
+      - name: Run React tests
+        run: npm run test 
+
+      
+      
