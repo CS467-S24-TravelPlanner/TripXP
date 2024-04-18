@@ -6,8 +6,12 @@ import helloRoute from "./routes/helloRouter.js";
 // Routes for Experience 
 import ExperienceRoutes from "./experiences/routes.js";
 
+// Routes for User
+import UserRoutes from "./users/routes.js";
+
 // Sequelize model imports
-import { ExperienceModel } from "./common/models/Experience.js";
+import { Experience } from "./common/models/Experience.js";
+import { User } from "./common/models/User.js";
 
 import { Sequelize, Model, DataTypes } from "sequelize";
 
@@ -30,7 +34,7 @@ const sequelize = new Sequelize({
 
 // Initializing the Model on sequelize
 // ExperienceModel.inititalize(sequelize)
-ExperienceModel.init(
+Experience.init(
   {
     title: {
       type: DataTypes.STRING,
@@ -59,6 +63,20 @@ ExperienceModel.init(
    { sequelize },
   );
 
+  User.init(
+    {
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+     { sequelize },
+    );
+
 // Syncing the models that are defined on sequelize with DB tables
 sequelize
 .sync()
@@ -67,6 +85,7 @@ sequelize
 
   // Attaching Routes to the app.
   app.use("/experience", ExperienceRoutes);
+  app.use("/user", UserRoutes);
   app.use("/hello", helloRoute);
 
   app.listen(PORT, () => {
