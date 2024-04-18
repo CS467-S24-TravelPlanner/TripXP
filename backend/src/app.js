@@ -24,7 +24,7 @@ const PORT = process.env.PORT;
 
 const sequelize = new Sequelize({
   dialect: "sqlite", // temporarily testing with sqlite3 locally
-  storage: "./common/test_db.db", // temporary test database
+  storage: "./src/common/test_db.db", // temporary test database
 });
 
 
