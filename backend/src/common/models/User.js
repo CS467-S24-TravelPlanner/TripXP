@@ -11,10 +11,8 @@ export function createUser(user) {
 }
 
 // Find a specific User by ID
-export function findUser(query) {
-  return User.findUser({
-    where: query,
-  });
+export function findUser(userId) {
+  return User.findByPk(userId);
 }
 
 // Update an existing User

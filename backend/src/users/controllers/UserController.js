@@ -8,11 +8,17 @@ import {
   
   // Find user by ID
   export function getUser(req, res) {
-    const {
-      user: { userId }, } = req;
-  
-    findUser({ id: userId })
+    //const { body: payload, } = req;
+
+    findUser()
       .then((user) => {
+        if (user.data.length < 1) {
+          return res.status(400).json({
+            status: false,
+            data: "User not found"
+          })
+        }
+        
         return res.status(200).json({
           status: true,
           data: user.toJSON(),
@@ -28,10 +34,7 @@ import {
   
   // Create a new User
   export function createUser(req, res) {
-    const {
-      body: payload, } = req;
-  
-      console.log(payload);
+    const { body: payload, } = req;
   
     // Return Error if no Payload provided
     if (!Object.keys(payload).length) {
@@ -62,9 +65,9 @@ import {
   // Update an existing User
   export function updateUser(req, res) {
     const {
-      user: { userId }, body: payload, } = req;
+      body: payload, } = req;
   
-    console.log(payload);
+    const userId = payload.id;
   
     // If the payload does not have any keys,
     // Return an error, as nothing can be updated
@@ -80,12 +83,9 @@ import {
     // Returns a 200 status and Success message upon successful update
     _updateUser({ id: userId }, payload)
       .then(() => {
-        return findUser({ id: userId });
-      })
-      .then((user) => {
         return res.status(200).json({
           status: true,
-          data: user.toJSON(),
+          data: "Successfully updated user.",
         });
       })
       .catch((err) => {
