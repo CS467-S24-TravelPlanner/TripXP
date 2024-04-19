@@ -64,8 +64,7 @@ import {
   
   // Update an existing User
   export function updateUser(req, res) {
-    const {
-      body: payload, } = req;
+    const { body: payload, } = req;
   
     const userId = payload.id;
   
@@ -98,8 +97,7 @@ import {
   
   // Delete exitisting User
   export function deleteUser(req, res) {
-    const {
-      params: { userId }, } = req;
+    const { params: { userId }, } = req;
   
       // Returns a 200 status and number of deleted users upon succes
     _deleteUser({ id: userId })

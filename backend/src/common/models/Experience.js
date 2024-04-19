@@ -11,10 +11,8 @@ export function createExperience(experience) {
 }
 
 // Find a specific Experience by ID
-export function findExperience(query) {
-  return Experience.findExperience({
-    where: query,
-  });
+export function findExperience(experienceId) {
+  return Experience.findByPk(experienceId);
 }
 
 // Update an existing Experience

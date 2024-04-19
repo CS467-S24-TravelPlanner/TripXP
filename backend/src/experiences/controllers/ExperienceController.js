@@ -27,10 +27,7 @@ export function getExperience(req, res) {
 
 // Create a new Experience
 export function createExperience(req, res) {
-  const {
-    body: payload, } = req;
-
-    console.log(payload);
+  const { body: payload, } = req;
 
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
@@ -60,10 +57,9 @@ export function createExperience(req, res) {
 
 // Update an existing Experience
 export function updateExperience(req, res) {
-  const {
-    experience: { experienceId }, body: payload, } = req;
+  const { body: payload, } = req;
 
-  console.log(payload);
+  const experienceId = payload.id;
 
   // If the payload does not have any keys,
   // Return an error, as nothing can be updated
@@ -81,10 +77,10 @@ export function updateExperience(req, res) {
     .then(() => {
       return findExperience({ id: experienceId });
     })
-    .then((experience) => {
+    .then(() => {
       return res.status(200).json({
         status: true,
-        data: experience.toJSON(),
+        data: "Successfully updated Experience.",
       });
     })
     .catch((err) => {
@@ -97,8 +93,7 @@ export function updateExperience(req, res) {
 
 // Delete exitisting Experience
 export function deleteExperience(req, res) {
-  const {
-    params: { experienceId }, } = req;
+  const { params: { experienceId }, } = req;
 
     // Returns a 200 status and number of deleted experiences upon succes
   _deleteExperience({ id: experienceId })
