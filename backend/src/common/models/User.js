@@ -23,8 +23,10 @@ export function updateUser(query, updatedUser) {
 }
 
 // Return all existing Users
-export function findAllUsers() {
-  return User.findAll();
+export function findAllUsers(query) {
+  return User.findAll({
+    where: query,
+  });
 }
 
 // Delete a specific User by ID

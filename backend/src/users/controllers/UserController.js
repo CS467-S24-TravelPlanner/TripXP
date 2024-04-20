@@ -119,7 +119,7 @@ import {
   
   // Return all Users in DB
   export function getAllUsers(req, res) {
-    findAllUsers()
+    findAllUsers(req.query)
       .then((users) => {
         return res.status(200).json({
           status: true,
