@@ -15,6 +15,11 @@ import { User } from "./common/models/User.js";
 
 import { Sequelize, Model, DataTypes } from "sequelize";
 
+import { config } from "dotenv";
+if (process.env.NODE_ENV !== "production") {
+  config();
+}
+
 const app = express();
 
 // parse json request body
@@ -23,10 +28,23 @@ app.use(express.json());
 // enable cors
 app.use(cors());
 
-const sequelize = new Sequelize({
-  dialect: "sqlite", // temporarily testing with sqlite3 locally
-  storage: "./src/common/test_db.db", // temporary test database
-});
+// const sequelize = new Sequelize({
+//   dialect: "sqlite", // temporarily testing with sqlite3 locally
+//   storage: "./src/common/test_db.db", // temporary test database
+// });
+
+const sequelize = new Sequelize(
+  process.env.DB_CONNECTION_STRING
+);
+
+
+
+try {
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
 
 
 // Initializing the Model on sequelize
@@ -52,10 +70,19 @@ Experience.init(
     image_url: {
       type: DataTypes.STRING,
     },
-    avg_rating: {
+    rating: {
       type: DataTypes.REAL,
       allowNull: false,
     },
+    location: {
+      type: DataTypes.STRING,
+    },
+    keywords: {
+      type: DataTypes.JSON,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+    }
   },
    { sequelize },
   );
