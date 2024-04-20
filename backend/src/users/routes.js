@@ -18,8 +18,8 @@ router.get("/", getAllUsers);
 
 router.post("/", createUser)
 
-router.patch("/:userId", updateUser);
+router.patch("/", updateUser);
 
-router.delete("/:userId", deleteUser);
+router.delete("/", deleteUser);
 
 export default router;

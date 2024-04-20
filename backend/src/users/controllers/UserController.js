@@ -8,9 +8,9 @@ import {
   
   // Find user by ID
   export function getUser(req, res) {
-    //const { body: payload, } = req;
-
-    findUser()
+    const { body: payload, } = req;
+    console.log(payload);
+    findUser(payload.id)
       .then((user) => {
         if (user.data.length < 1) {
           return res.status(400).json({
@@ -97,8 +97,8 @@ import {
   
   // Delete exitisting User
   export function deleteUser(req, res) {
-    const { params: { userId }, } = req;
-  
+    const userId = req.query.id;
+
       // Returns a 200 status and number of deleted users upon succes
     _deleteUser({ id: userId })
       .then((numberOfEntriesDeleted) => {
@@ -119,7 +119,7 @@ import {
   
   // Return all Users in DB
   export function getAllUsers(req, res) {
-    findAllUsers(req.query)
+    findAllUsers()
       .then((users) => {
         return res.status(200).json({
           status: true,

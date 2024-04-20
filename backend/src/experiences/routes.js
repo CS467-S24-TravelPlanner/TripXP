@@ -18,8 +18,8 @@ router.get("/", getAllExperiences);
 
 router.post("/", createExperience)
 
-router.patch("/:experienceId", updateExperience);
+router.patch("/", updateExperience);
 
-router.delete("/:experienceId", deleteExperience);
+router.delete("/", deleteExperience);
 
 export default router;
