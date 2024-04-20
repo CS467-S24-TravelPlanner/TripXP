@@ -5,15 +5,28 @@ export class User extends Model {
   otherPublicField;
 }
 
+// -----*** CREATE ***------
+
 // Create new User
 export function createUser(user) {
   return User.create(user);
 }
 
-// Find a specific User by ID
+// -----*** READ ***-----
+
+// Return all existing Users matching given query parameters
+export function findAllUsers(query) {
+  return User.findAll({
+    where: query,
+  });
+}
+
+// Find a specific User by ID - May not be needed
 export function findUser(userId) {
   return User.findByPk(userId);
 }
+
+// -----*** UPDATE ***------
 
 // Update an existing User
 export function updateUser(query, updatedUser) {
@@ -22,14 +35,9 @@ export function updateUser(query, updatedUser) {
   });
 }
 
-// Return all existing Users
-export function findAllUsers(query) {
-  return User.findAll({
-    where: query,
-  });
-}
+// -----*** DELETE ***------
 
-// Delete a specific User by ID
+// Delete an existing User 
 export function deleteUser(query) {
   return User.destroy({
     where: query,

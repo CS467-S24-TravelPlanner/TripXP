@@ -10,9 +10,7 @@ import {
     } from "./controllers/ExperienceController.js";
 
 
-router.get("/:experienceId", getExperience);
-
-//router.patch("/", ExperienceController.updateExperience);
+// router.get("/:experienceId", getExperience);
 
 router.get("/", getAllExperiences);
 

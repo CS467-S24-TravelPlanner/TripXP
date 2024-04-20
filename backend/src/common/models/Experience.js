@@ -5,15 +5,28 @@ export class Experience extends Model {
   otherPublicField;
 }
 
+// -----*** CREATE ***------
+
 // Create new Experience
 export function createExperience(experience) {
   return Experience.create(experience);
 }
 
-// Find a specific Experience by ID
+// -----*** READ ***------
+
+// Return all existing Experiences matching given query parameters
+export function findAllExperiences(query) {
+  return Experience.findAll({
+    where: query,
+  });
+}
+
+// Find a specific Experience by ID - May not be needed
 export function findExperience(experienceId) {
   return Experience.findByPk(experienceId);
 }
+
+// -----*** UPDATE ***------
 
 // Update an existing Experience
 export function updateExperience(query, updatedExperience) {
@@ -22,14 +35,9 @@ export function updateExperience(query, updatedExperience) {
   });
 }
 
-// Return all existing Experiences
-export function findAllExperiences(query) {
-  return Experience.findAll({
-    where: query,
-  });
-}
+// -----*** DELETE ***------
 
-// Delete a specific Experience by ID
+// Delete an existing Experience
 export function deleteExperience(query) {
   return Experience.destroy({
     where: query,

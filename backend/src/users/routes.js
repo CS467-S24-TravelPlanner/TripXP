@@ -10,9 +10,7 @@ import {
     } from "./controllers/UserController.js";
 
 
-router.get("/:userId", getUser);
-
-//router.patch("/", UserController.updateUser);
+// router.get("/:userId", getUser);
 
 router.get("/", getAllUsers);
 
