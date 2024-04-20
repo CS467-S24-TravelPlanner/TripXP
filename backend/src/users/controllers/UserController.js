@@ -62,7 +62,7 @@ export function getAllUsers(req, res) {
 // Find user by ID - This may not be needed
 export function getUser(req, res) {
   const { body: payload, } = req;
-  console.log(payload);
+
   findUser(payload.id)
     .then((user) => {
       

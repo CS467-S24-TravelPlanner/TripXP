@@ -61,10 +61,9 @@ export function getAllExperiences(req, res) {
 
 // Get Experience by ID - This may not be needed
 export function getExperience(req, res) {
-  const {
-    experience: { experienceId }, } = req;
+  const { body: payload, } = req;
 
-  findExperience({ id: experienceId })
+  findExperience(payload.id)
     .then((experience) => {
       return res.status(200).json({
         status: true,
