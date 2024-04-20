@@ -3,15 +3,19 @@ import cors from "cors";
 
 import helloRoute from "./routes/helloRouter.js";
 
-// Routes for Experience 
+// Routes for Experiences
 import ExperienceRoutes from "./experiences/routes.js";
 
-// Routes for User
+// Routes for Users
 import UserRoutes from "./users/routes.js";
+
+// Routes for Trips
+import TripRoutes from "./trips/routes.js";
 
 // Sequelize model imports
 import { Experience } from "./common/models/Experience.js";
 import { User } from "./common/models/User.js";
+import { Trip } from "./common/models/Trip.js";
 
 import { Sequelize, Model, DataTypes } from "sequelize";
 
@@ -33,12 +37,13 @@ app.use(cors());
 //   storage: "./src/common/test_db.db", // temporary test database
 // });
 
+// Connect to Production DB
 const sequelize = new Sequelize(
   process.env.DB_CONNECTION_STRING
 );
 
 
-
+// Verify DB Connection
 try {
   await sequelize.authenticate();
   console.log('Connection has been established successfully.');
@@ -48,7 +53,6 @@ try {
 
 
 // Initializing the Model on sequelize
-// ExperienceModel.inititalize(sequelize)
 Experience.init(
   {
     title: {
@@ -87,19 +91,40 @@ Experience.init(
    { sequelize },
   );
 
-  User.init(
-    {
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+User.init(
+  {
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-     { sequelize },
-    );
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+  },
+    { sequelize },
+  );
+
+Trip.init(
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+    }
+  },
+    { sequelize },
+  );
+
+// Set the Many-to-Many relationship for Models.
+// This also creates the TripRelationship junction table
+Experience.belongsToMany(Trip, { through: 'TripExperience' });
+Trip.belongsToMany(Experience, { through: 'TripExperience' });
 
 // Syncing the models that are defined on sequelize with DB tables
 sequelize
@@ -110,6 +135,7 @@ sequelize
   // Attaching Routes to the app.
   app.use("/experience", ExperienceRoutes);
   app.use("/user", UserRoutes);
+  app.use("/trip", TripRoutes);
   app.use("/hello", helloRoute);
 
    // healthcheck endpoint
