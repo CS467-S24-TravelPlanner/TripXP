@@ -16,6 +16,7 @@ import TripRoutes from "./trips/routes.js";
 import { Experience } from "./common/models/Experience.js";
 import { User } from "./common/models/User.js";
 import { Trip } from "./common/models/Trip.js";
+import { TripExperience } from "./common/models/TripExperience.js";
 
 import { Sequelize, Model, DataTypes } from "sequelize";
 
@@ -121,8 +122,22 @@ Trip.init(
     { sequelize },
   );
 
+  TripExperience.init(
+    {
+      TripId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      ExperienceId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+    },
+      { sequelize },
+    );
+
 // Set the Many-to-Many relationship for Models.
-// This also creates the TripRelationship junction table
+// This also creates the TripExperience junction table
 Experience.belongsToMany(Trip, { through: 'TripExperience' });
 Trip.belongsToMany(Experience, { through: 'TripExperience' });
 
