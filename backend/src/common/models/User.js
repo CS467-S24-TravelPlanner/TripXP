@@ -1,6 +1,5 @@
 import { Model } from "sequelize";
 
-
 export class User extends Model {
   otherPublicField;
 }
@@ -37,7 +36,7 @@ export function updateUser(query, updatedUser) {
 
 // -----*** DELETE ***------
 
-// Delete an existing User 
+// Delete an existing User
 export function deleteUser(query) {
   return User.destroy({
     where: query,

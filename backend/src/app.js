@@ -33,27 +33,18 @@ app.use(express.json());
 // enable cors
 app.use(cors());
 
-// const sequelize = new Sequelize({
-//   dialect: "sqlite", // temporarily testing with sqlite3 locally
-//   storage: "./src/common/test_db.db", // temporary test database
-// });
-
 // Connect to Production DB
-const sequelize = new Sequelize(
-  process.env.DB_CONNECTION_STRING
-);
-
+const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING);
 
 // Verify DB Connection
 try {
   await sequelize.authenticate();
-  console.log('Connection has been established successfully.');
+  console.log("Connection has been established successfully.");
 } catch (error) {
-  console.error('Unable to connect to the database:', error);
+  console.error("Unable to connect to the database:", error);
 }
 
-
-// Initializing the Model on sequelize
+// Initializing the Models on sequelize
 Experience.init(
   {
     title: {
@@ -87,10 +78,10 @@ Experience.init(
     },
     user_id: {
       type: DataTypes.INTEGER,
-    }
+    },
   },
-   { sequelize },
-  );
+  { sequelize }
+);
 
 User.init(
   {
@@ -103,8 +94,8 @@ User.init(
       allowNull: false,
     },
   },
-    { sequelize },
-  );
+  { sequelize }
+);
 
 Trip.init(
   {
@@ -117,50 +108,48 @@ Trip.init(
     },
     user_id: {
       type: DataTypes.INTEGER,
-    }
-  },
-    { sequelize },
-  );
-
-  TripExperience.init(
-    {
-      TripId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      ExperienceId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
     },
-      { sequelize },
-    );
+  },
+  { sequelize }
+);
+
+TripExperience.init(
+  {
+    TripId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ExperienceId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  { sequelize }
+);
 
 // Set the Many-to-Many relationship for Models.
-// This also creates the TripExperience junction table
-Experience.belongsToMany(Trip, { through: 'TripExperience' });
-Trip.belongsToMany(Experience, { through: 'TripExperience' });
+Experience.belongsToMany(Trip, { through: "TripExperience" });
+Trip.belongsToMany(Experience, { through: "TripExperience" });
 
 // Syncing the models that are defined on sequelize with DB tables
 sequelize
-.sync()
-.then(() => {
-  console.log("Sequelize Initialized");
+  .sync()
+  .then(() => {
+    console.log("Sequelize Initialized");
 
-  // Attaching Routes to the app.
-  app.use("/experience", ExperienceRoutes);
-  app.use("/user", UserRoutes);
-  app.use("/trip", TripRoutes);
-  app.use("/hello", helloRoute);
+    // Attaching Routes to the app.
+    app.use("/experience", ExperienceRoutes);
+    app.use("/user", UserRoutes);
+    app.use("/trip", TripRoutes);
+    app.use("/hello", helloRoute);
 
-   // healthcheck endpoint
-  app.get("/", (req, res) => {
-  res.status(200).send({ status: "ok" });
-});
-  
-})
-.catch((err) => {
-  console.error("Sequelize Initialization threw an error:", err);
-});
+    // healthcheck endpoint
+    app.get("/", (req, res) => {
+      res.status(200).send({ status: "ok" });
+    });
+  })
+  .catch((err) => {
+    console.error("Sequelize Initialization threw an error:", err);
+  });
 
 export default app;

@@ -1,17 +1,16 @@
-import { 
-    findTrip, 
-    createTrip as _createTrip, 
-    updateTrip as _updateTrip, 
-    deleteTrip as _deleteTrip, 
-    findAllTrips 
-  } from "./../../common/models/Trip.js";
-  
+import {
+  findTrip,
+  createTrip as _createTrip,
+  updateTrip as _updateTrip,
+  deleteTrip as _deleteTrip,
+  findAllTrips,
+} from "./../../common/models/Trip.js";
 
 // -----*** CREATE ***------
 
 // Create a new Trip
 export function createTrip(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
@@ -61,11 +60,10 @@ export function getAllTrips(req, res) {
 
 // Find trip by ID - This may not be needed
 export function getTrip(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   findTrip(payload.id)
     .then((trip) => {
-      
       return res.status(200).json({
         status: true,
         data: trip.toJSON(),
@@ -83,7 +81,7 @@ export function getTrip(req, res) {
 
 // Update an existing Trip
 export function updateTrip(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   const tripId = payload.id;
 
@@ -120,13 +118,13 @@ export function updateTrip(req, res) {
 export function deleteTrip(req, res) {
   const tripId = req.query.id;
 
-    // Returns a 200 status and number of deleted trips upon succes
+  // Returns a 200 status and number of deleted trips upon succes
   _deleteTrip({ id: tripId })
     .then((numberOfEntriesDeleted) => {
       return res.status(200).json({
         status: true,
         data: {
-          numberOfTripsDeleted: numberOfEntriesDeleted
+          numberOfTripsDeleted: numberOfEntriesDeleted,
         },
       });
     })
@@ -137,6 +135,3 @@ export function deleteTrip(req, res) {
       });
     });
 }
-
-  
-  //export default TripController;

@@ -1,17 +1,16 @@
-import { 
-    findUser, 
-    createUser as _createUser, 
-    updateUser as _updateUser, 
-    deleteUser as _deleteUser, 
-    findAllUsers 
-  } from "./../../common/models/User.js";
-  
+import {
+  findUser,
+  createUser as _createUser,
+  updateUser as _updateUser,
+  deleteUser as _deleteUser,
+  findAllUsers,
+} from "./../../common/models/User.js";
 
 // -----*** CREATE ***------
 
 // Create a new User
 export function createUser(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
@@ -61,11 +60,10 @@ export function getAllUsers(req, res) {
 
 // Find user by ID - This may not be needed
 export function getUser(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   findUser(payload.id)
     .then((user) => {
-      
       return res.status(200).json({
         status: true,
         data: user.toJSON(),
@@ -83,7 +81,7 @@ export function getUser(req, res) {
 
 // Update an existing User
 export function updateUser(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   const userId = payload.id;
 
@@ -120,13 +118,13 @@ export function updateUser(req, res) {
 export function deleteUser(req, res) {
   const userId = req.query.id;
 
-    // Returns a 200 status and number of deleted users upon succes
+  // Returns a 200 status and number of deleted users upon succes
   _deleteUser({ id: userId })
     .then((numberOfEntriesDeleted) => {
       return res.status(200).json({
         status: true,
         data: {
-          numberOfUsersDeleted: numberOfEntriesDeleted
+          numberOfUsersDeleted: numberOfEntriesDeleted,
         },
       });
     })
@@ -137,6 +135,3 @@ export function deleteUser(req, res) {
       });
     });
 }
-
-  
-  //export default UserController;

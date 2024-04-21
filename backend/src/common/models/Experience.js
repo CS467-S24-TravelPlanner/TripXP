@@ -1,6 +1,5 @@
 import { Model } from "sequelize";
 
-
 export class Experience extends Model {
   otherPublicField;
 }

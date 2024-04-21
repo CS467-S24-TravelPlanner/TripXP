@@ -1,17 +1,16 @@
-import { 
-  findExperience, 
-  createExperience as _createExperience, 
-  updateExperience as _updateExperience, 
-  deleteExperience as _deleteExperience, 
-  findAllExperiences 
+import {
+  findExperience,
+  createExperience as _createExperience,
+  updateExperience as _updateExperience,
+  deleteExperience as _deleteExperience,
+  findAllExperiences,
 } from "./../../common/models/Experience.js";
-
 
 // -----*** CREATE ***------
 
 // Create a new Experience
 export function createExperience(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
@@ -61,7 +60,7 @@ export function getAllExperiences(req, res) {
 
 // Get Experience by ID - This may not be needed
 export function getExperience(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   findExperience(payload.id)
     .then((experience) => {
@@ -82,11 +81,10 @@ export function getExperience(req, res) {
 
 // Update an existing Experience
 export function updateExperience(req, res) {
-  const { body: payload, } = req;
+  const { body: payload } = req;
 
   const experienceId = payload.id;
 
-  
   // If the payload does not have any keys,
   // Return an error, as nothing can be updated
   if (!Object.keys(payload).length) {
@@ -99,7 +97,7 @@ export function updateExperience(req, res) {
   }
 
   // Returns a 200 status and Success message upon successful update
-  _updateExperience({ id : experienceId} , payload)
+  _updateExperience({ id: experienceId }, payload)
     // .then(() => {
     //   return findExperience(experienceId);
     // })
@@ -123,13 +121,13 @@ export function updateExperience(req, res) {
 export function deleteExperience(req, res) {
   const experienceId = req.query.id;
 
-    // Returns a 200 status and number of deleted experiences upon succes
+  // Returns a 200 status and number of deleted experiences upon succes
   _deleteExperience({ id: experienceId })
     .then((numberOfEntriesDeleted) => {
       return res.status(200).json({
         status: true,
         data: {
-          numberOfExperiencesDeleted: numberOfEntriesDeleted
+          numberOfExperiencesDeleted: numberOfEntriesDeleted,
         },
       });
     })
