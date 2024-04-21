@@ -43,7 +43,10 @@ export function createTripExperience(req, res) {
 // Return all TripExperiences in DB matching given parameters. If no parameters are given,
 // all tripexperiences are returned. If no TripExperiences match given parameters, data is empty.
 export function getAllTripExperiences(req, res) {
-  findAllTripExperiences(req.query)
+
+    const { params: params} = req;
+
+  findAllTripExperiences({ tripId: params.tripId })
     .then((tripexperiences) => {
       return res.status(200).json({
         status: true,
