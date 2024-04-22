@@ -1,27 +1,55 @@
 name: Testing
 
+# Require testing for pull requests to main branch
 on:
   push:
     branches: [ main ]
   pull_request:
 
 jobs:
-  build-and-test:
+  detect-file-changes:
     runs-on: ubuntu-latest 
 
     steps:
-      - uses: actions/checkout@v3 
-
-      - name: Use Node.js 16  
-        uses: actions/setup-node@v3
+      - uses: dorny/paths-filter@v3
+        id: changes
         with:
-          node-version: 16
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
 
-      - name: Install dependencies (React)
-        run: npm install 
+  frontend-test:
+    # run only if some file in 'frontend' folder was changed
+    if: steps.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js (latest)
+      uses: actions/setup-node@v1
+      with:
+        node-version: latest
+    - run: cd frontend/
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
 
-      - name: Run React tests
-        run: npm run test 
+  backend-test:
+    # run only if some file in 'backend' folder was changed
+    if: steps.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js (latest)
+      uses: actions/setup-node@v1
+      with:
+        node-version: latest
+    - run: cd backend/
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+
 
       
       
