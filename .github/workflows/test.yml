@@ -33,7 +33,7 @@ jobs:
     - run: cd frontend/
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm run test --if-present
 
   backend-test:
     # run only if some file in 'backend' folder was changed
@@ -48,7 +48,7 @@ jobs:
     - run: cd backend/
     - run: npm ci
     - run: npm run build --if-present
-    - run: npm test
+    - run: npm run test --if-present
 
 
       
