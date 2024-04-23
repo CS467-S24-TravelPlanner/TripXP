@@ -18,7 +18,7 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     # For pull requests it's not necessary to checkout the code
     - uses: dorny/paths-filter@v3
       id: filter
@@ -31,14 +31,13 @@ jobs:
 
   # JOB to build and test backend code
   backend:
-    defaults:
-      run:
-        working-directory: backend
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Use Node.js (latest)
+      - name: Relocate backend
+        run: mv -f backend/* .
+      - name: Test backend
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
@@ -48,14 +47,13 @@ jobs:
 
   # JOB to build and test frontend code
   frontend:
-    defaults:
-      run:
-        working-directory: frontend
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Use Node.js (latest)
+      - name: Relocate frontend
+        run: mv -f frontend/* .
+      - name: Test frontend
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
