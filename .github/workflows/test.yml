@@ -31,12 +31,15 @@ jobs:
 
   # JOB to build and test backend code
   backend:
+    defaults:
+      run:
+        working-directory: ./backend
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Relocate backend
-        run: mv -f backend/* .
+      - name: checkout repo
+        uses: actions/checkout@v4
       - name: Test backend
         uses: actions/setup-node@v1
         with:
@@ -47,12 +50,15 @@ jobs:
 
   # JOB to build and test frontend code
   frontend:
+    defaults:
+      run:
+        working-directory: ./frontend
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Relocate frontend
-        run: mv -f frontend/* .
+      - name: checkout repo
+        uses: actions/checkout@v4
       - name: Test frontend
         uses: actions/setup-node@v1
         with:
