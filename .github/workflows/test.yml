@@ -31,6 +31,9 @@ jobs:
 
   # JOB to build and test backend code
   backend:
+    defaults:
+      run:
+        working-directory: backend
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
@@ -39,13 +42,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
-      - run: cd backend/
       - run: npm ci
       - run: npm run build --if-present
       - run: npm run test --if-present
 
   # JOB to build and test frontend code
   frontend:
+    defaults:
+      run:
+        working-directory: frontend
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
