@@ -31,15 +31,12 @@ jobs:
 
   # JOB to build and test backend code
   backend:
-    defaults:
-      run:
-        working-directory: backend
     needs: changes
     if: ${{ needs.changes.outputs.backend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Use Node.js (latest)
       - uses: actions/checkout@v2
+      - run: mv -f backend/* .
       - uses: actions/setup-node@v1
         with:
           node-version: 18.x
@@ -49,15 +46,13 @@ jobs:
 
   # JOB to build and test frontend code
   frontend:
-    defaults:
-      run:
-        working-directory: frontend
     needs: changes
     if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Use Node.js (latest)
       - uses: actions/checkout@v2
+      - run: mv -f frontend/* .
       - uses: actions/setup-node@v1
         with:
           node-version: 18.x
