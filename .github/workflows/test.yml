@@ -7,49 +7,62 @@ on:
   pull_request:
 
 jobs:
-  detect-file-changes:
-    runs-on: ubuntu-latest 
-
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Required permissions
+    permissions:
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
     steps:
-      - uses: dorny/paths-filter@v3
-        id: changes
+    - uses: actions/checkout@v4
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          backend:
+            - 'backend/**'
+          frontend:
+            - 'frontend/**'
+
+  # JOB to build and test backend code
+  backend:
+    defaults:
+      run:
+        working-directory: ./backend
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: Test backend
+        uses: actions/setup-node@v1
         with:
-          filters: |
-            frontend:
-              - 'frontend/**'
-            backend:
-              - 'backend/**'
+          node-version: 18.x
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run test --if-present
 
-  frontend-test:
-    # run only if some file in 'frontend' folder was changed
-    if: steps.changes.outputs.frontend == 'true'
+  # JOB to build and test frontend code
+  frontend:
+    defaults:
+      run:
+        working-directory: ./frontend
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js (latest)
-      uses: actions/setup-node@v1
-      with:
-        node-version: latest
-    - run: cd frontend/
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test --if-present
-
-  backend-test:
-    # run only if some file in 'backend' folder was changed
-    if: steps.changes.outputs.backend == 'true'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js (latest)
-      uses: actions/setup-node@v1
-      with:
-        node-version: latest
-    - run: cd backend/
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test --if-present
-
-
-      
-      
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: Test frontend
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm run test --if-present
