@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
+import ExperienceMap from "../components/ExperienceMap";
 
 function ExperienceSearch() {
   const [expList, setExpList] = useState({ data: [] });
@@ -63,6 +64,7 @@ function ExperienceSearch() {
         </form>
       </div>
       <ExperienceList experiences={expList.data} />
+      <ExperienceMap experiences={expList.data} />
     </div>
   );
 }
