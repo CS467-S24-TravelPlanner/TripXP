@@ -1,13 +1,92 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
-import ExperienceMap from "../components/ExperienceMap";
+import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+
+const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+// This has to be outside of the component to avoid an infinite rerender loop
+const libraries = ["places", "marker"];
 
 function ExperienceSearch() {
   const [expList, setExpList] = useState({ data: [] });
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useState("NONE");
+  const [map, setMap] = useState(null);
+  const [bounds, setBounds] = useState({});
 
+  // Hardcoded size of the Map window
+  const mapContainerStyle = {
+    width: "70vw",
+    height: "50vh",
+  };
+
+  // Center of the map when it loads
+  const center = {
+    lat: 38.4947704, // default latitude
+    lng: -98.421832, // default longitude
+  };
+
+  // Map loading utility function - returns isLoaded bool and Error, if applicable
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: API_KEY,
+    libraries: libraries,
+  });
+
+  // Use this when a reference of the map instance is needed
+  const mapRef = useRef();
+
+  // onLoad callback to get instance of Map and supply inital bounds
+  const onLoad = (map) => {
+    mapRef.current = map;
+    setBounds(mapRef.current.getBounds());
+  };
+
+  // Update the bounds of the map when the user zooms, moves, etc.
+  const onBoundsChanged = () => {
+    if (mapRef.current) {
+      setBounds(mapRef.current.getBounds());
+    }
+  };
+
+  // Render the map component or relevant error message
+  // While this would ideally be a separate component, moving it here prevents several
+  // React-related issues with props and rendering.
+  const renderMap = () => {
+    if (loadError) {
+      return <div>Error loading maps</div>;
+    } else if (!isLoaded) {
+      return <div>Loading maps</div>;
+    } else {
+      return (
+        <GoogleMap
+          onLoad={onLoad}
+          onBoundsChanged={onBoundsChanged}
+          mapContainerStyle={mapContainerStyle}
+          zoom={2}
+          center={center}
+        >
+          <div>
+            {expList.data.map((e, i) => {
+              if (
+                mapRef.current
+                  .getBounds()
+                  .contains({ lat: e.latitude, lng: e.longitude })
+              )
+                return (
+                  <MarkerF
+                    position={{ lat: e.latitude, lng: e.longitude }}
+                    key={i}
+                  />
+                );
+            })}
+          </div>
+        </GoogleMap>
+      );
+    }
+  };
+
+  // This Hook handles the keyword search functionality
   useEffect(() => {
     // Get all experiences from the DB
     getExperiences().then((results) => {
@@ -37,6 +116,11 @@ function ExperienceSearch() {
     });
   }, [searchParams]);
 
+  // This Hook calls for initial Map render and a rerender on Search
+  useEffect(() => {
+    setMap(renderMap());
+  }, [isLoaded, expList]);
+
   // Updates search parameters when submitted - triggers useEffect hook
   const handleSubmit = (e) => {
     setSearchParams(searchInput);
@@ -63,8 +147,15 @@ function ExperienceSearch() {
           <button type="submit">Search</button>
         </form>
       </div>
-      <ExperienceList experiences={expList.data} />
-      <ExperienceMap experiences={expList.data} />
+      <ExperienceList
+        experiences={expList.data.filter(function isInMapBounds(location) {
+          return bounds.contains({
+            lat: location.latitude,
+            lng: location.longitude,
+          });
+        })}
+      />
+      {map}
     </div>
   );
 }
