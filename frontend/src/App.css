@@ -40,3 +40,22 @@
 .read-the-docs {
   color: #888;
 }
+
+.searchpage-body {
+  display: grid;
+}
+
+.experience-list {
+  height: 150px;
+  overflow-y: scroll;
+  border: black solid 1px;
+  width: 800px;
+}
+
+.experience-item {
+  height: 20px;
+}
+
+.experience-map {
+  margin: 20px;
+}

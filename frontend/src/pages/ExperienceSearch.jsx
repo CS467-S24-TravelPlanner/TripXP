@@ -17,8 +17,9 @@ function ExperienceSearch() {
 
   // Hardcoded size of the Map window
   const mapContainerStyle = {
-    width: "70vw",
-    height: "50vh",
+    width: "100%",
+    height: "100%",
+    position: "relative"
   };
 
   // Center of the map when it loads
@@ -59,6 +60,7 @@ function ExperienceSearch() {
       return <div>Loading maps</div>;
     } else {
       return (
+        <div className="experience-map" style={{ position: 'relative', width: '70vw', height: '50vh' }}>
         <GoogleMap
           onLoad={onLoad}
           onBoundsChanged={onBoundsChanged}
@@ -82,6 +84,7 @@ function ExperienceSearch() {
             })}
           </div>
         </GoogleMap>
+        </div>
       );
     }
   };
@@ -134,8 +137,8 @@ function ExperienceSearch() {
   };
 
   return (
-    <div>
-      <div>
+    <div className="searchpage-body">
+      <div className="searchbar">
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -147,6 +150,7 @@ function ExperienceSearch() {
           <button type="submit">Search</button>
         </form>
       </div>
+      <p>
       <ExperienceList
         experiences={expList.data.filter(function isInMapBounds(location) {
           return bounds.contains({
@@ -155,7 +159,11 @@ function ExperienceSearch() {
           });
         })}
       />
+      </p>
+      <br/>
+      <p>
       {map}
+      </p>
     </div>
   );
 }
