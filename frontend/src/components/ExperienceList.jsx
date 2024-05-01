@@ -58,12 +58,13 @@ export default function ExperienceList({ experiences }) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column) => {
                       const value = experience[column.id];
+
                       if (column.id === "rating") {
                         return (
                           <TableCell key={column.id} align={column.align}>
                           <RatingDisplay value={value}/>
                           </TableCell>
-                        )
+                        );
                       } else {
                       return (
                         <TableCell key={column.id} align={column.align}>

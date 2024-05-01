@@ -4,25 +4,27 @@ import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 
 
+/*
+    Adapted from Material UI Documentation Examples
+*/
 
+
+// This component is used to display a rating as a series of stars.
 export default function RatingDisplay (value){
     return (
     <Box
       sx={{
-        width: 200,
+        width: 100,
         display: 'flex',
         alignItems: 'center',
       }}
     >
       <Rating
         name="rating-display"
-        value={value}
-        precision={0.25}
-        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+        value={value.value}
+        precision={0.125}
+        emptyIcon={<StarIcon style={{ opacity: 0.35 }} fontSize="inherit" />}
       />
-      {value !== null && (
-        <Box sx={{ ml: 2 }}>{value}</Box>
-      )}
     </Box>
   );
 }
