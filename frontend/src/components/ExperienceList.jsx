@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import RatingDisplay from "./RatingDisplay";
 
 /*
     Adapted from Material UI Documentation Examples
@@ -57,11 +58,19 @@ export default function ExperienceList({ experiences }) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column) => {
                       const value = experience[column.id];
+                      if (column.id === "rating") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                          <RatingDisplay value={value}/>
+                          </TableCell>
+                        )
+                      } else {
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {value}
                         </TableCell>
                       );
+                    }
                     })}
                   </TableRow>
                 );
