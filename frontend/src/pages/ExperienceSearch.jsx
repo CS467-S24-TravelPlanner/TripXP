@@ -2,6 +2,14 @@ import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
+import {
+  Box,
+  Grid,
+  FilledInput,
+  Button,
+  FormControl,
+  Stack,
+} from "@mui/material";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -19,7 +27,7 @@ function ExperienceSearch() {
   const mapContainerStyle = {
     width: "100%",
     height: "100%",
-    position: "relative"
+    position: "relative",
   };
 
   // Center of the map when it loads
@@ -60,31 +68,40 @@ function ExperienceSearch() {
       return <div>Loading maps</div>;
     } else {
       return (
-        <div className="experience-map" style={{ position: 'relative', width: '70vw', height: '50vh' }}>
-        <GoogleMap
-          onLoad={onLoad}
-          onBoundsChanged={onBoundsChanged}
-          mapContainerStyle={mapContainerStyle}
-          zoom={2}
-          center={center}
+        <Box
+          component="section"
+          height={500}
+          width={700}
+          my={4}
+          display="flex"
+          alignItems="center"
+          gap={4}
+          p={2}
         >
-          <div>
-            {expList.data.map((e, i) => {
-              if (
-                mapRef.current
-                  .getBounds()
-                  .contains({ lat: e.latitude, lng: e.longitude })
-              )
-                return (
-                  <MarkerF
-                    position={{ lat: e.latitude, lng: e.longitude }}
-                    key={i}
-                  />
-                );
-            })}
-          </div>
-        </GoogleMap>
-        </div>
+          <GoogleMap
+            onLoad={onLoad}
+            onBoundsChanged={onBoundsChanged}
+            mapContainerStyle={mapContainerStyle}
+            zoom={2}
+            center={center}
+          >
+            <div>
+              {expList.data.map((e, i) => {
+                if (
+                  mapRef.current
+                    .getBounds()
+                    .contains({ lat: e.latitude, lng: e.longitude })
+                )
+                  return (
+                    <MarkerF
+                      position={{ lat: e.latitude, lng: e.longitude }}
+                      key={i}
+                    />
+                  );
+              })}
+            </div>
+          </GoogleMap>
+        </Box>
       );
     }
   };
@@ -137,31 +154,51 @@ function ExperienceSearch() {
   };
 
   return (
-    <div className="searchpage-body">
-      <div className="searchbar">
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="search"
-            value={searchInput}
-            onChange={handleChange}
-            placeholder="Search for Experiences by Keyword"
-          />
-          <button type="submit">Search</button>
-        </form>
-      </div>
+    <div>
+      <Box
+        component="form"
+        alignItems="stretch"
+        display="flex"
+        fullWidth="true"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+      >
+        <FormControl fullWidth="true" variant="filled" display="inline">
+          <Stack direction="row">
+            <FilledInput
+              id="search"
+              label="Search for Experiences by Keyword"
+              fullWidth
+              type="search"
+              onChange={handleChange}
+              value={searchInput}
+              placeholder="Search for Experiences by Keyword"
+            />
 
-      <ExperienceList
-        experiences={expList.data.filter(function isInMapBounds(location) {
-          return bounds.contains({
-            lat: location.latitude,
-            lng: location.longitude,
-          });
-        })}
-      />
+            <Button type="submit" variant="outlined">
+              Search
+            </Button>
+          </Stack>
+        </FormControl>
+      </Box>
+      <Grid
+        container="true"
+        direction="column"
+        alignItems="center"
+        justify="center"
+      >
+        <ExperienceList
+          experiences={expList.data.filter(function isInMapBounds(location) {
+            return bounds.contains({
+              lat: location.latitude,
+              lng: location.longitude,
+            });
+          })}
+        />
 
-      {map}
-
+        {map}
+      </Grid>
     </div>
   );
 }
