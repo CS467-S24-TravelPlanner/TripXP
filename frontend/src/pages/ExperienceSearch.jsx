@@ -150,7 +150,7 @@ function ExperienceSearch() {
           <button type="submit">Search</button>
         </form>
       </div>
-      <p>
+
       <ExperienceList
         experiences={expList.data.filter(function isInMapBounds(location) {
           return bounds.contains({
@@ -159,11 +159,9 @@ function ExperienceSearch() {
           });
         })}
       />
-      </p>
-      <br/>
-      <p>
+
       {map}
-      </p>
+
     </div>
   );
 }
