@@ -18,7 +18,7 @@ function TripPage({ trip }) {
       .catch((error) => {
         setError(error.message);
       });
-    
+
     // Retrieve User information from API
     getUsers({ id: trip.user_id })
       .then((result) => {
