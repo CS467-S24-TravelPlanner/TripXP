@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ProfilePage from './components/ProfilePage';
+import ProfilePage from './pages/ProfilePage';
 import HomePage from './pages/Home';
 import './App.css';
 import ExperienceSearch from './pages/ExperienceSearch';
