@@ -10,6 +10,7 @@ function TripPage({ trip }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    // Retrieve Trip information from API
     getTripExperiences(trip.id)
       .then((result) => {
         setExperiences(result);
@@ -17,7 +18,8 @@ function TripPage({ trip }) {
       .catch((error) => {
         setError(error.message);
       });
-
+    
+    // Retrieve User information from API
     getUsers({ id: trip.user_id })
       .then((result) => {
         setUser(result.data[0]);
