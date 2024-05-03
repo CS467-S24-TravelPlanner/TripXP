@@ -159,17 +159,16 @@ function ExperienceSearch() {
         component="form"
         alignItems="stretch"
         display="flex"
-        fullWidth="true"
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <FormControl fullWidth="true" variant="filled" display="inline">
+        <FormControl fullWidth={true} variant="filled" display="inline">
           <Stack direction="row">
             <FilledInput
               id="search"
               label="Search for Experiences by Keyword"
-              fullWidth
+              fullWidth={true}
               type="search"
               onChange={handleChange}
               value={searchInput}
@@ -183,7 +182,7 @@ function ExperienceSearch() {
         </FormControl>
       </Box>
       <Grid
-        container="true"
+        container={true}
         direction="column"
         alignItems="center"
         justify="center"

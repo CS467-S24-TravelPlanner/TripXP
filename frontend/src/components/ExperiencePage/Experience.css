@@ -1,0 +1,88 @@
+.experience {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.experiences {
+  display: flex;
+  flex-direction: row;
+}
+.experience-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.ratings-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.write-review-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-to-trip-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Experience.css */
+
+.review-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure modal appears above other elements */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.review-form-modal.open {
+  /* Add class for open state */
+  opacity: 1; /* Make modal visible */
+}
+
+.review-form-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px; /* Limit modal width */
+  margin: 0 auto; /* Center the modal horizontally */
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  color: #ccc;
+  transition: color 0.2s ease-in-out;
+}
+
+.close-modal-btn:hover {
+  color: #333;
+}
