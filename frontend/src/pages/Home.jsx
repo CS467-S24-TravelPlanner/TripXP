@@ -17,6 +17,9 @@ function HomePage() {
         <li>
           <a href="/login">Login</a>
         </li>
+        <li>
+          <a href="/AddTrip">Add Trip</a>
+        </li>
       </ul>
     </div>
   );

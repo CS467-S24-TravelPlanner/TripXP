@@ -1,11 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ProfilePage from "./components/ProfilePage";
+import ProfilePage from './pages/ProfilePage';
 import HomePage from "./pages/Home";
 import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import TripPage from "./pages/TripPage";
 import LoginForm from "./pages/Login";
+import AddTrip from './pages/AddTrip';
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
               />
             }
           />
+          <Route path='/AddTrip' element={<AddTrip />}/>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
