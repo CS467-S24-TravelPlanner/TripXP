@@ -11,6 +11,12 @@ function HomePage() {
         <li>
           <a href="/ExperienceSearch">Experience Search</a>
         </li>
+        <li>
+          <a href="/TripPage">Trip Page</a>
+        </li>
+        <li>
+          <a href="/login">Login</a>
+        </li>
       </ul>
     </div>
   );
