@@ -40,6 +40,15 @@ function createExperience(
 }
 
 /**
+ * getExperience returns the experience matching the given ID from the Database.
+ * The return value is the response from the server in JSON format.
+ * @param {number} experienceId - The ID of the Trip.
+ */
+function getExperience(experienceId) {
+  return getData("/experience/" + experienceId);
+}
+
+/**
  * getExperiences returns Experiences matching the search parameters from the Database.
  * The return value is the response from the server in JSON format.
  * @param {JSON} searchParams - The optional search parameters for desired Experience(s).
@@ -74,4 +83,10 @@ function deleteExperience(id) {
   return deleteData("/experience", { id: id });
 }
 
-export { createExperience, editExperience, getExperiences, deleteExperience };
+export {
+  createExperience,
+  editExperience,
+  getExperience,
+  getExperiences,
+  deleteExperience,
+};
