@@ -7,6 +7,7 @@ import ExperienceSearch from "./pages/ExperienceSearch";
 import ViewTrip from "./pages/ViewTrip";
 import LoginForm from "./pages/Login";
 import AddTrip from "./pages/AddTrip";
+import EditTrip from "./pages/EditTrip";
 
 const App = () => {
   return (
@@ -32,7 +33,8 @@ const App = () => {
               />
             }
           />
-          <Route path="/addtrip" element={<AddTrip />} />
+          <Route path="/trip/add" element={<AddTrip />} />
+          <Route path="/trip/edit/:tripId" element={<EditTrip />} />
         </Routes>
       </Router>
     </div>

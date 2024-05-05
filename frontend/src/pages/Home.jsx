@@ -18,7 +18,7 @@ function HomePage() {
           <a href="/trip">View Trip</a>
         </li>
         <li>
-          <a href="/addtrip">Add Trip</a>
+          <a href="/trip/add">Add Trip</a>
         </li>
       </ul>
     </div>

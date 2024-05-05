@@ -1,32 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { getExperiences } from '../utilities/ExperienceHandler';
+import React, { useState, useEffect } from "react";
+import { createTrip } from "../utilities/TripHandler";
+import { useNavigate } from "react-router-dom";
+import TripDetails from "../components/TripDetails";
 
 const AddTrip = () => {
-    const [experiences, setExperiences] = useState([]);
+  // TODO user id (or better unique identifier) pulled from client, pending auth imp
+  const [trip, setTrip] = useState({ name: "", description: "", user_id: 2 });
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchExperiences();
-    }, []);
+  const handleChange = (e) => {
+    // TODO data validation
+    setTrip({
+      ...trip,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    const fetchExperiences = async () => {
-        try {
-            const response = await getExperiences({ user_id: 2 }); // TODO user id or other identfier to be fetched from browser based on auth 
-            if (response.status) {
-                setExperiences(response.data);
-                console.log(experiences);
-            } else {
-                console.error('Error fetching experiences:', response.error);
-            }
-        } catch (error) {
-            console.error('Error fetching experiences:', error);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await createTrip(trip.name, trip.description, trip.user_id);
+      if (res.status) {
+        console.log(`Trip ${res.id} created successfully.`);
+        navigate(`/trip/edit/${res.id}`);
+      } else {
+        console.error("Error creating trip:", res.error);
+      }
+    } catch (error) {
+      console.error("Create trip failed:", error);
+    }
+  };
 
-    return (
-    <div>
-        <h1>Add Trip</h1>
-    </div>
-    )
-}
+  return (
+    <>
+      <h1>Add Trip</h1>
+      <TripDetails
+        trip={trip}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+    </>
+  );
+};
 
 export default AddTrip;
