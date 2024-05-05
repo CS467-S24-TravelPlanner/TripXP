@@ -24,10 +24,11 @@ export function createTrip(req, res) {
 
   // Returns a 200 status and Success message upon successful creation
   _createTrip(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new trip.",
+        id: model.id,
       });
     })
     .catch((err) => {

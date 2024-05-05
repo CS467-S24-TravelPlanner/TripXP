@@ -24,10 +24,11 @@ export function createExperience(req, res) {
 
   // Returns a 200 status and Success message upon successful creation
   _createExperience(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new experience.",
+        id: model.id,
       });
     })
     .catch((err) => {
