@@ -59,11 +59,9 @@ export function getAllTrips(req, res) {
     });
 }
 
-// Find trip by ID - This may not be needed
+// Find trip by ID
 export function getTrip(req, res) {
-  const { body: payload } = req;
-
-  findTrip(payload.id)
+  findTrip(req.params.tripId)
     .then((trip) => {
       return res.status(200).json({
         status: true,

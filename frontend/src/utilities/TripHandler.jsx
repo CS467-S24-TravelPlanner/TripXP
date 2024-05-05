@@ -29,6 +29,15 @@ function addExperienceToTrip(tripId, experienceId) {
 }
 
 /**
+ * getTrip returns the trip matching the given ID from the Database.
+ * The return value is the response from the server in JSON format.
+ * @param {number} tripId - The ID of the Trip.
+ */
+function getTrip(tripId) {
+  return getData("/trip/" + tripId);
+}
+
+/**
  * getTrips returns Trips matching the search parameters from the Database.
  * The return value is the response from the server in JSON format.
  * @param {JSON} searchParams - The optional search parameters for desired Trip(s).
@@ -46,8 +55,7 @@ async function getTripExperiences(tripId) {
   async function getTripExpObjs(tripId) {
     return getData("/trip/" + tripId);
   }
-  let data = 
-  await getTripExpObjs(tripId)
+  let data = await getTripExpObjs(tripId)
     .then(async (tripExps) => {
       return tripExps.data;
     })
@@ -63,7 +71,7 @@ async function getTripExperiences(tripId) {
     .then((experiences) => {
       return experiences[0];
     });
-    return (data == undefined) ? [] : data;
+  return data == undefined ? [] : data;
 }
 
 /**
@@ -107,6 +115,7 @@ export {
   createTrip,
   addExperienceToTrip,
   editTrip,
+  getTrip,
   getTrips,
   getTripExperiences,
   deleteTrip,
