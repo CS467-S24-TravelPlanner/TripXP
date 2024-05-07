@@ -48,30 +48,12 @@ function getTrips(searchParams = {}) {
 
 /**
  * getTripExperiences returns Experiences belonging to a Trip from the Database.
- * The return value is an Array of Experience objects.
+ * The return value is the response from the server in JSON format.
  * @param {number} tripId - The ID of the Trip whose Experiences will be returned.
  */
 async function getTripExperiences(tripId) {
-  async function getTripExpObjs(tripId) {
-    return getData("/trip/" + tripId + "/experience");
-  }
-  let data = await getTripExpObjs(tripId)
-    .then(async (tripExps) => {
-      return tripExps.data;
-    })
-    .then(async (exps) => {
-      let experiences = [];
-      for (let i = 0; i < exps.length; i++) {
-        await getExperiences(exps[i].ExperienceId).then((exp) => {
-          experiences.push(exp.data);
-        });
-      }
-      return experiences;
-    })
-    .then((experiences) => {
-      return experiences[0];
-    });
-  return data == undefined ? [] : data;
+  let experiences = await getData("/trip/" + tripId + "/experience");
+  return experiences;
 }
 
 /**
