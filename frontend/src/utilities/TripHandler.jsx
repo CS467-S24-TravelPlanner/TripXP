@@ -25,7 +25,7 @@ function createTrip(name, description, user_id) {
  * @param {number} experienceId - An ID of the Experience being added to the Trip.
  */
 function addExperienceToTrip(tripId, experienceId) {
-  return postData("/trip/" + tripId, { expId: experienceId }, {});
+  return postData("/trip/" + tripId + "/experience/" + experienceId, {});
 }
 
 /**
@@ -53,7 +53,7 @@ function getTrips(searchParams = {}) {
  */
 async function getTripExperiences(tripId) {
   async function getTripExpObjs(tripId) {
-    return getData("/trip/" + tripId);
+    return getData("/trip/" + tripId + "/experience");
   }
   let data = await getTripExpObjs(tripId)
     .then(async (tripExps) => {
@@ -108,7 +108,7 @@ function deleteTrip(id) {
  * @param {number} experienceId - An ID of the Experience being removed from the Trip.
  */
 function removeExperienceFromTrip(tripId, experienceId) {
-  return deleteData("/trip/" + tripId, { expId: experienceId }, {});
+  return deleteData("/trip/" + tripId + "/experience/" + experienceId, {});
 }
 
 export {

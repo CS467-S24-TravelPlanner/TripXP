@@ -21,16 +21,16 @@ router.get("/:tripId", getTrip);
 
 router.get("/", getAllTrips);
 
-router.get("/:tripId", getAllTripExperiences);
+router.get("/:tripId/experience", getAllTripExperiences);
 
 router.post("/", createTrip);
 
-router.post("/:tripId", createTripExperience);
+router.post("/:tripId/experience/:expId", createTripExperience);
 
 router.patch("/", updateTrip);
 
 router.delete("/", deleteTrip);
 
-router.delete("/:tripId", deleteTripExperience);
+router.delete("/:tripId/experience/:expId", deleteTripExperience);
 
 export default router;

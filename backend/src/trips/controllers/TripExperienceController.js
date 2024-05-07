@@ -8,19 +8,19 @@ import {
 
 // Create a new TripExperience
 export function createTripExperience(req, res) {
-  const { params: params, query: query, body: payload } = req;
+  const { params: params } = req;
 
   // Return Error if incorrect parameters provided
-  if (Object.keys(params).length !== 1) {
+  if (Object.keys(params).length !== 2) {
     return res.status(400).json({
       status: false,
       error: {
         message:
-          "Number of parameters required for creating a new TripExperience is 1.",
+          "Number of parameters required for creating a new TripExperience is 2.",
       },
     });
   }
-  const tripExperience = { TripId: params.tripId, ExperienceId: query.expId };
+  const tripExperience = { TripId: params.tripId, ExperienceId: params.expId };
 
   // Returns a 200 status and Success message upon successful creation
   _createTripExperience(tripExperience)
@@ -45,7 +45,7 @@ export function createTripExperience(req, res) {
 export function getAllTripExperiences(req, res) {
   const { params: params } = req;
 
-  findAllTripExperiences({ tripId: params.tripId })
+  findAllTripExperiences({ TripId: params.tripId })
     .then((tripexperiences) => {
       return res.status(200).json({
         status: true,
@@ -68,9 +68,9 @@ export function getAllTripExperiences(req, res) {
 
 // Delete existing TripExperience
 export function deleteTripExperience(req, res) {
-  const { params: params, query: query, body: payload } = req;
+  const { params: params } = req;
 
-  const tripExperience = { TripId: params.tripId, ExperienceId: query.expId };
+  const tripExperience = { TripId: params.tripId, ExperienceId: params.expId };
 
   // Returns a 200 status and number of deleted tripexperiences upon succes
   _deleteTripExperience(tripExperience)

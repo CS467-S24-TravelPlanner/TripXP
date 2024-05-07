@@ -1,4 +1,6 @@
 import { Model } from "sequelize";
+import { Experience } from "./Experience.js";
+import { Trip } from "./Trip.js";
 
 export class TripExperience extends Model {
   otherPublicField;
@@ -14,9 +16,20 @@ export function createTripExperience(tripexperience) {
 // -----*** READ ***-----
 
 // Return all existing TripExperiences matching given query parameters
-export function findAllTripExperiences(query) {
-  return TripExperience.findAll({
-    where: query,
+// Utilize sequelize eager loading to inner join and query for experiences
+// associated with TripId provided in query.
+export async function findAllTripExperiences(query) {
+  console.log(query);
+  return Experience.findAll({
+    include: {
+      model: Trip,
+      required: true,
+      attributes: [],
+      through: {
+        where: query,
+        attributes: [],
+      },
+    },
   });
 }
 
