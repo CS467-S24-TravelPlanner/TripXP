@@ -1,11 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
 import ProfilePage from "./components/ProfilePage";
 import HomePage from "./pages/Home";
 import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import TripPage from "./pages/TripPage";
 import LoginForm from "./pages/Login";
+import Experience from "./components/ExperiencePage/Experience"
 
 const App = () => {
   return (
@@ -31,10 +32,22 @@ const App = () => {
           />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/" element={<HomePage />} />
+
+          
+          <Route path="/experience/:id" element={<ExperiencePage/>}/>
+          
         </Routes>
       </Router>
     </div>
   );
 };
+
+const ExperiencePage = () => {
+  let { id } = useParams();
+
+  return (
+    <Experience experience={ id } />
+  )
+}
 
 export default App;

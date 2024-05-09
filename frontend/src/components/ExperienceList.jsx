@@ -10,12 +10,13 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
+import { Link } from "react-router-dom";
 
 /*
     Adapted from Material UI Documentation Examples
 */
 
-export default function ExperienceList({ experiences }) {
+export default function ExperienceList({ experiences, onClick }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -61,19 +62,19 @@ export default function ExperienceList({ experiences }) {
                     {columns.map((column) => {
                       const value = experience[column.id];
 
-                      if (column.id === "rating") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <RatingDisplay value={value} />
-                          </TableCell>
-                        );
-                      } else {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {value}
-                          </TableCell>
-                        );
-                      }
+                      return column.id === "rating" ? (
+                        <TableCell key={column.id} align={column.align}>
+                          <RatingDisplay value={value} />
+                        </TableCell>
+                      ) : column.id === "title" ? (
+                        <TableCell key={column.id} align={column.align}>
+                          <Link id={experience.id} onClick={onClick}>{value}</Link>
+                        </TableCell>
+                      ) : (
+                        <TableCell key={column.id} align={column.align}>
+                          {value}
+                        </TableCell>
+                      );
                     })}
                   </TableRow>
                 );

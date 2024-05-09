@@ -10,6 +10,7 @@ import {
   FormControl,
   Stack,
 } from "@mui/material";
+import Experience from "../components/ExperiencePage/Experience";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -17,9 +18,16 @@ const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const libraries = ["places", "marker"];
 
 function ExperienceSearch() {
+  // Current experience list
   const [expList, setExpList] = useState({ data: [] });
+
+  const [currentExperience, setCurrentExperience] = useState(null);
+
+  // Search state
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useState("NONE");
+
+  // Map state
   const [map, setMap] = useState(null);
   const [bounds, setBounds] = useState({});
 
@@ -153,7 +161,19 @@ function ExperienceSearch() {
     e.preventDefault();
   };
 
-  return (
+  const handleExperienceClick = (e) => {
+    let expId = e.target.id;
+    for (let i = 0; i < expList.data.length; i++) {
+      let exp = expList.data[i];
+      if (exp.id.toString() == expId) {
+        setCurrentExperience(exp);
+      }
+    }
+  };
+
+  return currentExperience ? (
+    <Experience experience={currentExperience} />
+  ) : (
     <div>
       <Box
         component="form"
@@ -188,6 +208,7 @@ function ExperienceSearch() {
         justify="center"
       >
         <ExperienceList
+          onClick={handleExperienceClick}
           experiences={expList.data.filter(function isInMapBounds(location) {
             return bounds.contains({
               lat: location.latitude,
