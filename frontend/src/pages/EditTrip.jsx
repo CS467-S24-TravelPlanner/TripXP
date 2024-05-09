@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { editTrip } from "../utilities/TripHandler";
+import { editTrip, getTripExperiences } from "../utilities/TripHandler";
 import { useParams } from "react-router-dom";
 import TripDetails from "../components/TripDetails";
 import { getTrip } from "../utilities/TripHandler";
+import ExperienceList from "../components/ExperienceList";
+import { getExperiences } from "../utilities/ExperienceHandler";
 
 const EditTrip = () => {
   const [trip, setTrip] = useState(false);
+  const [tripExperiences, setTripExperiences] = useState(false);
+  const [allExperiences, setAllExperiences] = useState(false);
 
   let { tripId } = useParams();
 
   useEffect(() => {
     fetchTrip();
+    fetchTripExperiences();
+    fetchAllExperiences();
   }, []);
 
   const fetchTrip = async () => {
@@ -26,11 +32,40 @@ const EditTrip = () => {
         console.error("Error fetching trip:", res.error);
       }
     } catch (error) {
-      console.error("Error fetching trip:", error);
+      console.error("fetchTrip error:", error);
     }
   };
 
-  const handleChange = (e) => {
+  const fetchTripExperiences = async () => {
+    try {
+      const res = await getTripExperiences(tripId);
+      if (res.status) {
+        setTripExperiences(res.data);
+      } else {
+        console.error(`Error fetching experiences for ${tripId}:`, res.error);
+      }
+    } catch (error) {
+      console.error("fetchTripExperiences error:", error);
+    }
+  };
+
+  const fetchAllExperiences = async () => {
+    try {
+      const res = await getExperiences();
+      if (res.status) {
+        if (res.data.length) {
+          setAllExperiences(res.data);
+          console.log(res.data);
+        }
+      } else {
+        console.error("Error fetching experiences list:", res.error);
+      }
+    } catch (error) {
+      console.error("fetchAllExperiences error:", error);
+    }
+  };
+
+  const handleDetailsChange = (e) => {
     // TODO data validation
     setTrip({
       ...trip,
@@ -38,7 +73,7 @@ const EditTrip = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleDetailsSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await editTrip(tripId, { ...trip });
@@ -60,9 +95,19 @@ const EditTrip = () => {
       {trip && (
         <TripDetails
           trip={trip}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
+          handleDetailsChange={handleDetailsChange}
+          handleSubmit={handleDetailsSubmit}
         />
+      )}
+      {allExperiences && tripExperiences ? (
+        <ExperienceList
+          experiences={allExperiences}
+          tripId={tripId}
+          tripExperiences={tripExperiences}
+        />
+      ) : (
+        // TODO Loading wheel insert
+        <p>Loading...</p>
       )}
     </>
   );
