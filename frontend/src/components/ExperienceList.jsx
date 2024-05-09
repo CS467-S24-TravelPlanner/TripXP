@@ -10,12 +10,17 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
+import ExpInTripCheckbox from "./ExpInTripCheckbox";
 
 /*
     Adapted from Material UI Documentation Examples
 */
 
-export default function ExperienceList({ experiences }) {
+export default function ExperienceList({
+  experiences,
+  tripId = null,
+  tripExperiences = null,
+}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -28,12 +33,19 @@ export default function ExperienceList({ experiences }) {
     setPage(0);
   };
 
-  const columns = [
+  let columns = [
     { id: "title", label: "Title", minWidth: 170 },
     { id: "description", label: "Description", minWidth: 100 },
     { id: "location", label: "Location", minWidth: 170 },
     { id: "rating", label: "Rating", minWidth: 100 },
   ];
+
+  if (tripId) {
+    columns = [
+      { id: "partOfTrip", label: "Part of Trip", minWidth: 50 },
+      ...columns,
+    ];
+  }
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -60,7 +72,18 @@ export default function ExperienceList({ experiences }) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column) => {
                       const value = experience[column.id];
-
+                      if (column.id === "partOfTrip") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            <p>{experience.id}</p>
+                            <ExpInTripCheckbox
+                              expId={experience.id}
+                              tripId={tripId}
+                              tripExperiences={tripExperiences}
+                            />
+                          </TableCell>
+                        );
+                      }
                       if (column.id === "rating") {
                         return (
                           <TableCell key={column.id} align={column.align}>
