@@ -12,11 +12,15 @@ import UserRoutes from "./users/routes.js";
 // Routes for Trips
 import TripRoutes from "./trips/routes.js";
 
+// Routes for Reviews
+import ReviewRoutes from "./reviews/routes.js";
+
 // Sequelize model imports
 import { Experience } from "./common/models/Experience.js";
 import { User } from "./common/models/User.js";
 import { Trip } from "./common/models/Trip.js";
 import { TripExperience } from "./common/models/TripExperience.js";
+import { Review } from "./common/models/Review.js";
 
 import { Sequelize, Model, DataTypes } from "sequelize";
 
@@ -127,6 +131,28 @@ TripExperience.init(
   { sequelize }
 );
 
+Review.init(
+  {
+    experience_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    review_text: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    rating: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+  },
+  { sequelize }
+);
+
 // Set the Many-to-Many relationship for Models.
 Experience.belongsToMany(Trip, { through: "TripExperience" });
 Trip.belongsToMany(Experience, { through: "TripExperience" });
@@ -142,6 +168,7 @@ sequelize
     app.use("/user", UserRoutes);
     app.use("/trip", TripRoutes);
     app.use("/hello", helloRoute);
+    app.use("/review", ReviewRoutes);
 
     // healthcheck endpoint
     app.get("/", (req, res) => {
