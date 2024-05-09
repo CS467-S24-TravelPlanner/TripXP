@@ -1,6 +1,8 @@
 import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
+
+import { Link } from "react-router-dom";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import {
   Box,
@@ -78,6 +80,7 @@ function ExperienceSearch() {
           gap={4}
           p={2}
         >
+          
           <GoogleMap
             onLoad={onLoad}
             onBoundsChanged={onBoundsChanged}
@@ -159,17 +162,16 @@ function ExperienceSearch() {
         component="form"
         alignItems="stretch"
         display="flex"
-        fullWidth="true"
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <FormControl fullWidth="true" variant="filled" display="inline">
+        <FormControl fullWidth={true} variant="filled" display="inline">
           <Stack direction="row">
             <FilledInput
               id="search"
               label="Search for Experiences by Keyword"
-              fullWidth
+              fullWidth={true}
               type="search"
               onChange={handleChange}
               value={searchInput}
@@ -183,7 +185,7 @@ function ExperienceSearch() {
         </FormControl>
       </Box>
       <Grid
-        container="true"
+        container={true}
         direction="column"
         alignItems="center"
         justify="center"

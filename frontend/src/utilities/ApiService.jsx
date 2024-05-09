@@ -50,8 +50,6 @@ async function getData(path = "", params = {}) {
 }
 
 /**
- * patchData sends a PATCH request to the API endpoint at the specifed path.
- * The return value is the response from the server in JSON format.
  * @param {string} path - The relative path the request will be made to.
  * @param {JSON} [body] - An optional body for the request.
  */

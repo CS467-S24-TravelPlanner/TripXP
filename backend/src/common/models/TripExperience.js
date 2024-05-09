@@ -14,9 +14,18 @@ export function createTripExperience(tripexperience) {
 // -----*** READ ***-----
 
 // Return all existing TripExperiences matching given query parameters
-export function findAllTripExperiences(query) {
-  return TripExperience.findAll({
-    where: query,
+export async function findAllTripExperiences(query) {
+  console.log(query);
+  return Experience.findAll({
+    include: {
+      model: Trip,
+      required: true,
+      attributes: [],
+      through: {
+        where: query,
+        attributes: [],
+      },
+    },
   });
 }
 

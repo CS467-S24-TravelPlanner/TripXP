@@ -1,4 +1,5 @@
 import { postData, getData, patchData, deleteData } from "./ApiService.jsx";
+import { getExperiences } from "./ExperienceHandler.jsx";
 
 /**
  * createTrip adds a new Trip to the Database.
@@ -38,11 +39,31 @@ function getTrips(searchParams = {}) {
 
 /**
  * getTripExperiences returns Experiences belonging to a Trip from the Database.
- * The return value is the response from the server in JSON format.
+ * The return value is an Array of Experience objects.
  * @param {number} tripId - The ID of the Trip whose Experiences will be returned.
  */
-function getTripExperiences(tripId) {
-  return getData("/trip/" + tripId);
+async function getTripExperiences(tripId) {
+  async function getTripExpObjs(tripId) {
+    return getData("/trip/" + tripId);
+  }
+  let data = 
+  await getTripExpObjs(tripId)
+    .then(async (tripExps) => {
+      return tripExps.data;
+    })
+    .then(async (exps) => {
+      let experiences = [];
+      for (let i = 0; i < exps.length; i++) {
+        await getExperiences(exps[i].ExperienceId).then((exp) => {
+          experiences.push(exp.data);
+        });
+      }
+      return experiences;
+    })
+    .then((experiences) => {
+      return experiences[0];
+    });
+    return (data == undefined) ? [] : data;
 }
 
 /**
