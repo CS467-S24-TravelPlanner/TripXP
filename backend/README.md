@@ -318,13 +318,12 @@ npm run dev
 
 #### Add an Experience to a Trip
 
-- To add an Experience to a Trip, send a POST request using the path '/trip/:tripId',
-  providing the Experience id as a parameter named 'expId'.
+- To add an Experience to a Trip, send a POST request using the path '/trip/:tripId/experience/:expId'
 - Timestamps will be added automatically to the createdAt and updatedAt fields
 - A 200 status code, status bool, and success message will be returned upon successful creation.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - POST Request Sent to path '/trip/2?expId=2'
+##### EXAMPLE - POST Request Sent to path '/trip/2/experience/3'
 
 ```json
 {
@@ -333,18 +332,13 @@ npm run dev
 }
 ```
 
-#### Read Existing Trip(s)
+#### Read an Existing Trip
 
-- To read Trip(s), send a GET request using the path '/trip'.
-- The provided parameters will be used to generate an SQL query and all
-  Users matching the query will be returned.
-- This means, for instance, that providing a user id as a parameter will
-  return all the Trips created by that User.
-- A request with no parameters will return all Trips.
+- To read a specific existing Trip, send a GET request using the path '/trip/:tripId'.
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE #1 - Response to GET Request Sent to '/trip?user_id=1'
+##### EXAMPLE #1 - Response to GET Request Sent to '/trip/1'
 
 ```json
 {
@@ -357,66 +351,107 @@ npm run dev
       "user_id": 1,
       "createdAt": "2024-04-20T11:57:45.000Z",
       "updatedAt": "2024-04-20T13:09:36.000Z"
-    },
-    {
-      "id": 3,
-      "name": "Third Test Trip",
-      "description": "A really awesome trip.",
-      "user_id": 1,
-      "createdAt": "2024-04-21T04:26:30.000Z",
-      "updatedAt": "2024-04-21T04:26:30.000Z"
     }
   ]
 }
 ```
 
-#### Read Experiences in Existing Trip
+#### Read All Existing Trips
 
-- To read all Experiences included in a Trip, send a GET request using the path '/trip/:tripId'.
-- No parameters are required.
-- The returned data includes a list of TripExperience objects, which are simply pairs of Trip ids
-  and Experience ids.
-- If a Trip has no Experiences, data will be empty.
+- To read all existing Trip(s), send a GET request using the path '/trip.
+- TODO: this will ultimately be all existing Trip belonging to the current user!
+- A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE #1 - Response to GET Request Sent to '/trip/1'
+##### EXAMPLE #1 - Response to GET Request Sent to '/trip?user_id=1'
 
 ```json
 {
   "status": true,
   "data": [
     {
-      "TripId": 1,
-      "ExperienceId": 1,
-      "createdAt": "2024-04-21T01:45:46.000Z",
-      "updatedAt": "2024-04-21T01:45:46.000Z"
+      "id":1,
+      "name":"First Test Trip",
+      "description":"Super awesome trip.",
+      "user_id":1,
+      "createdAt":"2024-04-20T11:57:45.000Z",
+      "updatedAt":"2024-04-20T13:09:36.000Z"
     },
     {
-      "TripId": 1,
-      "ExperienceId": 2,
-      "createdAt": "2024-04-21T01:38:23.000Z",
-      "updatedAt": "2024-04-21T01:38:23.000Z"
+      "id":2,
+      "name":"Second Test Trip",
+      "description":"A somewhat okay trip.",
+      "user_id":2,"createdAt":"2024-04-21T02:11:03.000Z",
+      "updatedAt":"2024-04-21T02:11:03.000Z"
     }
   ]
 }
 ```
 
+#### Read all Experiences in Existing Trip
+
+- To read all Experiences included in a Trip, send a GET request using the path '/trip/:tripId/experience'.
+- The returned data includes a list of the Experience objects.
+- If a Trip has no Experiences, data will be empty.
+
+##### EXAMPLE #1 - Response to GET Request Sent to '/trip/1/experience'
+
+```json
+{
+  "status": true,
+  "data":[
+   {
+      "id":1,
+      "title":"Test Experience 1",
+      "description":"A sentence describing the experience.",
+      "latitude":31.9876,
+      "longitude":-99.1245,
+      "image_url":"/path/to/image.jpg",
+      "rating":4.73,
+      "location":"A super cool place.",
+      "keywords":[
+         "awesome",
+         "exciting"
+      ],
+      "user_id":1,
+      "createdAt":"2024-04-20T08:33:12.000Z",
+      "updatedAt":"2024-04-28T18:27:29.000Z"
+   },
+   {
+      "id":2,
+      "title":"Test Experience 2",
+      "description":"A different sentence describing the experience.",
+      "latitude":33.1234,
+      "longitude":-98.2223,
+      "image_url":"/path/to/image2.jpg",
+      "rating":4.38,
+      "location":"A moderately cool place.",
+      "keywords":[
+         "cool",
+         "exciting"
+      ],
+      "user_id":2,
+      "createdAt":"2024-04-20T11:53:41.000Z",
+      "updatedAt":"2024-04-28T18:27:57.000Z"
+   }
+]
+}
+```
+
 #### Update Existing Trip
 
-- To update an existing Trip, send a PATCH request using the path '/trip'.
-- The body of the PATCH request must include the id of the Trip.
+- To update an existing Trip, send a PATCH request using the path '/trip/:tripId'.
 - Only key/value pairs that you want to update are required, any values that will remain
   the same do not need to be included.
-- No parameters are required.
 - The updatedAt field will be updated automatically with current timestamp.
 - A 200 status code, status bool, and success message will be returned upon successful update.
 - A 400 status code, status bool, and failure message are returned if the body of the request is empty.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - Request Body to Update Trip
+##### EXAMPLE - Request Body to Update Trip Sent to '/trip/3'
 
 ```json
 {
-  "id": 3,
   "name": "Updated Third Test Trip"
 }
 ```
@@ -432,12 +467,11 @@ npm run dev
 
 #### Delete Existing Trip
 
-- To delete an existing Trip, send a DELETE request using the path '/trip',
-  providing the id of the Trip as a parameter.
+- To delete an existing Trip, send a DELETE request using the path '/trip/:tripId'
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - Response to DELETE Request to path '/trip?id=3'
+##### EXAMPLE - Response to DELETE Request to path '/trip/3'
 
 ```json
 {
@@ -450,12 +484,11 @@ npm run dev
 
 #### Remove an Experience from an Existing Trip
 
-- To remove an Experience from a Trip, send a DELETE request using the path '/trip/:tripId',
-  providing the id of the Experience as a parameter named 'expId'.
+- To remove an Experience from a Trip, send a DELETE request using the path '/trip/:tripId/experience/:expId'
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - Response to DELETE Request to path '/trip/2?expId=2'
+##### EXAMPLE - Response to DELETE Request to path '/trip/2/experience/2'
 
 ```json
 {

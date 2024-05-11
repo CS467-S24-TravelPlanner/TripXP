@@ -24,10 +24,11 @@ export function createExperience(req, res) {
 
   // Returns a 200 status and Success message upon successful creation
   _createExperience(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new experience.",
+        id: model.id,
       });
     })
     .catch((err) => {
@@ -58,11 +59,9 @@ export function getAllExperiences(req, res) {
     });
 }
 
-// Get Experience by ID - This may not be needed
+// Get Experience by ID
 export function getExperience(req, res) {
-  const { body: payload } = req;
-
-  findExperience(payload.id)
+  findExperience(req.params.experienceId)
     .then((experience) => {
       return res.status(200).json({
         status: true,

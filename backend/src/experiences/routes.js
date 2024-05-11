@@ -11,7 +11,7 @@ import {
   deleteExperience,
 } from "./controllers/ExperienceController.js";
 
-// router.get("/:experienceId", getExperience);
+router.get("/:experienceId", getExperience);
 
 router.get("/", getAllExperiences);
 
