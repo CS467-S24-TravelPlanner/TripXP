@@ -18,6 +18,7 @@ import ExpInTripCheckbox from "./ExpInTripCheckbox";
 */
 
 export default function ExperienceList({
+  onClick,
   experiences,
   tripId = null,
   tripExperiences = null,
@@ -70,7 +71,7 @@ export default function ExperienceList({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((experience, i) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={i}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={i} onClick={onClick}>
                     {columns.map((column) => {
                       const value = experience[column.id];
                       if (column.id === "partOfTrip") {
