@@ -1,16 +1,21 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProfilePage from "./components/ProfilePage";
 import HomePage from "./pages/Home";
 import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
-import ViewTrip from "./pages/ViewTrip";
-import LoginForm from "./pages/Login";
-import Experience from "./components/ExperiencePage/Experience"
-import AddTrip from "./pages/AddTrip";
-import EditTrip from "./pages/EditTrip";
-
+import LoginForm from "./pages/Login.jsx";
 const App = () => {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: REACT_APP_CLIENT_ID,
+        scope: "",
+      });
+    }
+
+    gapi.load("client auth2", start);
+  });
   return (
     <div>
       <Router>
@@ -35,13 +40,6 @@ const App = () => {
             }
           />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/" element={<HomePage />} />
-
-          
-          <Route path="/experience/:id" element={<ExperiencePage/>}/>
-          
-          <Route path="/trip/add" element={<AddTrip />} />
-          <Route path="/trip/edit/:tripId" element={<EditTrip />} />
         </Routes>
       </Router>
     </div>

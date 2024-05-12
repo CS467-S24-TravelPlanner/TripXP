@@ -48,7 +48,7 @@ function getTrips(searchParams = {}) {
 
 /**
  * getTripExperiences returns Experiences belonging to a Trip from the Database.
- * The return value is the response from the server in JSON format.
+ * The return value is an Array of Experience objects.
  * @param {number} tripId - The ID of the Trip whose Experiences will be returned.
  */
 async function getTripExperiences(tripId) {

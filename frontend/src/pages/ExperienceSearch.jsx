@@ -1,6 +1,8 @@
 import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
+
+import { Link } from "react-router-dom";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import {
   Box,
@@ -86,6 +88,7 @@ function ExperienceSearch() {
           gap={4}
           p={2}
         >
+          
           <GoogleMap
             onLoad={onLoad}
             onBoundsChanged={onBoundsChanged}
