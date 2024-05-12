@@ -1,4 +1,4 @@
-const apiUrl = "https://travelplannerapi-production.up.railway.app";
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * postData sends a POST request to the API endpoint at the specifed path.
@@ -8,16 +8,15 @@ const apiUrl = "https://travelplannerapi-production.up.railway.app";
  * @param {JSON} [body] - An optional body for the request.
  */
 async function postData(path = "", params = {}, body = {}) {
-  
   const URLparams = Object.keys(params).length
     ? new URLSearchParams(Object.entries(params))
     : "";
-    URLparams.toString;
+  URLparams.toString;
   const options = {
     method: "POST",
     headers: {
-        "Content-Type": "application/json",
-      },
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   };
 
@@ -59,8 +58,8 @@ async function patchData(path = "", body = {}) {
   const options = {
     method: "PATCH",
     headers: {
-        "Content-Type": "application/json",
-      },
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(body),
   };
   const response = await fetch(apiUrl + path, options);

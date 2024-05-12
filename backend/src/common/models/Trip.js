@@ -20,7 +20,7 @@ export function findAllTrips(query) {
   });
 }
 
-// Find a specific Trip by ID - May not be needed
+// Find a specific Trip by ID
 export function findTrip(tripId) {
   return Trip.findByPk(tripId);
 }

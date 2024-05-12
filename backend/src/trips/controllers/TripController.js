@@ -24,10 +24,11 @@ export function createTrip(req, res) {
 
   // Returns a 200 status and Success message upon successful creation
   _createTrip(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new trip.",
+        id: model.id,
       });
     })
     .catch((err) => {
@@ -58,11 +59,9 @@ export function getAllTrips(req, res) {
     });
 }
 
-// Find trip by ID - This may not be needed
+// Find trip by ID
 export function getTrip(req, res) {
-  const { body: payload } = req;
-
-  findTrip(payload.id)
+  findTrip(req.params.tripId)
     .then((trip) => {
       return res.status(200).json({
         status: true,

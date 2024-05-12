@@ -11,12 +11,17 @@ import {
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
 import { Link } from "react-router-dom";
+import ExpInTripCheckbox from "./ExpInTripCheckbox";
 
 /*
     Adapted from Material UI Documentation Examples
 */
 
-export default function ExperienceList({ experiences, onClick }) {
+export default function ExperienceList({
+  experiences,
+  tripId = null,
+  tripExperiences = null,
+}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -29,12 +34,19 @@ export default function ExperienceList({ experiences, onClick }) {
     setPage(0);
   };
 
-  const columns = [
+  let columns = [
     { id: "title", label: "Title", minWidth: 170 },
     { id: "description", label: "Description", minWidth: 100 },
     { id: "location", label: "Location", minWidth: 170 },
     { id: "rating", label: "Rating", minWidth: 100 },
   ];
+
+  if (tripId) {
+    columns = [
+      { id: "partOfTrip", label: "Part of Trip", minWidth: 50 },
+      ...columns,
+    ];
+  }
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -61,20 +73,31 @@ export default function ExperienceList({ experiences, onClick }) {
                   <TableRow hover role="checkbox" tabIndex={-1} key={i}>
                     {columns.map((column) => {
                       const value = experience[column.id];
-
-                      return column.id === "rating" ? (
-                        <TableCell key={column.id} align={column.align}>
-                          <RatingDisplay value={value} />
-                        </TableCell>
-                      ) : column.id === "title" ? (
-                        <TableCell key={column.id} align={column.align}>
-                          <Link id={experience.id} onClick={onClick}>{value}</Link>
-                        </TableCell>
-                      ) : (
-                        <TableCell key={column.id} align={column.align}>
-                          {value}
-                        </TableCell>
-                      );
+                      if (column.id === "partOfTrip") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            <p>{experience.id}</p>
+                            <ExpInTripCheckbox
+                              expId={experience.id}
+                              tripId={tripId}
+                              tripExperiences={tripExperiences}
+                            />
+                          </TableCell>
+                        );
+                      }
+                      if (column.id === "rating") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            <RatingDisplay value={value} />
+                          </TableCell>
+                        );
+                      } else {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {value}
+                          </TableCell>
+                        );
+                      }
                     })}
                   </TableRow>
                 );

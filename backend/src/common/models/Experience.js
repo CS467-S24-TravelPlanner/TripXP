@@ -20,7 +20,7 @@ export function findAllExperiences(query) {
   });
 }
 
-// Find a specific Experience by ID - May not be needed
+// Find a specific Experience by ID
 export function findExperience(experienceId) {
   return Experience.findByPk(experienceId);
 }
