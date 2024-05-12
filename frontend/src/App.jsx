@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ProfilePage from "./components/ProfilePage";
+import ProfilePage from "./pages/ProfilePage.jsx"
 import HomePage from "./pages/Home";
 import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import LoginForm from "./pages/Login.jsx";
+import ViewTrip from "./pages/ViewTrip.jsx";
+
 const App = () => {
   useEffect(() => {
     function start() {
