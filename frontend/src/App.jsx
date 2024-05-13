@@ -42,6 +42,7 @@ const App = () => {
             }
           />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/experience/:id" element={<ExperiencePage />} />
         </Routes>
       </Router>
     </div>
@@ -50,6 +51,7 @@ const App = () => {
 
 const ExperiencePage = () => {
   let { id } = useParams();
+  console.log(id);
 
   return (
     <Experience experience={ id } />

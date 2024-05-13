@@ -29,6 +29,8 @@ const Experience = ({ experience, closeExperience }) => {
 
   return (
     <div className="experiences">
+
+      <button onClick={closeExperience}>Back to Experience Search</button>
       
         <div key={experience.id} className="experience">
           

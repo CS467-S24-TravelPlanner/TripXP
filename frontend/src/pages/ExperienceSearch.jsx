@@ -164,18 +164,17 @@ function ExperienceSearch() {
     e.preventDefault();
   };
 
-  const handleExperienceClick = (e) => {
-    let expId = e.target.id;
-    for (let i = 0; i < expList.data.length; i++) {
-      let exp = expList.data[i];
-      if (exp.id.toString() == expId) {
-        setCurrentExperience(exp);
-      }
-    }
-  };
+  const handleExperienceClick = (exp) => {
+      setCurrentExperience(exp);
+    };
+  
+    const handleExperienceClose = () => {
+      setCurrentExperience(null);
+      renderMap();
+    };
 
   return currentExperience ? (
-    <Experience experience={currentExperience} />
+    <Experience experience={currentExperience} closeExperience={handleExperienceClose} />
   ) : (
     <div>
       <Box
@@ -211,13 +210,14 @@ function ExperienceSearch() {
         justify="center"
       >
         <ExperienceList
-          onClick={handleExperienceClick}
+          experienceClick={handleExperienceClick}
           experiences={expList.data.filter(function isInMapBounds(location) {
+            if (bounds) {
             return bounds.contains({
               lat: location.latitude,
               lng: location.longitude,
             });
-          })}
+          }})}
         />
 
         {map}
