@@ -76,7 +76,13 @@ export default function ExperienceList({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((experience) => {
                 return (
-                  <TableRow hover role="button" tabIndex={-1} key={experience.id} onClick={() => handleExperienceClick(experience)}>
+                  <TableRow
+                    hover
+                    role="button"
+                    tabIndex={-1}
+                    key={experience.id}
+                    onClick={() => handleExperienceClick(experience)}
+                  >
                     {columns.map((column) => {
                       const value = experience[column.id];
                       if (column.id === "partOfTrip") {

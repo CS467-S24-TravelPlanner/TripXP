@@ -88,7 +88,6 @@ function ExperienceSearch() {
           gap={4}
           p={2}
         >
-          
           <GoogleMap
             onLoad={onLoad}
             onBoundsChanged={onBoundsChanged}
@@ -165,16 +164,19 @@ function ExperienceSearch() {
   };
 
   const handleExperienceClick = (exp) => {
-      setCurrentExperience(exp);
-    };
-  
-    const handleExperienceClose = () => {
-      setCurrentExperience(null);
-      renderMap();
-    };
+    setCurrentExperience(exp);
+  };
+
+  const handleExperienceClose = () => {
+    setCurrentExperience(null);
+    renderMap();
+  };
 
   return currentExperience ? (
-    <Experience experience={currentExperience} closeExperience={handleExperienceClose} />
+    <Experience
+      experience={currentExperience}
+      closeExperience={handleExperienceClose}
+    />
   ) : (
     <div>
       <Box
@@ -213,11 +215,12 @@ function ExperienceSearch() {
           experienceClick={handleExperienceClick}
           experiences={expList.data.filter(function isInMapBounds(location) {
             if (bounds) {
-            return bounds.contains({
-              lat: location.latitude,
-              lng: location.longitude,
-            });
-          }})}
+              return bounds.contains({
+                lat: location.latitude,
+                lng: location.longitude,
+              });
+            }
+          })}
         />
 
         {map}

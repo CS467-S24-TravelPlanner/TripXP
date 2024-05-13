@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage.jsx"
+import ProfilePage from "./pages/ProfilePage.jsx";
 import HomePage from "./pages/Home";
 import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
@@ -42,20 +42,22 @@ const App = () => {
             }
           />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/experience/:id" element={<ExperiencePage />} />
+          {/* <Route path="/experience/:id" element={<ExperiencePage />} /> */}
         </Routes>
       </Router>
     </div>
   );
 };
 
-const ExperiencePage = () => {
-  let { id } = useParams();
-  console.log(id);
+// Not sure we need this?
 
-  return (
-    <Experience experience={ id } />
-  )
-}
+// const ExperiencePage = () => {
+//   let { id } = useParams();
+//   console.log(id);
+
+//   return (
+//     <Experience experience={ id } />
+//   )
+// }
 
 export default App;

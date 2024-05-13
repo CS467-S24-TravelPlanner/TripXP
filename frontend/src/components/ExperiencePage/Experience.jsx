@@ -26,29 +26,26 @@ const Experience = ({ experience, closeExperience }) => {
     setShowReviewForm({ ...showReviewForm, [experienceId]: false });
   };
 
-
   return (
     <div className="experiences">
-
       <button onClick={closeExperience}>Back to Experience Search</button>
-      
-        <div key={experience.id} className="experience">
-          
-          <h2>{experience.title}</h2>
-          <p>{experience.description}</p>
-          <p>{experience.location}</p>
-          <img
-            src={experience.image_url}
-            alt={experience.title}
-            className="experience-image"
-          />
 
-          <h4 className="ratings-section">
-                Rating: 
-              <RatingDisplay value={experience.rating} />
+      <div key={experience.id} className="experience">
+        <h2>{experience.title}</h2>
+        <p>{experience.description}</p>
+        <p>{experience.location}</p>
+        <img
+          src={experience.image_url}
+          alt={experience.title}
+          className="experience-image"
+        />
 
-            {/* Display detailed reviews */}
-            {/* <ul>
+        <h4 className="ratings-section">
+          Rating:
+          <RatingDisplay value={experience.rating} />
+          {/* For now, Review is not implemented, so this is removed for testing. */}
+          {/* Display detailed reviews */}
+          {/* <ul>
               {experience.reviews.map((review) => (
                 <li key={review.id}>
                   <p>
@@ -58,26 +55,25 @@ const Experience = ({ experience, closeExperience }) => {
                 </li>
               ))}
             </ul> */}
-          </h4>
+        </h4>
 
-          <button
-            className="write-review-btn"
-            onClick={() => handleWriteReviewClick(experience.id)}
-          >
-            Write a Review
-          </button>
-          <button className="add-to-trip-btn">Add to Trip</button>
+        <button
+          className="write-review-btn"
+          onClick={() => handleWriteReviewClick(experience.id)}
+        >
+          Write a Review
+        </button>
+        <button className="add-to-trip-btn">Add to Trip</button>
 
-          {showReviewForm[experience.id] && ( // Conditionally render ReviewForm for specific experience
-            <ReviewForm
-              onSubmit={(reviewData) =>
-                handleReviewSubmit(reviewData, experience.id)
-              }
-              onCancel={() => handleReviewCancel(experience.id)}
-            />
-          )}
-        </div>
-      
+        {showReviewForm[experience.id] && ( // Conditionally render ReviewForm for specific experience
+          <ReviewForm
+            onSubmit={(reviewData) =>
+              handleReviewSubmit(reviewData, experience.id)
+            }
+            onCancel={() => handleReviewCancel(experience.id)}
+          />
+        )}
+      </div>
     </div>
   );
 };
