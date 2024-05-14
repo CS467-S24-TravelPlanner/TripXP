@@ -42,7 +42,7 @@ const App = () => {
 
   return (
     <div>
-      <UserContext.Provider value={user}>
+      <UserContext.Provider value={{ user, setUser }}>
         <Router>
           <NavBar />
           <Routes>

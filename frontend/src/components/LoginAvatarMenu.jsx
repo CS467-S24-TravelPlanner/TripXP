@@ -12,11 +12,9 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const settings = ["Profile", "Dashboard", "Logout"];
-
 export default function LoginAvatarMenu() {
   const navigate = useNavigate();
-  const user = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -30,7 +28,7 @@ export default function LoginAvatarMenu() {
   if (user) {
     return (
       <Box sx={{ flexGrow: 0 }}>
-        <Tooltip title="Open settings">
+        <Tooltip title="Open ">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <Avatar alt={user.name} src={user.picture} />
           </IconButton>
@@ -51,11 +49,23 @@ export default function LoginAvatarMenu() {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          {settings.map((setting) => (
-            <MenuItem key={setting} onClick={handleCloseUserMenu}>
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          ))}
+          <MenuItem
+            key="profile"
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
+            <Typography textAlign="center">Profile</Typography>
+          </MenuItem>
+          <MenuItem
+            key="logout"
+            onClick={() => {
+              setUser(false);
+              navigate("/");
+            }}
+          >
+            <Typography textAlign="center">Logout</Typography>
+          </MenuItem>
         </Menu>
       </Box>
     );
