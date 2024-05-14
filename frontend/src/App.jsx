@@ -48,8 +48,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/profilepage" element={<ProfilePage />} />
-            <Route path="/experiencesearch" element={<ExperienceSearch />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/experiences" element={<ExperienceSearch />} />
             {/* TODO Experience Add/Edit page(s) */}
             {/* TODO Trips List Page */}
             <Route path="/trip/add" element={<AddTrip />} />
