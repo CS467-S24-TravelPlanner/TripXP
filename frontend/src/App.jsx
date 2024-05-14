@@ -8,6 +8,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import AddTrip from "./pages/AddTrip.jsx";
 import EditTrip from "./pages/EditTrip.jsx";
+import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
     <div>
       <UserContext.Provider value={user}>
         <Router>
+          <NavBar />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginForm />} />

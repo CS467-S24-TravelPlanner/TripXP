@@ -1,10 +1,8 @@
 // This is just a temporary HomePage as a placeholder
-import ResponsiveAppBar from "../components/NavBar";
 
 function HomePage() {
   return (
     <div>
-      <ResponsiveAppBar />
       <h1>TripXP HomePage</h1>
       <ul>
         <li>
