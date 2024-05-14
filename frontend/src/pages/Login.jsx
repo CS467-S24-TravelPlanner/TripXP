@@ -1,22 +1,11 @@
-// LoginForm.js
-
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Paper } from "@mui/material";
 import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
 
-const REACT_APP_CLIENT_ID ="Add API CLIENT KEY HERE OR IN .ENV file";
+const clientId =
+  "370617990760-0a454d3po46q4jkntns96pnov7ngfqev.apps.googleusercontent.com";
+
 const LoginForm = () => {
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: REACT_APP_CLIENT_ID,
-        scope: "",
-      });
-    }
-
-    gapi.load("client auth2", start);
-  });
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,11 +18,11 @@ const LoginForm = () => {
     setPassword("");
   };
 
-  const responseGoogleTrue = (response) => {
-    console.log("Login:" + response);
+  const onSuccess = (res) => {
+    console.log("login success:", res.profileObj);
   };
-  const responseGooglefalse = (response) => {
-    console.log("Login:" + response);
+  const onFail = (res) => {
+    console.log("login Fail:", res);
   };
 
   return (
@@ -78,15 +67,18 @@ const LoginForm = () => {
               Clear
             </Button>
           </Grid>
-          <Grid item xs={12}>
-            <GoogleLogin
-              clientId={REACT_APP_CLIENT_ID}
-              onSuccess={responseGoogleTrue}
-              onFailure={responseGooglefalse}
-            />
-          </Grid>
         </Grid>
       </form>
+      <div>
+        <GoogleLogin
+          clientId={clientId}
+          buttonText="Login"
+          onSuccess={onSuccess}
+          onFailure={onFail}
+          cookiePolicy={"single_host_origin"}
+          isSignedIn={true}
+        />
+      </div>
     </Paper>
   );
 };

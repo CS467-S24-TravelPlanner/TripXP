@@ -6,17 +6,18 @@ import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import TripPage from "./pages/TripPage";
 import LoginForm from "./pages/Login";
+const clientId =
+  "370617990760-0a454d3po46q4jkntns96pnov7ngfqev.apps.googleusercontent.com";
 
 const App = () => {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId: REACT_APP_CLIENT_ID,
+        clientId: clientId,
         scope: "",
       });
     }
-
-    gapi.load("client auth2", start);
+    gapi.load("client:auth2", start);
   });
   return (
     <div>
