@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import {
   Box,
+  Button,
   Tooltip,
   IconButton,
   Avatar,
@@ -9,10 +10,12 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const settings = ["Profile", "Dashboard", "Logout"];
 
 export default function LoginAvatarMenu() {
+  const navigate = useNavigate();
   const user = useContext(UserContext);
 
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -59,7 +62,13 @@ export default function LoginAvatarMenu() {
   } else {
     return (
       <Box sx={{ flexGrow: 0 }}>
-        <div id="googleLoginBtn"></div>
+        <Button
+          id="loginRedirBtn"
+          onClick={() => navigate("/login")}
+          sx={{ color: "white", display: "block" }}
+        >
+          Login
+        </Button>
       </Box>
     );
   }
