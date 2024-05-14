@@ -4,18 +4,31 @@ import React, { useState, useEffect, useContext } from "react";
 import { TextField, Button, Grid, Paper } from "@mui/material";
 import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 
 const LoginForm = () => {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const divRef = useRef(null);
 
   useEffect(() => {
     if (user) {
       navigate("/profile");
     }
   }, [user, navigate]);
+
+  // Necessary for re-rendering of button after initial app load.
+  useEffect(() => {
+    window.google.accounts.id.renderButton(
+      document.getElementById("googleLoginBtn"),
+      {
+        theme: "outline",
+        size: "large",
+      }
+    );
+  }, [divRef.current]);
 
   const handleLogin = () => {
     console.log("Logging in with:", { username, password });
