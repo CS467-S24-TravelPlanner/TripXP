@@ -1,24 +1,21 @@
 // LoginForm.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { TextField, Button, Grid, Paper } from "@mui/material";
-import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
+import { UserContext } from "../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
-const REACT_APP_CLIENT_ID ="Add API CLIENT KEY HERE OR IN .ENV file";
 const LoginForm = () => {
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: REACT_APP_CLIENT_ID,
-        scope: "",
-      });
-    }
-
-    gapi.load("client auth2", start);
-  });
+  const user = useContext(UserContext);
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/profile");
+    }
+  }, [user, navigate]);
 
   const handleLogin = () => {
     console.log("Logging in with:", { username, password });
@@ -79,11 +76,7 @@ const LoginForm = () => {
             </Button>
           </Grid>
           <Grid item xs={12}>
-            <GoogleLogin
-              clientId={REACT_APP_CLIENT_ID}
-              onSuccess={responseGoogleTrue}
-              onFailure={responseGooglefalse}
-            />
+            <div id="googleLoginBtn"></div>
           </Grid>
         </Grid>
       </form>
