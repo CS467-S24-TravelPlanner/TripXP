@@ -32,6 +32,10 @@ const App = () => {
       client_id: import.meta.env.VITE_GOOGLE_IDENTITY_CLIENT_ID,
       callback: handleLoginResponse,
     });
+    google.accounts.id.renderButton(document.getElementById("googleLoginBtn"), {
+      theme: "outline",
+      size: "large",
+    });
     google.accounts.id.prompt();
   }, []);
 
