@@ -1,10 +1,16 @@
 import * as React from "react";
 import { AppBar, Box, Toolbar, Container, Button } from "@mui/material";
 import LoginAvatarMenu from "./LoginAvatarMenu";
+import { useNavigate, Link } from "react-router-dom";
 
-const pages = ["Experiences", "Page 1", "Page 2"];
+const pages = [
+  { linkName: "Experiences", url: "/experiences" },
+  { linkName: "New Trip", url: "/trip/add" },
+  { linkName: "My Trips", url: "/trips" },
+];
 
 function ResponsiveAppBar() {
+  const navigate = useNavigate();
   const handleLinkClick = (event) => {
     console.log(event.target.id);
   };
@@ -13,17 +19,19 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <img src={"./logo.png"} width={80} height={56} />
+          <Link to="/">
+            <img src={"./logo.png"} width={80} height={56} />
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page, i) => (
               <Button
                 id={i}
-                key={page}
-                onClick={handleLinkClick}
+                key={page.linkName}
+                onClick={() => navigate(page.url)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.linkName}
               </Button>
             ))}
           </Box>
