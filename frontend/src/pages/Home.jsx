@@ -1,24 +1,26 @@
 // This is just a temporary HomePage as a placeholder
 
+import { Link } from "react-router-dom";
+
 function HomePage() {
   return (
     <div>
       <h1>TripXP HomePage</h1>
       <ul>
         <li>
-          <a href="/profilepage">Profile Page</a>
+          <Link to="/profile">Profile Page</Link>
         </li>
         <li>
-          <a href="/login">Login</a>
+          <Link to="/login">Login</Link>
         </li>
         <li>
-          <a href="/experiencesearch">Experience Search</a>
+          <Link to="/experiences">Experience Search</Link>
         </li>
         <li>
-          <a href="/trip">View Trip</a>
+          <Link to="/trip">View Trip</Link>
         </li>
         <li>
-          <a href="/trip/add">Add Trip</a>
+          <Link to="/trip/add">Add Trip</Link>
         </li>
       </ul>
     </div>

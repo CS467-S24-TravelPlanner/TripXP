@@ -1,6 +1,8 @@
 import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
+
+import { Link } from "react-router-dom";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import {
   Box,
@@ -10,6 +12,7 @@ import {
   FormControl,
   Stack,
 } from "@mui/material";
+import Experience from "../components/ExperiencePage/Experience";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -17,9 +20,16 @@ const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const libraries = ["places", "marker"];
 
 function ExperienceSearch() {
+  // Current experience list
   const [expList, setExpList] = useState({ data: [] });
+
+  const [currentExperience, setCurrentExperience] = useState(null);
+
+  // Search state
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useState("NONE");
+
+  // Map state
   const [map, setMap] = useState(null);
   const [bounds, setBounds] = useState({});
 
@@ -153,7 +163,21 @@ function ExperienceSearch() {
     e.preventDefault();
   };
 
-  return (
+  const handleExperienceClick = (exp) => {
+    setCurrentExperience(exp);
+  };
+
+  const handleExperienceClose = () => {
+    setCurrentExperience(null);
+    renderMap();
+  };
+
+  return currentExperience ? (
+    <Experience
+      experience={currentExperience}
+      closeExperience={handleExperienceClose}
+    />
+  ) : (
     <div>
       <Box
         component="form"
@@ -188,11 +212,14 @@ function ExperienceSearch() {
         justify="center"
       >
         <ExperienceList
+          experienceClick={handleExperienceClick}
           experiences={expList.data.filter(function isInMapBounds(location) {
-            return bounds.contains({
-              lat: location.latitude,
-              lng: location.longitude,
-            });
+            if (bounds) {
+              return bounds.contains({
+                lat: location.latitude,
+                lng: location.longitude,
+              });
+            }
           })}
         />
 

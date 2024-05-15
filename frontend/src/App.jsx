@@ -1,42 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage";
-import HomePage from "./pages/Home";
+import { jwtDecode } from "jwt-decode";
 import "./App.css";
+import HomePage from "./pages/Home";
+import LoginForm from "./pages/Login.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import ExperienceSearch from "./pages/ExperienceSearch";
-import ViewTrip from "./pages/ViewTrip";
-import LoginForm from "./pages/Login";
-import AddTrip from "./pages/AddTrip";
-import EditTrip from "./pages/EditTrip";
+import AddTrip from "./pages/AddTrip.jsx";
+import EditTrip from "./pages/EditTrip.jsx";
+import NavBar from "./components/NavBar.jsx";
+import { UserContext } from "./contexts/UserContext.js";
 
 const App = () => {
+  const [user, setUser] = useState(false);
+
+  function handleLoginResponse(res) {
+    if (res.credential) {
+      try {
+        const decode = jwtDecode(res.credential);
+        setUser(decode);
+      } catch (err) {
+        console.error("JWT Decode failure: ", err);
+      }
+    } else {
+      console.error("Login response error.");
+    }
+  }
+
+  useEffect(() => {
+    /* global google */
+    google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_IDENTITY_CLIENT_ID,
+      callback: handleLoginResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("googleLoginBtn"), {
+      theme: "outline",
+      size: "large",
+    });
+    google.accounts.id.prompt();
+  }, []);
+
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/profilepage" element={<ProfilePage />} />
-          <Route path="/experiencesearch" element={<ExperienceSearch />} />
-          <Route
-            path="/trip"
-            element={
-              <ViewTrip
-                trip={{
-                  id: 1,
-                  name: "First Test Trip",
-                  description: "Super awesome trip.",
-                  user_id: 1,
-                  createdAt: "2024-04-20T11:57:45.000Z",
-                  updatedAt: "2024-04-20T13:09:36.000Z",
-                }}
-              />
-            }
-          />
-          <Route path="/trip/add" element={<AddTrip />} />
-          <Route path="/trip/edit/:tripId" element={<EditTrip />} />
-        </Routes>
-      </Router>
+      <UserContext.Provider value={{ user, setUser }}>
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/experiences" element={<ExperienceSearch />} />
+            {/* TODO Experience Add/Edit page(s) */}
+            {/* TODO Trips List Page */}
+            <Route path="/trip/add" element={<AddTrip />} />
+            <Route path="/trip/edit/:tripId" element={<EditTrip />} />
+          </Routes>
+        </Router>
+      </UserContext.Provider>
     </div>
   );
 };

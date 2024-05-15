@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import "./Experience.css";
 import dummyData from "../dummy/dummyData.js"; // Import dummy data
 import ReviewForm from "../ReviewForm/ReviewForm"; // Import ReviewForm component
+import RatingDisplay from "../RatingDisplay.jsx";
 
-const Experience = () => {
+const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState({
     /* Object to store form visibility for each experience */
   });
@@ -27,21 +28,24 @@ const Experience = () => {
 
   return (
     <div className="experiences">
-      {dummyData.map((experience) => (
-        <div key={experience.id} className="experience">
-          <h2>{experience.title}</h2>
-          <p>{experience.description}</p>
-          <p>{experience.location}</p>
-          <img
-            src={experience.imageUrl}
-            alt={experience.title}
-            className="experience-image"
-          />
+      <button onClick={closeExperience}>Back to Experience Search</button>
 
-          <div className="ratings-section">
-            <p>Rating: {experience.averageRating}</p>
-            {/* Display detailed reviews */}
-            <ul>
+      <div key={experience.id} className="experience">
+        <h2>{experience.title}</h2>
+        <p>{experience.description}</p>
+        <p>{experience.location}</p>
+        <img
+          src={experience.image_url}
+          alt={experience.title}
+          className="experience-image"
+        />
+
+        <h4 className="ratings-section">
+          Rating:
+          <RatingDisplay value={experience.rating} />
+          {/* For now, Review is not implemented, so this is removed for testing. */}
+          {/* Display detailed reviews */}
+          {/* <ul>
               {experience.reviews.map((review) => (
                 <li key={review.id}>
                   <p>
@@ -50,27 +54,26 @@ const Experience = () => {
                   <p>Rating: {review.rating}</p>
                 </li>
               ))}
-            </ul>
-          </div>
+            </ul> */}
+        </h4>
 
-          <button
-            className="write-review-btn"
-            onClick={() => handleWriteReviewClick(experience.id)}
-          >
-            Write a Review
-          </button>
-          <button className="add-to-trip-btn">Add to Trip</button>
+        <button
+          className="write-review-btn"
+          onClick={() => handleWriteReviewClick(experience.id)}
+        >
+          Write a Review
+        </button>
+        <button className="add-to-trip-btn">Add to Trip</button>
 
-          {showReviewForm[experience.id] && ( // Conditionally render ReviewForm for specific experience
-            <ReviewForm
-              onSubmit={(reviewData) =>
-                handleReviewSubmit(reviewData, experience.id)
-              }
-              onCancel={() => handleReviewCancel(experience.id)}
-            />
-          )}
-        </div>
-      ))}
+        {showReviewForm[experience.id] && ( // Conditionally render ReviewForm for specific experience
+          <ReviewForm
+            onSubmit={(reviewData) =>
+              handleReviewSubmit(reviewData, experience.id)
+            }
+            onCancel={() => handleReviewCancel(experience.id)}
+          />
+        )}
+      </div>
     </div>
   );
 };

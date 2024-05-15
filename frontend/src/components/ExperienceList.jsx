@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
+import { Link } from "react-router-dom";
 import ExpInTripCheckbox from "./ExpInTripCheckbox";
 
 /*
@@ -17,12 +18,14 @@ import ExpInTripCheckbox from "./ExpInTripCheckbox";
 */
 
 export default function ExperienceList({
+  experienceClick,
   experiences,
   tripId = null,
   tripExperiences = null,
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [selectedExp, setSelectedExp] = React.useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -31,6 +34,10 @@ export default function ExperienceList({
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleExperienceClick = (experience) => {
+    experienceClick(experience);
   };
 
   let columns = [
@@ -67,9 +74,15 @@ export default function ExperienceList({
           <TableBody>
             {experiences
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((experience, i) => {
+              .map((experience) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={i}>
+                  <TableRow
+                    hover
+                    role="button"
+                    tabIndex={-1}
+                    key={experience.id}
+                    onClick={() => handleExperienceClick(experience)}
+                  >
                     {columns.map((column) => {
                       const value = experience[column.id];
                       if (column.id === "partOfTrip") {
