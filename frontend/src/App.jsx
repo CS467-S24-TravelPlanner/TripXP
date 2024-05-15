@@ -10,6 +10,7 @@ import AddTrip from "./pages/AddTrip.jsx";
 import EditTrip from "./pages/EditTrip.jsx";
 import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
+import TripPage from "./pages/TripPage.jsx";
 
 const App = () => {
   const [user, setUser] = useState(false);
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/experiences" element={<ExperienceSearch />} />
             {/* TODO Experience Add/Edit page(s) */}
             {/* TODO Trips List Page */}
+            <Route path="/trip/:id" component={TripPage} />
             <Route path="/trip/add" element={<AddTrip />} />
             <Route path="/trip/edit/:tripId" element={<EditTrip />} />
           </Routes>
