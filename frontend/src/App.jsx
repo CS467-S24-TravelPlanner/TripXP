@@ -6,6 +6,8 @@ import "./App.css";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import TripPage from "./pages/TripPage";
 import LoginForm from "./pages/Login";
+import { gapi } from "gapi-script";
+import ResponsiveAppBar from "./components/Navbar/Navbar";
 const clientId =
   "370617990760-0a454d3po46q4jkntns96pnov7ngfqev.apps.googleusercontent.com";
 
@@ -20,7 +22,8 @@ const App = () => {
     gapi.load("client:auth2", start);
   });
   return (
-    <div>
+    <div className="home-body">
+      <ResponsiveAppBar />
       <Router>
         <Routes>
           <Route path="/ProfilePage" element={<ProfilePage />} />

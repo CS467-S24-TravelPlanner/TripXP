@@ -1,0 +1,19 @@
+.full-nav {
+  padding: 5px;
+  padding-top: 10px;
+  position: relative;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  height: 110px !important;
+  z-index: 0 !important;
+}
+
+.logo-img {
+  height: 80px;
+  width: 80px;
+}
+
+.collaplse-menu-list {
+  text-decoration: none;
+  color: black;
+}

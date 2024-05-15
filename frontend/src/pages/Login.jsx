@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Paper } from "@mui/material";
 import { GoogleLogin } from "react-google-login";
 
-const clientId =
-  "370617990760-0a454d3po46q4jkntns96pnov7ngfqev.apps.googleusercontent.com";
-
+const clientId = import.meta.env.REACT_APP_CLIENT_ID;
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +27,7 @@ const LoginForm = () => {
     <Paper
       sx={{ maxWidth: 400, margin: "auto", marginTop: 4, padding: 2 }}
       elevation={3}
+      className="after-nav-display"
     >
       <form noValidate autoComplete="off">
         <Grid container spacing={3} justifyContent="center">

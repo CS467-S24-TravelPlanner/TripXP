@@ -157,7 +157,7 @@ function ExperienceSearch() {
   };
 
   return (
-    <div>
+    <div className="after-nav-display">
       <Box
         component="form"
         alignItems="stretch"

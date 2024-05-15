@@ -42,7 +42,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div>
+    <div className="after-nav-display">
       <div
         style={{
           display: "flex",

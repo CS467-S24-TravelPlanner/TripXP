@@ -31,7 +31,7 @@ function TripPage({ trip }) {
   }, []);
 
   return (
-    <div>
+    <div className="after-nav-display">
       <Link to="/">
         <button>Back</button>
       </Link>
