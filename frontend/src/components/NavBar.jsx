@@ -4,7 +4,8 @@ import LoginAvatarMenu from "./LoginAvatarMenu";
 import { useNavigate, Link } from "react-router-dom";
 
 const pages = [
-  { linkName: "Experiences", url: "/experiences" },
+  { linkName: "Find Experiences", url: "/experiences" },
+  { linkName: "New Experience", url: "/experience/add" },
   { linkName: "New Trip", url: "/trip/add" },
   { linkName: "My Trips", url: "/profile" },
 ];
