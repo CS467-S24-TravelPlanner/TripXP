@@ -16,6 +16,8 @@ function createReview(experienceId, userId, reviewText, rating) {
     rating: rating,
   };
 
+  console.log(newReview);
+
   return postData("/review", {}, newReview);
 }
 

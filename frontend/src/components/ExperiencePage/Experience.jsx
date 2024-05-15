@@ -3,6 +3,7 @@ import "./Experience.css";
 import dummyData from "../dummy/dummyData.js"; // Import dummy data
 import ReviewForm from "../ReviewForm/ReviewForm"; // Import ReviewForm component
 import RatingDisplay from "../RatingDisplay.jsx";
+import { createReview } from "../../utilities/ReviewHandler.jsx";
 
 const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState({
@@ -18,7 +19,17 @@ const Experience = ({ experience, closeExperience }) => {
 
   const handleReviewSubmit = (reviewData, experienceId) => {
     // Handle submitted review data (e.g., update experience data)
-    console.log("Submitted review:", reviewData);
+    
+    if (reviewData && Object.keys(reviewData).length) {
+      
+      const userId = 0; // TODO: Get actual User ID from login info
+
+      const reviewText = reviewData.review_text;
+      const rating = reviewData.rating;
+
+      createReview(experienceId, userId, reviewText, rating);
+    }
+
     setShowReviewForm({ ...showReviewForm, [experienceId]: false }); // Close form after submit
   };
 
