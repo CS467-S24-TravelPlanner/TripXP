@@ -18,10 +18,10 @@ import ExpInTripCheckbox from "./ExpInTripCheckbox";
 */
 
 export default function ExperienceList({
-  experienceClick,
   experiences,
   tripId = null,
   tripExperiences = null,
+  experienceClick = () => console.log('experience clicked'),
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
