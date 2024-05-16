@@ -3,6 +3,8 @@ import userPicture from "../assets/user-solid.svg";
 import { getTrips } from "../utilities/TripHandler";
 import { getUsers } from "../utilities/UserHandler";
 import { Link } from "react-router-dom";
+
+
 const ProfilePage = () => {
   const [trips, setTrips] = useState([]);
   const [user, setUser] = useState([]);
@@ -43,19 +45,6 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottom: "10px solid #ffffff",
-        }}
-      >
-        <Link to="/">
-          <button>Back</button>
-        </Link>
-        <button>Add Trip</button>
-      </div>
 
       <div style={{ textAlign: "center", marginTop: "10px" }}>
         <img
@@ -82,17 +71,31 @@ const ProfilePage = () => {
           }}
         >
           {trips.map((trip) => (
-            <div
-              key={trip.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "5px",
-                padding: "10px",
-              }}
-            >
-              <h3>{trip.name}</h3>
-              <p>{trip.description}</p>
-            </div>
+             <Link
+             key={trip.id}
+             to={`/trip/${trip.id}`}
+             style={{ textDecoration: "none", color: "inherit" }}
+           >
+             <div
+               style={{
+                 border: "1px solid #ddd",
+                 borderRadius: "5px",
+                 padding: "10px",
+                 cursor: "pointer",
+               }}
+               onMouseOver={(e) => {
+                 e.currentTarget.style.borderColor = "#3498db";
+                 e.currentTarget.style.borderWidth = "3px";
+               }}
+               onMouseOut={(e) => {
+                 e.currentTarget.style.borderColor = "#ddd";
+                 e.currentTarget.style.borderWidth = "1px";
+               }}
+             >
+               <h3 style={{ margin: 0, textDecoration: "none", color: "black" }}>{trip.name}</h3>
+               <p style={{ margin: 0, textDecoration: "none", color: "black" }}>{trip.description}</p>
+             </div>
+           </Link>
           ))}
         </div>
       </div>
