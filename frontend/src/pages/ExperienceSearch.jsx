@@ -15,10 +15,14 @@ import {
   Select,
   ToggleButton,
   ToggleButtonGroup,
+  Slider,
 } from "@mui/material";
 import Experience from "../components/ExperiencePage/Experience";
 import { getKeywords } from "../utilities/Keywords";
-import { getCoordinates } from "../utilities/LocationService";
+import {
+  getCoordinates,
+  haversineDistance,
+} from "../utilities/LocationService";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -36,6 +40,7 @@ function ExperienceSearch() {
   // Search state
   const [searchBy, setSearchBy] = useState("Location");
   const [searchLocation, setSearchLocation] = useState(null);
+  const [searchDistance, setSearchDistance] = useState(0);
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useState("");
 
@@ -52,7 +57,7 @@ function ExperienceSearch() {
 
   // Map state
   const [map, setMap] = useState(null);
-  const [bounds, setBounds] = useState({});
+  const [bounds, setBounds] = useState(null);
 
   // Hardcoded size of the Map window
   const mapContainerStyle = {
@@ -118,17 +123,19 @@ function ExperienceSearch() {
           >
             <div>
               {expList.data.map((e, i) => {
-                if (
-                  mapRef.current
-                    .getBounds()
-                    .contains({ lat: e.latitude, lng: e.longitude })
-                )
-                  return (
-                    <MarkerF
-                      position={{ lat: e.latitude, lng: e.longitude }}
-                      key={i}
-                    />
-                  );
+                if (mapRef) {
+                  if (
+                    mapRef.current
+                      .getBounds()
+                      .contains({ lat: e.latitude, lng: e.longitude })
+                  )
+                    return (
+                      <MarkerF
+                        position={{ lat: e.latitude, lng: e.longitude }}
+                        key={i}
+                      />
+                    );
+                }
               })}
             </div>
           </GoogleMap>
@@ -137,11 +144,12 @@ function ExperienceSearch() {
     }
   };
 
-  // This Hook handles the keyword search functionality
+  // This Hook handles the search functionality
   useEffect(() => {
     // Get all experiences from the DB
     getExperiences().then((results) => {
       if (searchParams) {
+        
         // Create empty list of experiences
         let updatedExpList = { data: [] };
         // Iterate through experiences
@@ -159,10 +167,18 @@ function ExperienceSearch() {
                 break; // Experience added to list, no need to keep checking keywords
               }
             }
-          } else {  // Search by Location
-            locationSearch(searchParams);
+          } else {
+            // Experience location as Coords object
+            let expCoords = { lat: exp.latitude, lng: exp.longitude };
+
+            console.log(haversineDistance(expCoords, searchLocation))
+            // Calculate distance between points and add Experience if within range
+            if (haversineDistance(expCoords, searchLocation) <= searchDistance) {
+              updatedExpList.data.push(exp);
+            }
           }
         }
+
         // Return list of experiences with matching keywords
         setExpList(updatedExpList);
       } else {
@@ -179,7 +195,15 @@ function ExperienceSearch() {
 
   // Updates search parameters when submitted - triggers useEffect hook
   const handleSubmit = (e) => {
+
     setSearchParams(searchInput);
+    
+    // Set searchlocation coordinates, if needed
+    if (searchBy === "Location") {
+      locationSearch(searchParams)
+    }
+    
+    setSearchInput("");
     e.preventDefault();
   };
 
@@ -189,26 +213,40 @@ function ExperienceSearch() {
     e.preventDefault();
   };
 
+  // Opens Experience View when user clicks on Exp in list
   const handleExperienceClick = (exp) => {
     setCurrentExperience(exp);
   };
 
+  // Closes Experience View 
   const handleExperienceClose = () => {
     setCurrentExperience(null);
     renderMap();
   };
 
+  // Handles Toggle between Keyword and Location Search
   const handleSearchToggle = (e, val) => {
-    setSearchBy(val);
-    setSearchInput("");
+    if (val) {
+      setSearchBy(val);
+      setSearchInput("");
+      setSearchLocation(null);
+    }
   };
 
+  // Change Value from Distance Slider
+  const handleDistanceChange = (e, val) => {
+    if (val) {
+      setSearchDistance(val);
+    }
+  };
+
+  // Gets location information for user input on location search
   const locationSearch = (location) => {
-    getCoordinates(location)
-    .then((response) => {
+    getCoordinates(location).then((response) => {
+      console.log(response);
       setSearchLocation(response.results[0].geometry.location);
     });
-  }
+  };
 
   return currentExperience ? (
     <Experience
@@ -227,9 +265,10 @@ function ExperienceSearch() {
       >
         <Stack
           direction="row"
-          sx={{ marginLeft: 15, width: "80%", alignItems: "center" }}
+          sx={{ m: 2, width: "100%", alignItems: "center" }}
         >
           <ToggleButtonGroup
+            sx={{ m: 1 }}
             size="small"
             value={searchBy}
             exclusive
@@ -240,16 +279,33 @@ function ExperienceSearch() {
           </ToggleButtonGroup>
 
           {searchBy === "Location" ? (
-            <FormControl sx={{ m: 1, width: "100%" }}>
-              <FilledInput
-                id="search"
-                label="Search for Experiences by Location"
-                type="search"
-                onChange={handleChange}
-                value={searchBy === "Location" ? searchInput : ""}
-                placeholder="Search for Experiences by Location"
-              />
-            </FormControl>
+            <Box display="flex" width="100%">
+              <FormControl sx={{ m: 1, width: "20%" }}>
+                <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
+                  Within {searchDistance} Miles
+                </InputLabel>
+                <Slider
+                  defaultValue={25}
+                  valueLabelDisplay="auto"
+                  shiftStep={50}
+                  step={25}
+                  marks
+                  min={25}
+                  max={250}
+                  onChange={handleDistanceChange}
+                />
+              </FormControl>
+              <FormControl sx={{ m: 1, width: "100%" }}>
+                <FilledInput
+                  id="search"
+                  label="Search for Experiences by Location"
+                  type="search"
+                  onChange={handleChange}
+                  value={searchBy === "Location" ? searchInput : ""}
+                  placeholder="Search for Experiences by Location"
+                />
+              </FormControl>
+            </Box>
           ) : (
             <FormControl sx={{ m: 1, width: "100%" }}>
               <InputLabel id="keywords-label">Keywords</InputLabel>
@@ -271,11 +327,11 @@ function ExperienceSearch() {
             </FormControl>
           )}
 
-          <FormControl sx={{ width: "60%", height: "100%" }}>
+          <FormControl>
             <Button
               type="submit"
               variant="outlined"
-              sx={{ m: 1, width: "50%", height: "100%" }}
+              sx={{ m: 1, width: "100%", height: "100%" }}
             >
               Search by {searchBy}
             </Button>
