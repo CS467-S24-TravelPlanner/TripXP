@@ -1,8 +1,6 @@
 import { React, useEffect, useState, useRef } from "react";
 import { getExperiences } from "../utilities/ExperienceHandler";
 import ExperienceList from "../components/ExperienceList";
-
-import { Link } from "react-router-dom";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import {
   Box,
@@ -11,13 +9,21 @@ import {
   Button,
   FormControl,
   Stack,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  Select,
 } from "@mui/material";
 import Experience from "../components/ExperiencePage/Experience";
+import { getKeywords } from "../utilities/Keywords";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
 // This has to be outside of the component to avoid an infinite rerender loop
 const libraries = ["places", "marker"];
+
+const keywordsList = getKeywords();
 
 function ExperienceSearch() {
   // Current experience list
@@ -28,6 +34,17 @@ function ExperienceSearch() {
   // Search state
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useState("NONE");
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   // Map state
   const [map, setMap] = useState(null);
@@ -181,29 +198,39 @@ function ExperienceSearch() {
     <div>
       <Box
         component="form"
-        alignItems="stretch"
+        alignItems="center"
         display="flex"
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <FormControl fullWidth={true} variant="filled" display="inline">
-          <Stack direction="row">
-            <FilledInput
-              id="search"
-              label="Search for Experiences by Keyword"
-              fullWidth={true}
-              type="search"
-              onChange={handleChange}
-              value={searchInput}
-              placeholder="Search for Experiences by Keyword"
-            />
+        <Stack direction="row" sx={{ marginLeft: 15, width: "70%", alignItems: "center"}}>
 
-            <Button type="submit" variant="outlined">
+            <FormControl sx={{ m: 1, width: "100%" }}>
+          <InputLabel id="keywords-label">Keywords</InputLabel>
+          <Select
+          sx={{ m: 1, width: "100%" }}
+            labelId="keywords-label"
+            id="keywordsSelect"
+            value={searchInput}
+            onChange={handleChange}
+            input={<OutlinedInput label="Keywords" id="keywordsInput"/>}
+            MenuProps={MenuProps}
+          >
+            {keywordsList.map((keyword) => (
+              <MenuItem key={keyword} value={keyword}>
+                <ListItemText primary={keyword} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{width: "20%", height: "100%" }}>
+        <Button type="submit" variant="outlined" sx={{ m: 1, width: "20%", height: "100%" }}>
               Search
             </Button>
+            </FormControl>
           </Stack>
-        </FormControl>
+
       </Box>
       <Grid
         container={true}
