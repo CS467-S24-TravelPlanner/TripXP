@@ -5,12 +5,33 @@ import {
   FormControl,
   TextField,
   Stack,
+  OutlinedInput,
+  InputLabel,
+  MenuItem,
+  ListItemText,
+  Select,
+  Checkbox,
 } from "@mui/material";
+import { getKeywords } from "../utilities/Keywords";
+
+const keywordsList = getKeywords();
 
 function ExperienceForm({ handleSubmit }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
+  const [keywords, setKeywords] = useState([]);
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -22,6 +43,13 @@ function ExperienceForm({ handleSubmit }) {
 
   const handleLocationChange = (e) => {
     setLocation(e.target.value);
+  };
+
+  const handleKeywordsChange = (e) => {
+    setKeywords(
+      typeof e.target.value === "string" ? value.split(",") : e.target.value
+    );
+    console.log(e.target.value)
   };
 
   return (
@@ -39,7 +67,7 @@ function ExperienceForm({ handleSubmit }) {
       <Stack spacing={3}>
         <FormControl fullWidth={true} variant="filled" display="inline">
           <TextField
-            id="title-input"
+            id="titleInput"
             label="Title"
             type="text"
             onChange={handleTitleChange}
@@ -49,7 +77,7 @@ function ExperienceForm({ handleSubmit }) {
 
         <FormControl fullWidth={true} variant="filled" display="inline">
           <TextField
-            id="description-input"
+            id="descriptionInput"
             label="Description"
             type="text"
             multiline={true}
@@ -61,12 +89,33 @@ function ExperienceForm({ handleSubmit }) {
 
         <FormControl fullWidth={true} variant="filled" display="inline">
           <TextField
-            id="location-input"
+            id="locationInput"
             label="Location"
             type="text"
             onChange={handleLocationChange}
             value={location}
           />
+        </FormControl>
+
+        <FormControl sx={{ m: 1 }}>
+          <InputLabel id="keywords-label">Keywords</InputLabel>
+          <Select
+            labelId="keywords-label"
+            id="keywordsSelect"
+            multiple
+            value={keywords}
+            onChange={handleKeywordsChange}
+            input={<OutlinedInput label="Keywords" id="keywordsInput"/>}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+          >
+            {keywordsList.map((keyword) => (
+              <MenuItem key={keyword} value={keyword}>
+                <Checkbox checked={keywords.indexOf(keyword) > -1} />
+                <ListItemText primary={keyword} />
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
 
         <Button type="submit" variant="outlined">
