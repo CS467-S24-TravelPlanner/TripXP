@@ -49,7 +49,6 @@ function ExperienceForm({ handleSubmit }) {
     setKeywords(
       typeof e.target.value === "string" ? value.split(",") : e.target.value
     );
-    console.log(e.target.value)
   };
 
   return (
