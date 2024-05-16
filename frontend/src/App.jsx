@@ -10,6 +10,7 @@ import AddTrip from "./pages/AddTrip.jsx";
 import EditTrip from "./pages/EditTrip.jsx";
 import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
+import TripPage from "./pages/TripPage.jsx";
 import AddExperience from "./pages/AddExperience.jsx";
 
 const App = () => {
@@ -53,6 +54,7 @@ const App = () => {
             <Route path="/experiences" element={<ExperienceSearch />} />
             <Route path="/experience/add" element={<AddExperience />} />
             {/* TODO Trips List Page */}
+            <Route path="/trip/:id" component={TripPage} />
             <Route path="/trip/add" element={<AddTrip />} />
             <Route path="/trip/edit/:tripId" element={<EditTrip />} />
           </Routes>

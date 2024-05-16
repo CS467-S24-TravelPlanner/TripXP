@@ -4,6 +4,7 @@ import { getTripExperiences } from "../utilities/TripHandler";
 import { getUsers } from "../utilities/UserHandler";
 import ExperienceList from "../components/ExperienceList";
 
+
 import { Link } from "react-router-dom";
 function TripPage({ trip }) {
   const [experiences, setExperiences] = useState(null);
