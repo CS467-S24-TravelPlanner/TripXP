@@ -9,14 +9,16 @@ import {
   Button,
   FormControl,
   Stack,
-  OutlinedInput,
   InputLabel,
   MenuItem,
   ListItemText,
   Select,
+  ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import Experience from "../components/ExperiencePage/Experience";
 import { getKeywords } from "../utilities/Keywords";
+import { getCoordinates } from "../utilities/LocationService";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -32,8 +34,10 @@ function ExperienceSearch() {
   const [currentExperience, setCurrentExperience] = useState(null);
 
   // Search state
+  const [searchBy, setSearchBy] = useState("Location");
+  const [searchLocation, setSearchLocation] = useState(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchParams, setSearchParams] = useState("NONE");
+  const [searchParams, setSearchParams] = useState("");
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -143,15 +147,20 @@ function ExperienceSearch() {
         // Iterate through experiences
         for (let i = 0; i < results.data.length; i++) {
           let exp = results.data[i];
-          // Split experience keywords into an array - easier to work with.
-          let expKeywords = exp.keywords.toString().split(",");
-          // Iterate through experience keywords
-          for (let j = 0; j < expKeywords.length; j++) {
-            // If matching keyword is found, add that experience to the list
-            if (expKeywords[j] == searchParams) {
-              updatedExpList.data.push(exp);
-              break; // Experience added to list, no need to keep checking keywords
+
+          if (searchBy === "Keyword") {
+            // Split experience keywords into an array - easier to work with.
+            let expKeywords = exp.keywords.toString().split(",");
+            // Iterate through experience keywords
+            for (let j = 0; j < expKeywords.length; j++) {
+              // If matching keyword is found, add that experience to the list
+              if (expKeywords[j] == searchParams) {
+                updatedExpList.data.push(exp);
+                break; // Experience added to list, no need to keep checking keywords
+              }
             }
+          } else {  // Search by Location
+            locationSearch(searchParams);
           }
         }
         // Return list of experiences with matching keywords
@@ -189,6 +198,18 @@ function ExperienceSearch() {
     renderMap();
   };
 
+  const handleSearchToggle = (e, val) => {
+    setSearchBy(val);
+    setSearchInput("");
+  };
+
+  const locationSearch = (location) => {
+    getCoordinates(location)
+    .then((response) => {
+      setSearchLocation(response.results[0].geometry.location);
+    });
+  }
+
   return currentExperience ? (
     <Experience
       experience={currentExperience}
@@ -204,33 +225,62 @@ function ExperienceSearch() {
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <Stack direction="row" sx={{ marginLeft: 15, width: "70%", alignItems: "center"}}>
-
-            <FormControl sx={{ m: 1, width: "100%" }}>
-          <InputLabel id="keywords-label">Keywords</InputLabel>
-          <Select
-          sx={{ m: 1, width: "100%" }}
-            labelId="keywords-label"
-            id="keywordsSelect"
-            value={searchInput}
-            onChange={handleChange}
-            input={<OutlinedInput label="Keywords" id="keywordsInput"/>}
-            MenuProps={MenuProps}
+        <Stack
+          direction="row"
+          sx={{ marginLeft: 15, width: "80%", alignItems: "center" }}
+        >
+          <ToggleButtonGroup
+            size="small"
+            value={searchBy}
+            exclusive
+            onChange={handleSearchToggle}
           >
-            {keywordsList.map((keyword) => (
-              <MenuItem key={keyword} value={keyword}>
-                <ListItemText primary={keyword} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{width: "20%", height: "100%" }}>
-        <Button type="submit" variant="outlined" sx={{ m: 1, width: "20%", height: "100%" }}>
-              Search
-            </Button>
-            </FormControl>
-          </Stack>
+            <ToggleButton value="Location">Location</ToggleButton>
+            <ToggleButton value="Keyword">Keyword</ToggleButton>
+          </ToggleButtonGroup>
 
+          {searchBy === "Location" ? (
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <FilledInput
+                id="search"
+                label="Search for Experiences by Location"
+                type="search"
+                onChange={handleChange}
+                value={searchBy === "Location" ? searchInput : ""}
+                placeholder="Search for Experiences by Location"
+              />
+            </FormControl>
+          ) : (
+            <FormControl sx={{ m: 1, width: "100%" }}>
+              <InputLabel id="keywords-label">Keywords</InputLabel>
+              <Select
+                sx={{ m: 1, width: "100%" }}
+                labelId="keywords-label"
+                id="keywordsSelect"
+                value={searchBy === "Keyword" ? searchInput : ""}
+                onChange={handleChange}
+                input={<FilledInput label="Keywords" id="keywordsInput" />}
+                MenuProps={MenuProps}
+              >
+                {keywordsList.map((keyword) => (
+                  <MenuItem key={keyword} value={keyword}>
+                    <ListItemText primary={keyword} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
+          <FormControl sx={{ width: "60%", height: "100%" }}>
+            <Button
+              type="submit"
+              variant="outlined"
+              sx={{ m: 1, width: "50%", height: "100%" }}
+            >
+              Search by {searchBy}
+            </Button>
+          </FormControl>
+        </Stack>
       </Box>
       <Grid
         container={true}
