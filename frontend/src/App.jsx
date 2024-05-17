@@ -19,7 +19,10 @@ const App = () => {
     if (res.credential) {
       try {
         const decode = jwtDecode(res.credential);
+        // Add raw jwt to decode/user object for ease of access (e.g. API calls)
+        decode.raw_jwt = res.credential;
         setUser(decode);
+        console.log(user);
       } catch (err) {
         console.error("JWT Decode failure: ", err);
       }
