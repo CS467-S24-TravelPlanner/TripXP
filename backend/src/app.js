@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 
-import helloRoute from "./routes/helloRouter.js";
-
 // Routes for Experiences
 import ExperienceRoutes from "./experiences/routes.js";
 
@@ -167,7 +165,6 @@ sequelize
     app.use("/experience", ExperienceRoutes);
     app.use("/user", UserRoutes);
     app.use("/trip", TripRoutes);
-    app.use("/hello", helloRoute);
     app.use("/review", ReviewRoutes);
 
     // healthcheck endpoint
