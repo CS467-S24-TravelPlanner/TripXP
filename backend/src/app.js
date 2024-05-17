@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import { expressjwt as jwt } from "express-jwt";
+import jwksRsa from "jwks-rsa";
 
 // Routes for Experiences
 import ExperienceRoutes from "./experiences/routes.js";
@@ -34,6 +36,40 @@ app.use(express.json());
 
 // enable cors
 app.use(cors());
+
+// utilize express-jwt middleware to valide JWTs
+app.use(
+  jwt({
+    secret: jwksRsa.expressJwtSecret({
+      cache: true,
+      jwksUri: "https://www.googleapis.com/oauth2/v3/certs",
+    }),
+    audience: process.env.GOOGLE_IDENTITY_CLIENT_ID,
+    issuer: "https://accounts.google.com",
+    algorithms: ["RS256"],
+  }).unless({
+    path: ["/", "/experience", "/review"],
+  }),
+  (req, res) => {
+    if (!req.auth)
+      return res.sendStatus(401).send({
+        success: false,
+        message: "Unauthorized.",
+      });
+    next();
+  }
+);
+
+// error handling for express-jwt
+app.use((err, req, res, next) => {
+  if (err.name === "UnauthorizedError") {
+    return res.status(403).send({
+      success: false,
+      message: err.message,
+    });
+  }
+  next();
+});
 
 // Connect to Production DB
 const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING);
