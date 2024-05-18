@@ -21,8 +21,8 @@ export function findAllUsers(query) {
 }
 
 // Find a specific User by ID - May not be needed
-export function findUser(userId) {
-  return User.findByPk(userId);
+export function findUser(authSub) {
+  return User.findOne({ where: { jwt_unique: authSub } });
 }
 
 // -----*** UPDATE ***------

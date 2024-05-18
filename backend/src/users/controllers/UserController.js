@@ -58,11 +58,9 @@ export function getAllUsers(req, res) {
     });
 }
 
-// Find user by ID - This may not be needed
+// Find current user based purely on JWT sub (unique)
 export function getUser(req, res) {
-  const { body: payload } = req;
-
-  findUser(payload.id)
+  findUser(req.auth.sub)
     .then((user) => {
       return res.status(200).json({
         status: true,
