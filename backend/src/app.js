@@ -49,15 +49,7 @@ app.use(
     algorithms: ["RS256"],
   }).unless({
     path: ["/", "/experience", "/review"],
-  }),
-  (req, res) => {
-    if (!req.auth)
-      return res.sendStatus(401).send({
-        success: false,
-        message: "Unauthorized.",
-      });
-    next();
-  }
+  })
 );
 
 // error handling for express-jwt
