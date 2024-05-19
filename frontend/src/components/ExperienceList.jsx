@@ -21,7 +21,7 @@ export default function ExperienceList({
   experiences,
   tripId = null,
   tripExperiences = null,
-  experienceClick = () => console.log('experience clicked'),
+  experienceClick = null,
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -37,7 +37,9 @@ export default function ExperienceList({
   };
 
   const handleExperienceClick = (experience) => {
-    experienceClick(experience);
+    if (experienceClick) {
+      experienceClick(experience);
+    }
   };
 
   let columns = [
