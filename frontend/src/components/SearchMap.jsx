@@ -16,6 +16,7 @@ import {
   Slider,
 } from "@mui/material";
 import { getCoordinates } from "../utilities/LocationService";
+import KeywordsList from "./KeywordsList";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -46,6 +47,8 @@ function SearchMap({ expList, expClick }) {
 
   // The list of Experiences meeting search parameters
   const [filteredExpList, setFilteredExpList] = useState(expList.data);
+
+  const [keywords, setKeywords] = useState([]);
 
   // Map loading utility function - returns isLoaded bool and Error, if applicable
   const { isLoaded, loadError } = useLoadScript({
@@ -98,6 +101,11 @@ function SearchMap({ expList, expClick }) {
     return searchBounds.contains(location);
   };
 
+  const experienceHasKeywords = (exp) => {
+    const includesAll = (arr, values) => values.every((v) => arr.includes(v));
+    return includesAll(exp.keywords, keywords);
+  };
+
   // Update search area radius
   const handleDistanceChange = (e, val) => {
     if (val) {
@@ -116,9 +124,12 @@ function SearchMap({ expList, expClick }) {
   useEffect(() => {
     if (searchBounds) {
       let newExpList = expList.data.filter(experienceIsInBounds);
+      if (keywords) {
+        newExpList = newExpList.filter(experienceHasKeywords);
+      }
       setFilteredExpList(newExpList);
     }
-  }, [searchBounds]);
+  }, [searchBounds, keywords]);
 
   if (loadError) {
     return <div>Error loading maps</div>;
@@ -128,19 +139,24 @@ function SearchMap({ expList, expClick }) {
     return (
       <Stack margin={3}>
         <h1>Search for Experiences</h1>
-        <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
-          Within {searchRadius / 1000} Km
-        </InputLabel>
-        <Slider
-          defaultValue={0}
-          valueLabelDisplay="auto"
-          shiftStep={100}
-          step={25}
-          marks
-          min={0}
-          max={500}
-          onChange={handleDistanceChange}
-        />
+        <Stack direction="row" width="100%">
+          <Box minWidth="30%" maxWidth="30%">
+            <KeywordsList keywords={keywords} setKeywords={setKeywords} />
+          </Box>
+          <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
+            Within {searchRadius / 1000} Km
+          </InputLabel>
+          <Slider
+            defaultValue={0}
+            valueLabelDisplay="auto"
+            shiftStep={100}
+            step={25}
+            marks
+            min={0}
+            max={500}
+            onChange={handleDistanceChange}
+          />
+        </Stack>
         <StandaloneSearchBox onPlacesChanged={onPlacesChanged}>
           <FilledInput
             id="searchBox"
@@ -223,23 +239,22 @@ function SearchMap({ expList, expClick }) {
                         scale: 4,
                       }}
                     />
-                        <Circle
-
-      center={center}
-      options = {{
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.15,
-        clickable: false,
-        draggable: false,
-        editable: false,
-        visible: true,
-        radius: searchRadius,
-        zIndex: 1
-      }}
-    />
+                    <Circle
+                      center={center}
+                      options={{
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: "#FF0000",
+                        fillOpacity: 0.15,
+                        clickable: false,
+                        draggable: false,
+                        editable: false,
+                        visible: true,
+                        radius: searchRadius,
+                        zIndex: 1,
+                      }}
+                    />
                   </div>
                 ) : (
                   ""
