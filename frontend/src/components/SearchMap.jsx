@@ -120,7 +120,7 @@ function SearchMap({ expList, expClick }) {
     }
   }, [searchRadius]);
 
-  // Remove and/or remove any Experience Markers after search area changes
+  // Remove and/or remove any Experience Markers after search area or keywords change
   useEffect(() => {
     if (searchBounds) {
       let newExpList = expList.data.filter(experienceIsInBounds);
@@ -137,12 +137,16 @@ function SearchMap({ expList, expClick }) {
     return <div>Loading maps</div>;
   } else {
     return (
-      <Stack margin={3}>
+      <Stack margin={3} >
         <h1>Search for Experiences</h1>
-        <Stack direction="row" width="100%">
-          <Box minWidth="30%" maxWidth="30%">
+        <Stack direction="row" width="100%" alignItems="center" alignContent="center">
+          <Box minWidth="33%" maxWidth="33%">
             <KeywordsList keywords={keywords} setKeywords={setKeywords} />
           </Box>
+          <Box minWidth="34%" maxWidth="34%">
+            
+          </Box>
+          <Box minWidth="33%" maxWidth="33%">
           <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
             Within {searchRadius / 1000} Km
           </InputLabel>
@@ -156,6 +160,7 @@ function SearchMap({ expList, expClick }) {
             max={500}
             onChange={handleDistanceChange}
           />
+          </Box>
         </Stack>
         <StandaloneSearchBox onPlacesChanged={onPlacesChanged}>
           <FilledInput
