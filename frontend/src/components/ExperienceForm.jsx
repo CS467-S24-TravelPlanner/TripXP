@@ -12,9 +12,8 @@ import {
   Select,
   Checkbox,
 } from "@mui/material";
-import { getKeywords } from "../utilities/Keywords";
+import KeywordsList from "./KeywordsList";
 
-const keywordsList = getKeywords();
 
 function ExperienceForm({ handleSubmit }) {
   const [title, setTitle] = useState("");
@@ -22,16 +21,7 @@ function ExperienceForm({ handleSubmit }) {
   const [location, setLocation] = useState("");
   const [keywords, setKeywords] = useState([]);
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -97,24 +87,7 @@ function ExperienceForm({ handleSubmit }) {
         </FormControl>
 
         <FormControl sx={{ m: 1 }}>
-          <InputLabel id="keywords-label">Keywords</InputLabel>
-          <Select
-            labelId="keywords-label"
-            id="keywordsSelect"
-            multiple
-            value={keywords}
-            onChange={handleKeywordsChange}
-            input={<OutlinedInput label="Keywords" id="keywordsInput"/>}
-            renderValue={(selected) => selected.join(", ")}
-            MenuProps={MenuProps}
-          >
-            {keywordsList.map((keyword) => (
-              <MenuItem key={keyword} value={keyword}>
-                <Checkbox checked={keywords.indexOf(keyword) > -1} />
-                <ListItemText primary={keyword} />
-              </MenuItem>
-            ))}
-          </Select>
+          <KeywordsList keywords={keywords} setKeywords={setKeywords} />
         </FormControl>
 
         <Button type="submit" variant="outlined">
