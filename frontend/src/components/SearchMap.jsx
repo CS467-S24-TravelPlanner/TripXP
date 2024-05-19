@@ -50,6 +50,8 @@ function SearchMap({ expList, expClick }) {
 
   const [keywords, setKeywords] = useState([]);
 
+  const [selectedExp, setSelectedExp] = useState(null);
+
   // Map loading utility function - returns isLoaded bool and Error, if applicable
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
@@ -137,29 +139,32 @@ function SearchMap({ expList, expClick }) {
     return <div>Loading maps</div>;
   } else {
     return (
-      <Stack margin={3} >
+      <Stack margin={3}>
         <h1>Search for Experiences</h1>
-        <Stack direction="row" width="100%" alignItems="center" alignContent="center">
+        <Stack
+          direction="row"
+          width="100%"
+          alignItems="center"
+          alignContent="center"
+        >
           <Box minWidth="33%" maxWidth="33%">
             <KeywordsList keywords={keywords} setKeywords={setKeywords} />
           </Box>
-          <Box minWidth="34%" maxWidth="34%">
-            
-          </Box>
+          <Box minWidth="34%" maxWidth="34%"></Box>
           <Box minWidth="33%" maxWidth="33%">
-          <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
-            Within {searchRadius / 1000} Km
-          </InputLabel>
-          <Slider
-            defaultValue={0}
-            valueLabelDisplay="auto"
-            shiftStep={100}
-            step={25}
-            marks
-            min={0}
-            max={500}
-            onChange={handleDistanceChange}
-          />
+            <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
+              Within {searchRadius / 1000} Km
+            </InputLabel>
+            <Slider
+              defaultValue={0}
+              valueLabelDisplay="auto"
+              shiftStep={100}
+              step={25}
+              marks
+              min={0}
+              max={500}
+              onChange={handleDistanceChange}
+            />
           </Box>
         </Stack>
         <StandaloneSearchBox onPlacesChanged={onPlacesChanged}>
@@ -229,6 +234,15 @@ function SearchMap({ expList, expClick }) {
                           scale: 5,
                         }}
                         key={i}
+                        clickable={true}
+                        onClick={() => {
+                          if (!selectedExp) {
+                            setSelectedExp(e);
+                          } else {
+                            setSelectedExp(null);
+                          }
+                        }}
+                        label={e == selectedExp ? e.title : ""}
                       />
                     );
                   }
