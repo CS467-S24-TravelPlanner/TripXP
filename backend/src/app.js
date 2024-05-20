@@ -48,7 +48,7 @@ app.use(
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
   }).unless({
-    path: ["/", "/experience", "/review"],
+    path: ["/", "/experience", "/review", "/imageUpload"],
   })
 );
 
