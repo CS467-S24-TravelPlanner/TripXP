@@ -21,7 +21,7 @@ async function postData(path = "", params = {}, body = {}) {
   };
 
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
-  if (response.ok) {
+  if (response) {
     const data = await response.json();
     return data;
   }
@@ -42,7 +42,7 @@ async function getData(path = "", params = {}) {
     method: "GET",
   };
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
-  if (response.ok) {
+  if (response) {
     const data = await response.json();
     return data;
   }
@@ -61,7 +61,7 @@ async function patchData(path = "", body = {}) {
     body: JSON.stringify(body),
   };
   const response = await fetch(apiUrl + path, options);
-  if (response.ok) {
+  if (response) {
     const data = await response.json();
     return data;
   }
@@ -82,7 +82,7 @@ async function deleteData(path = "", params = {}) {
     method: "DELETE",
   };
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
-  if (response.ok) {
+  if (response) {
     const data = await response.json();
     return data;
   }

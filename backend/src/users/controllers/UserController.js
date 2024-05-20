@@ -22,18 +22,22 @@ export function createUser(req, res) {
     });
   }
 
+  // Insert to payload sub (unique id) from validated JWT
+  payload["jwt_unique"] = req.auth.sub;
+
   // Returns a 200 status and Success message upon successful creation
   _createUser(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new user.",
+        id: model.id,
       });
     })
     .catch((err) => {
       return res.status(500).json({
         status: false,
-        error: err,
+        error: err?.errors[0].message,
       });
     });
 }
@@ -58,16 +62,24 @@ export function getAllUsers(req, res) {
     });
 }
 
-// Find user by ID - This may not be needed
+// Find user calling the request via auth'd JWT.
+// If no match, returns a 404 with user not found message.
 export function getUser(req, res) {
-  const { body: payload } = req;
-
-  findUser(payload.id)
+  findUser(req.auth.sub)
     .then((user) => {
-      return res.status(200).json({
-        status: true,
-        data: user.toJSON(),
-      });
+      if (user) {
+        return res.status(200).json({
+          status: true,
+          data: user.toJSON(),
+        });
+      } else {
+        return res.status(404).json({
+          status: false,
+          error: {
+            message: "User not found.",
+          },
+        });
+      }
     })
     .catch((err) => {
       return res.status(500).json({

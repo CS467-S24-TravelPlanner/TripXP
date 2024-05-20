@@ -16,13 +16,23 @@ function createUser(username, email) {
 }
 
 /**
- * getUsers returns Users matching the search parameters from the Database.
+ * getUser returns the user based on the auth_token provided
  * The return value is the response from the server in JSON format.
- * @param {JSON} searchParams - The optional search parameters for desired User(s).
+ * @param {string} auth_token - The full JWT for authorization.
  */
-function getUsers(searchParams = {}) {
-  return getData("/user", searchParams);
+function getUser(auth_token) {
+  return getData("/user", {}, auth_token);
 }
+
+// /**
+//  * getUsers returns Users matching the search parameters from the Database.
+//  * The return value is the response from the server in JSON format.
+//  * @param {JSON} searchParams - The optional search parameters for desired User(s).
+//  * @param {string} auth_token - The full JWT for authorization.
+//  */
+// function getUsers(searchParams = {}, auth_token) {
+//   return getData("/user", searchParams, auth_token);
+// }
 
 /**
  * editUser modifies an existing User in the Database.
@@ -50,4 +60,4 @@ function deleteUser(id) {
   return deleteData("/user", { id: id });
 }
 
-export { createUser, editUser, getUsers, deleteUser };
+export { createUser, editUser, getUser, deleteUser };
