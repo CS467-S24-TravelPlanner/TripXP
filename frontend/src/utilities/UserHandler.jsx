@@ -42,7 +42,7 @@ function getUser(auth_token) {
  */
 function editUser(id, newData = {}) {
   const idObj = { id: id };
-  const oldUser = getUsers(idObj);
+  const oldUser = getUser(idObj);
 
   const newUser = Object.keys(newData).length
     ? { ...idObj, ...newData }

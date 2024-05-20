@@ -1,7 +1,7 @@
 import { React, useEffect, useState } from "react";
 import { Button, Paper, Stack, Box, Divider } from "@mui/material";
 import { getTripExperiences } from "../utilities/TripHandler";
-import { getUsers } from "../utilities/UserHandler";
+import { getUser } from "../utilities/UserHandler";
 import ExperienceList from "../components/ExperienceList";
 
 
@@ -22,7 +22,7 @@ function TripPage({ trip }) {
       });
 
     // Retrieve User information from API
-    getUsers({ id: trip.user_id })
+    getUser({ id: trip.user_id })
       .then((result) => {
         setUser(result.data[0]);
       })

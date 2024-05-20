@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import userPicture from "../assets/user-solid.svg";
 import { getTrips } from "../utilities/TripHandler";
-import { getUsers } from "../utilities/UserHandler";
+import { getUser } from "../utilities/UserHandler";
 import { Link } from "react-router-dom";
 
 
@@ -32,7 +32,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await getUsers({ id: 2 });
+      const response = await getUser({ id: 2 });
       if (response.status) {
         setUser(response.data);
       } else {
