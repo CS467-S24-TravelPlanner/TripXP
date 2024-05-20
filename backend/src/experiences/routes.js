@@ -1,6 +1,9 @@
 import { Router } from "express";
+import multer from "multer";
 
 const router = Router();
+
+const upload = multer({ dest: '../uploads'})
 
 // Controller Imports
 import {
@@ -15,7 +18,8 @@ router.get("/:experienceId", getExperience);
 
 router.get("/", getAllExperiences);
 
-router.post("/", createExperience);
+// router.post("/", createExperience);
+router.post("/", upload.single('uploaded_file'), createExperience)
 
 router.patch("/", updateExperience);
 
