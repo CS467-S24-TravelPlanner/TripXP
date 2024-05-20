@@ -50,7 +50,7 @@ app.use(
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
   }).unless({
-    path: ["/", "/experience", "/review", "/imageUpload"],
+    path: ["/", "/experience", "/review", "/upload"],
   })
 );
 
@@ -203,7 +203,7 @@ sequelize
     app.use("/trip", TripRoutes);
     app.use("/review", ReviewRoutes);
 
-    app.use("/imageUpload", ImageRoutes);
+    app.use("/upload", ImageRoutes);
 
     // healthcheck endpoint
     app.get("/", (req, res) => {

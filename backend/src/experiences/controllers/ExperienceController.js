@@ -12,7 +12,6 @@ import {
 export function createExperience(req, res) {
   const { body: payload } = req;
 
-  console.log(payload);
 
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
@@ -23,8 +22,6 @@ export function createExperience(req, res) {
       },
     });
   }
-
-
 
 
   // Returns a 200 status and Success message upon successful creation
