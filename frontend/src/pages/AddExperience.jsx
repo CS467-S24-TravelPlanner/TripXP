@@ -5,6 +5,9 @@ import { getCoordinates } from "../utilities/LocationService";
 import Experience from "../components/ExperiencePage/Experience";
 import { useNavigate } from "react-router-dom";
 
+
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
 function AddExperience() {
   const [experience, setExperience] = useState(null);
 
@@ -14,6 +17,9 @@ function AddExperience() {
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    console.log(e.target.imageUpload.files[0])
+
     const formData = {
       title: e.target.titleInput.value,
       description: e.target.descriptionInput.value,
@@ -21,7 +27,16 @@ function AddExperience() {
       keywords: keywords,
       image: e.target.imageUpload.files[0]
     };
-    getCoordinates(formData.location).then((response) => {
+    getCoordinates(formData.location).then(async (response) => {
+
+         let imageData = new FormData(); 
+         imageData.append("uploaded_file", formData.image);
+         fetch(apiUrl + "/imageUpload", {
+         method: 'POST',
+         body: imageData,
+         })
+        
+
       const locationData = response.results[0];
       const formattedAddress = locationData.formatted_address;
       const coordinates = locationData.geometry.location;
