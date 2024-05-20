@@ -65,7 +65,7 @@ export function getAllUsers(req, res) {
 // Find user calling the request via auth'd JWT.
 // If no match, returns a 404 with user not found message.
 export function getUser(req, res) {
-  findUser(req.auth.sub)
+  findUser({ jwt_unique: req.auth.sub })
     .then((user) => {
       if (user) {
         return res.status(200).json({
