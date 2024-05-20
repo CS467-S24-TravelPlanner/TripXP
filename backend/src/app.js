@@ -15,6 +15,8 @@ import TripRoutes from "./trips/routes.js";
 // Routes for Reviews
 import ReviewRoutes from "./reviews/routes.js";
 
+import ImageRoutes from "./experiences/imageRoutes.js"
+
 // Sequelize model imports
 import { Experience } from "./common/models/Experience.js";
 import { User } from "./common/models/User.js";
@@ -200,6 +202,8 @@ sequelize
     app.use("/user", UserRoutes);
     app.use("/trip", TripRoutes);
     app.use("/review", ReviewRoutes);
+
+    app.use("/imageUpload", ImageRoutes);
 
     // healthcheck endpoint
     app.get("/", (req, res) => {
