@@ -115,6 +115,11 @@ Experience.init(
 
 User.init(
   {
+    jwt_unique: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -122,6 +127,7 @@ User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
   },
   { sequelize }

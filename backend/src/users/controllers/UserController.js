@@ -22,6 +22,9 @@ export function createUser(req, res) {
     });
   }
 
+  // Insert to payload sub (unique id) from validated JWT
+  payload["jwt_unique"] = req.auth.sub;
+
   // Returns a 200 status and Success message upon successful creation
   _createUser(payload)
     .then(() => {
