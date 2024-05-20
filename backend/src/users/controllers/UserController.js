@@ -129,18 +129,14 @@ export function updateUser(req, res) {
 
 // -----*** DELETE ***------
 
-// Delete exitisting User
+// Delete existing User
 export function deleteUser(req, res) {
-  const userId = req.query.id;
-
   // Returns a 200 status and number of deleted users upon succes
-  _deleteUser({ id: userId })
-    .then((numberOfEntriesDeleted) => {
+  _deleteUser({ jwt_unique: req.query.id })
+    .then(() => {
       return res.status(200).json({
         status: true,
-        data: {
-          numberOfUsersDeleted: numberOfEntriesDeleted,
-        },
+        data: "Successfully deleted user.",
       });
     })
     .catch((err) => {
