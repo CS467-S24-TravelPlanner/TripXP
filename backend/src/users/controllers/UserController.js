@@ -37,7 +37,7 @@ export function createUser(req, res) {
     .catch((err) => {
       return res.status(500).json({
         status: false,
-        error: err?.errors[0].message,
+        error: err,
       });
     });
 }
