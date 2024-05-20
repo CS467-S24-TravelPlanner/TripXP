@@ -27,16 +27,17 @@ export function createUser(req, res) {
 
   // Returns a 200 status and Success message upon successful creation
   _createUser(payload)
-    .then(() => {
+    .then((model) => {
       return res.status(200).json({
         status: true,
         data: "Successfully created new user.",
+        id: model.id,
       });
     })
     .catch((err) => {
       return res.status(500).json({
         status: false,
-        error: err,
+        error: err?.errors[0].message,
       });
     });
 }
