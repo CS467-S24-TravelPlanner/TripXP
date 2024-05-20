@@ -31,7 +31,7 @@ function AddExperience() {
         formData.description,
         coordinates.lat,
         coordinates.lng,
-        formData.image.name,
+        formData.image,
         5,
         formattedAddress,
         formData.keywords,

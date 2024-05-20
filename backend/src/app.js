@@ -67,8 +67,8 @@ Experience.init(
       type: DataTypes.REAL,
       allowNull: false,
     },
-    image_url: {
-      type: DataTypes.STRING,
+    image: {
+      type: DataTypes.BLOB,
     },
     rating: {
       type: DataTypes.REAL,

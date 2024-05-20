@@ -12,6 +12,8 @@ import {
 export function createExperience(req, res) {
   const { body: payload } = req;
 
+  console.log(payload);
+
   // Return Error if no Payload provided
   if (!Object.keys(payload).length) {
     return res.status(400).json({
