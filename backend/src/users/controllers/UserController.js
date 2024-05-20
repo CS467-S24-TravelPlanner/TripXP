@@ -95,8 +95,6 @@ export function getUser(req, res) {
 export function updateUser(req, res) {
   const { body: payload } = req;
 
-  const userId = payload.id;
-
   // If the payload does not have any keys,
   // Return an error, as nothing can be updated
   if (!Object.keys(payload).length) {
@@ -106,10 +104,15 @@ export function updateUser(req, res) {
         message: "Body is empty, can't update the user.",
       },
     });
+  } else if ("jwt_unique" in payload) {
+    return res.status(400).json({
+      status: false,
+      error: { message: "Body contains disallowed keys." },
+    });
   }
 
   // Returns a 200 status and Success message upon successful update
-  _updateUser({ id: userId }, payload)
+  _updateUser({ jwt_unique: req.auth.sub }, payload)
     .then(() => {
       return res.status(200).json({
         status: true,
