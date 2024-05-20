@@ -11,31 +11,16 @@ import EditTrip from "./pages/EditTrip.jsx";
 import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
 import TripPage from "./pages/TripPage.jsx";
+import { handleGoogleLogin } from "./utilities/LoginHandler.jsx";
 
 const App = () => {
   const [user, setUser] = useState(false);
-
-  function handleLoginResponse(res) {
-    if (res.credential) {
-      try {
-        const decode = jwtDecode(res.credential);
-        // Add raw jwt to decode/user object for ease of access (e.g. API calls)
-        decode.raw_jwt = res.credential;
-        setUser(decode);
-        console.log(user);
-      } catch (err) {
-        console.error("JWT Decode failure: ", err);
-      }
-    } else {
-      console.error("Login response error.");
-    }
-  }
 
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_IDENTITY_CLIENT_ID,
-      callback: handleLoginResponse,
+      callback: (res) => handleGoogleLogin(res, setUser),
     });
     google.accounts.id.renderButton(document.getElementById("googleLoginBtn"), {
       theme: "outline",
