@@ -18,8 +18,8 @@ router.get("/:experienceId", getExperience);
 
 router.get("/", getAllExperiences);
 
-// router.post("/", createExperience);
-router.post("/", upload.single('uploaded_file'), createExperience)
+router.post("/", createExperience);
+// router.post("/", upload.single('uploaded_file'), createExperience)
 
 router.patch("/", updateExperience);
 
