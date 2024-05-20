@@ -15,12 +15,13 @@ import {
 import KeywordsList from "./KeywordsList";
 
 
-function ExperienceForm({ handleSubmit }) {
+function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
-  const [keywords, setKeywords] = useState([]);
 
+
+  const [image, setImage] = useState("")
 
 
   const handleTitleChange = (e) => {
@@ -35,15 +36,21 @@ function ExperienceForm({ handleSubmit }) {
     setLocation(e.target.value);
   };
 
-  const handleKeywordsChange = (e) => {
-    setKeywords(
-      typeof e.target.value === "string" ? value.split(",") : e.target.value
-    );
+  const handleImageChange = (e) => {
+    console.log(e.target.value)
+    setImage(e.target.value);
+  };
+
+
+  const handleFakeSubmit = (e) => {
+    console.log(e.target)
+    e.preventDefault()
   };
 
   return (
     <Box
       component="form"
+      encType="multipart/form-data"
       alignItems="stretch"
       display="block"
       noValidate
@@ -88,6 +95,17 @@ function ExperienceForm({ handleSubmit }) {
 
         <FormControl sx={{ m: 1 }}>
           <KeywordsList keywords={keywords} setKeywords={setKeywords} />
+        </FormControl>
+
+        <FormControl sx={{ m: 1 }}>
+          <TextField
+          id="imageUpload"
+          label="Image Upload"
+          type="file"
+          name="uploaded_file"
+          value={image}
+          onChange={handleImageChange}
+          />
         </FormControl>
 
         <Button type="submit" variant="outlined">

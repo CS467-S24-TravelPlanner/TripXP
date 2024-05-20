@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 function AddExperience() {
   const [experience, setExperience] = useState(null);
 
+  const [keywords, setKeywords] = useState([]);
+
   let navigate = useNavigate();
 
   function handleSubmit(e) {
@@ -16,7 +18,8 @@ function AddExperience() {
       title: e.target.titleInput.value,
       description: e.target.descriptionInput.value,
       location: e.target.locationInput.value,
-      keywords: e.target.keywordsInput.value.split(','),
+      keywords: keywords,
+      image: e.target.imageUpload.files[0]
     };
     getCoordinates(formData.location).then((response) => {
       const locationData = response.results[0];
@@ -28,7 +31,7 @@ function AddExperience() {
         formData.description,
         coordinates.lat,
         coordinates.lng,
-        "",
+        formData.image.name,
         5,
         formattedAddress,
         formData.keywords,
@@ -51,7 +54,7 @@ function AddExperience() {
     (experience) ? 
     <Experience experience={experience} closeExperience={handleClose}/>
     :
-    <ExperienceForm handleSubmit={handleSubmit} />
+    <ExperienceForm handleSubmit={handleSubmit} keywords={keywords} setKeywords={setKeywords} />
     
   );
 }

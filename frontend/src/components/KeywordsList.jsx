@@ -19,9 +19,8 @@ function KeywordsList({ keywords, setKeywords }) {
     };
 
     const handleKeywordsChange = (e) => {
-        setKeywords(
-          typeof e.target.value === "string" ? value.split(",") : e.target.value
-        );
+        let newList = typeof e.target.value === "string" ? value.split(",") : e.target.value;
+        setKeywords(newList)
       };
 
     return (
