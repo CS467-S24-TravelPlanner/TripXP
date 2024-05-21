@@ -1,4 +1,4 @@
-import { getUser, createUser } from "./UserHandler.jsx";
+import { getUser } from "./UserHandler.jsx";
 import { jwtDecode } from "jwt-decode";
 
 /**
@@ -13,22 +13,28 @@ import { jwtDecode } from "jwt-decode";
  */
 async function handleGoogleLogin(res, userSetter) {
   if (!res.credential) {
-    console.error("Login response error.");
+    console.error("Google authentication response error.");
     return;
   }
 
   const decodedJwt = decodeJwt(res.credential);
   if (!decodedJwt) return;
 
-  const userExists = await checkUserExists(res.credential);
-  if (userExists) {
-    userSetter({
-      ...decodedJwt,
-      raw_jwt: res.credential,
-      user_id: userExists.id,
-    });
-  } else {
-    await createUserInDb(decodedJwt, res.credential);
+  try {
+    const dbUser = await getUser(res.credential);
+    if (dbUser.status === true) {
+      userSetter({
+        ...decodedJwt,
+        raw_jwt: res.credential,
+        user_id: dbUser.data.id,
+      });
+    } else {
+      console.error("User fetch failed", dbUser.error);
+      return;
+    }
+  } catch (err) {
+    console.error("Error getting user:", err);
+    return;
   }
 }
 
@@ -39,46 +45,7 @@ function decodeJwt(credential) {
     return decoded;
   } catch (err) {
     console.error("JWT Decode failure: ", err);
-    return null;
-  }
-}
-
-async function checkUserExists(credential) {
-  try {
-    const userRes = await getUser(credential);
-    if (userRes.status === true) {
-      return userRes.data;
-    } else if (userRes.status === false) {
-      return null;
-    } else {
-      console.error("User fetch failed", userRes.error);
-      return null;
-    }
-  } catch (err) {
-    console.error("Error validating user:", err);
-    return null;
-  }
-}
-
-async function createUserInDb(decodedJwt, credential, userSetter) {
-  try {
-    const createUserRes = await createUser(
-      decodedJwt.email,
-      decodedJwt.email,
-      credential
-    );
-    if (createUserRes.status) {
-      userSetter({
-        ...decodeJwt,
-        raw_jwt: res.credential,
-        user_id: createUserRes.id,
-      });
-      console.log("New user created successfully in DB.");
-    } else {
-      console.log("User not able to be created.");
-    }
-  } catch (err) {
-    console.error("Create user failed", err);
+    return;
   }
 }
 
