@@ -266,7 +266,7 @@ sequelize
     }
 
     let fileName = req.query.fileName
-    res.sendFile(uploadPath + "/" + fileName, options, function (err) {
+    res.sendFile(fileName, options, function (err) {
       if (err) {
         next(err)
       } else {
