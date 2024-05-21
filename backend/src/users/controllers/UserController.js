@@ -47,7 +47,7 @@ export async function updateUser(req, res) {
         message: "Body is empty, can't update the user.",
       },
     });
-  } else if ("jwt_unique" in payload) {
+  } else if ("jwt_unique" in payload || "email" in payload) {
     return res.status(400).json({
       status: false,
       error: { message: "Body contains disallowed keys." },
