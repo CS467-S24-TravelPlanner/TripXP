@@ -10,5 +10,5 @@ export function uploadImage(req, res) {
 //       }
 //     });
 //   }
-  return res.status(200).json({ status: true, message: "Uploading image" });
+  return res.status(200).json({ status: true, message: "Uploading image", filename: req.file.filename });
 }

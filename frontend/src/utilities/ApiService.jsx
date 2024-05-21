@@ -1,5 +1,4 @@
-//const apiUrl = import.meta.env.VITE_API_BASE_URL;
-const apiUrl = "http://127.0.0.1:3333";
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * postData sends a POST request to the API endpoint at the specifed path.

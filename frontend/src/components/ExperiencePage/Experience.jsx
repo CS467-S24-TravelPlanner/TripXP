@@ -6,6 +6,7 @@ import RatingDisplay from "../RatingDisplay.jsx";
 import { createReview, getReviews } from "../../utilities/ReviewHandler.jsx";
 import ReviewList from "../ReviewList.jsx";
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState({
@@ -70,7 +71,7 @@ const Experience = ({ experience, closeExperience }) => {
         <p>{experience.description}</p>
         <p>{experience.location}</p>
         <img
-          src={experience.image_url}
+          src={apiUrl + "/uploads/?fileName=" + experience.image_url}
           alt={experience.title}
           className="experience-image"
         />

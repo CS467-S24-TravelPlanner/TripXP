@@ -45,6 +45,16 @@ app.use(express.json());
 // enable cors
 app.use(cors());
 
+
+// Array for JWT unprotected paths in Regex
+const unprotected = [
+  /\/uploads*/,
+  /\/experience*/,
+  /\//,
+  /\/upload*/,
+  /\/review/
+];
+
 // utilize express-jwt middleware to valide JWTs
 app.use(
   jwt({
@@ -56,7 +66,7 @@ app.use(
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
   }).unless({
-    path: ["/", "/experience", "/review", "/uploads", "/upload"],
+    path: unprotected
   })
 );
 
@@ -211,6 +221,7 @@ sequelize
 
     //app.use("/upload", ImageRoutes);
     app.use('/upload', express.static(__dirname));
+    app.use('/uploads', express.static(__dirname));
 
     //let path = process.env.RAILWAY_VOLUME_MOUNT_PATH
 
@@ -240,6 +251,27 @@ sequelize
     app.get("/upload", (req, res) => {
       res.status(200).send({ status: "ok" });
     });
+
+
+  app.get("/uploads", function (req, res, next) {
+    let options = {
+      root: path.join(__dirname, 'uploads'),
+      dotfiles: 'deny',
+      headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+      }
+    }
+
+    let fileName = req.query.fileName
+    res.sendFile(fileName, options, function (err) {
+      if (err) {
+        next(err)
+      } else {
+        console.log('Sent:', fileName)
+      }
+    })
+  })
   })
   .catch((err) => {
     console.error("Can't connect to /upload:", err);
