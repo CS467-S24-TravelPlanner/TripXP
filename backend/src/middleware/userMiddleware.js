@@ -1,4 +1,5 @@
 import { User } from "../db.js";
+import { createUser } from "../common/models/User.js";
 
 const userMiddleware = async (req, res, next) => {
   try {
@@ -6,9 +7,27 @@ const userMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "User not authenticated" });
     }
 
-    const user = await User.findOne({ where: { jwt_unique: req.auth.sub } });
+    let user = await User.findOne({ where: { jwt_unique: req.auth.sub } });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      const newUser = {
+        username: req.auth.email,
+        email: req.auth.email,
+        jwt_unique: req.auth.sub,
+      };
+      try {
+        const createRes = await createUser(newUser);
+        if (createRes) {
+          user = await User.findOne({ where: { jwt_unique: req.auth.sub } });
+        } else {
+          throw new Error("User creation failure.");
+        }
+      } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+          status: false,
+          error: err.message,
+        });
+      }
     }
 
     // Attach user object to the request
