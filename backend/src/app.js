@@ -39,6 +39,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
+const uploadPath = import.meta.RAILWAY_VOLUME_MOUNT_PATH
+
 // parse json request body
 app.use(express.json());
 
@@ -255,7 +257,7 @@ sequelize
 
   app.get("/uploads", function (req, res, next) {
     let options = {
-      root: path.join(__dirname, 'uploads'),
+      root: importPath,
       dotfiles: 'deny',
       headers: {
         'x-timestamp': Date.now(),
