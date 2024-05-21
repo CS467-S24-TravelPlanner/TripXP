@@ -3,12 +3,13 @@ import {
   deleteTripExperience as _deleteTripExperience,
   findAllTripExperiences,
 } from "./../../common/models/TripExperience.js";
+import { findTrip } from "../../common/models/Trip.js";
 
 // -----*** CREATE ***------
 
 // Create a new TripExperience
-export function createTripExperience(req, res) {
-  const { params: params } = req;
+export async function createTripExperience(req, res) {
+  const { params } = req;
 
   // Return Error if incorrect parameters provided
   if (Object.keys(params).length !== 2) {
@@ -16,76 +17,100 @@ export function createTripExperience(req, res) {
       status: false,
       error: {
         message:
-          "Number of parameters required for creating a new TripExperience is 2.",
+          "Trip ID and Experience ID must be given as parameters in request URI.",
       },
     });
   }
+
   const tripExperience = { TripId: params.tripId, ExperienceId: params.expId };
 
-  // Returns a 200 status and Success message upon successful creation
-  _createTripExperience(tripExperience)
-    .then(() => {
-      return res.status(200).json({
-        status: true,
-        data: "Successfully added Experience to Trip.",
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
+  try {
+    const trip = await findTrip(params.tripId);
+    if (trip.user_id !== req.user.dataValues.id) {
+      return res.status(403).json({
         status: false,
-        error: err,
+        error: {
+          message: "This trip doesn't belong to you.",
+        },
       });
+    }
+
+    await _createTripExperience(tripExperience);
+    return res.status(200).json({
+      status: true,
+      data: "Successfully added Experience to Trip.",
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
 
 // -----*** READ ***------
 
 // Return all TripExperiences in DB matching given parameters. If no parameters are given,
 // all tripexperiences are returned. If no TripExperiences match given parameters, data is empty.
-export function getAllTripExperiences(req, res) {
-  const { params: params } = req;
+export async function getAllTripExperiences(req, res) {
+  const { params } = req;
 
-  findAllTripExperiences({ TripId: params.tripId })
-    .then((tripexperiences) => {
-      return res.status(200).json({
-        status: true,
-        data: tripexperiences,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
+  try {
+    const trip = await findTrip(params.tripId);
+    if (trip.user_id !== req.user.dataValues.id) {
+      return res.status(403).json({
         status: false,
-        error: err,
+        error: {
+          message: "This trip doesn't belong to you.",
+        },
       });
+    }
+
+    const tripexperiences = await findAllTripExperiences({
+      TripId: params.tripId,
     });
+    return res.status(200).json({
+      status: true,
+      data: tripexperiences,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
-
-// -----*** UPDATE ***------
-
-// Update functionality not needed for this Model
 
 // -----*** DELETE ***------
 
 // Delete existing TripExperience
-export function deleteTripExperience(req, res) {
-  const { params: params } = req;
+export async function deleteTripExperience(req, res) {
+  const { params } = req;
 
   const tripExperience = { TripId: params.tripId, ExperienceId: params.expId };
 
-  // Returns a 200 status and number of deleted tripexperiences upon succes
-  _deleteTripExperience(tripExperience)
-    .then((numberOfEntriesDeleted) => {
-      return res.status(200).json({
-        status: true,
-        data: {
-          numberOfTripExperiencesDeleted: numberOfEntriesDeleted,
+  try {
+    const trip = await findTrip(params.tripId);
+    if (trip.user_id !== req.user.dataValues.id) {
+      return res.status(403).json({
+        status: false,
+        error: {
+          message: "This trip doesn't belong to you.",
         },
       });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+    }
+
+    const numberOfEntriesDeleted = await _deleteTripExperience(tripExperience);
+    return res.status(200).json({
+      status: true,
+      data: {
+        numberOfTripExperiencesDeleted: numberOfEntriesDeleted,
+      },
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
