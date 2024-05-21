@@ -17,6 +17,7 @@ import TripRoutes from "./trips/routes.js";
 import ReviewRoutes from "./reviews/routes.js";
 
 import { config } from "dotenv";
+import userMiddleware from "./middleware/userMiddleware.js";
 if (process.env.NODE_ENV !== "production") {
   config();
 }
@@ -58,6 +59,9 @@ app.use((err, req, res, next) => {
 // Initialize the database and start the server
 initDb()
   .then(() => {
+    // Middleware requiring DB
+    app.use(userMiddleware);
+
     // Attach routes to the app
     app.use("/experience", ExperienceRoutes);
     app.use("/user", UserRoutes);
