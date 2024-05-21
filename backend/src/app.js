@@ -222,8 +222,8 @@ sequelize
     app.use("/review", ReviewRoutes);
 
     //app.use("/upload", ImageRoutes);
-    app.use('/upload', express.static(__dirname));
-    app.use('/uploads', express.static(__dirname));
+    // app.use('/upload', express.static(__dirname));
+    // app.use('/uploads', express.static(__dirname));
 
     //let path = process.env.RAILWAY_VOLUME_MOUNT_PATH
 
