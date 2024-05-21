@@ -56,7 +56,7 @@ app.use(
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {
     return res.status(403).send({
-      success: false,
+      status: false,
       message: err.message,
     });
   }
