@@ -40,8 +40,7 @@ app.use(
     audience: process.env.GOOGLE_IDENTITY_CLIENT_ID,
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
-  }).unless({
-    path: ["/", "/experience", "/review"],
+    credentialsRequired: false,
   })
 );
 
