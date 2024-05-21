@@ -74,7 +74,7 @@ export async function getTrip(req, res) {
       return res.status(403).json({
         status: false,
         error: {
-          message: "This resource doesn't belong to you.",
+          message: "This trip doesn't belong to you.",
         },
       });
     }
@@ -110,7 +110,7 @@ export async function updateTrip(req, res) {
       return res.status(403).json({
         status: false,
         error: {
-          message: "This resource doesn't belong to you.",
+          message: "This trip doesn't belong to you.",
         },
       });
     }
@@ -139,7 +139,7 @@ export async function deleteTrip(req, res) {
       return res.status(403).json({
         status: false,
         error: {
-          message: "This resource doesn't belong to you.",
+          message: "This trip doesn't belong to you.",
         },
       });
     }
