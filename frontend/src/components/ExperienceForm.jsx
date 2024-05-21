@@ -97,7 +97,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
           <KeywordsList keywords={keywords} setKeywords={setKeywords} />
         </FormControl>
 
-        <FormControl sx={{ m: 1 }}>
+        <FormControl sx={{ m: 1 }} >
           <TextField
           id="imageUpload"
           label="Image Upload"

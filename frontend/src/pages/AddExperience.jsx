@@ -4,9 +4,8 @@ import { createExperience, getExperience } from "../utilities/ExperienceHandler"
 import { getCoordinates } from "../utilities/LocationService";
 import Experience from "../components/ExperiencePage/Experience";
 import { useNavigate } from "react-router-dom";
+import { uploadImage } from "../utilities/ImageHandler";
 
-
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 function AddExperience() {
   const [experience, setExperience] = useState(null);
@@ -29,13 +28,8 @@ function AddExperience() {
     };
     getCoordinates(formData.location).then(async (response) => {
 
-         let imageData = new FormData(); 
-         imageData.append("uploaded_file", formData.image);
-         fetch(apiUrl + "/imageUpload", {
-         method: 'POST',
-         body: imageData,
-         })
-        
+         console.log(formData.image)
+         uploadImage(formData)
 
       const locationData = response.results[0];
       const formattedAddress = locationData.formatted_address;

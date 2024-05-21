@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import { expressjwt as jwt } from "express-jwt";
 import jwksRsa from "jwks-rsa";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from 'url';
 
 // Routes for Experiences
 import ExperienceRoutes from "./experiences/routes.js";
@@ -15,7 +18,7 @@ import TripRoutes from "./trips/routes.js";
 // Routes for Reviews
 import ReviewRoutes from "./reviews/routes.js";
 
-import ImageRoutes from "./experiences/imageRoutes.js"
+import { uploadImage } from "./experiences/controllers/ImageController.js";
 
 // Sequelize model imports
 import { Experience } from "./common/models/Experience.js";
@@ -32,6 +35,9 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 // parse json request body
 app.use(express.json());
@@ -50,7 +56,7 @@ app.use(
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
   }).unless({
-    path: ["/", "/experience", "/review", "/upload"],
+    path: ["/", "/experience", "/review", "/uploads", "/upload"],
   })
 );
 
@@ -203,15 +209,40 @@ sequelize
     app.use("/trip", TripRoutes);
     app.use("/review", ReviewRoutes);
 
-    app.use("/upload", ImageRoutes);
+    //app.use("/upload", ImageRoutes);
+    app.use('/upload', express.static(__dirname));
+
+    //let path = process.env.RAILWAY_VOLUME_MOUNT_PATH
+
+    let storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '/uploads/'));
+      },
+      filename: function (req, file, cb) {
+        cb(null, new Date().toISOString() +  file.originalname);
+      },
+    });
+    
+    
+    let upload = multer({ storage: storage });
+    
+    app.post(
+      "/upload",
+      upload.single("uploaded_file"),
+      uploadImage
+    );
 
     // healthcheck endpoint
     app.get("/", (req, res) => {
       res.status(200).send({ status: "ok" });
     });
+
+    app.get("/upload", (req, res) => {
+      res.status(200).send({ status: "ok" });
+    });
   })
   .catch((err) => {
-    console.error("Sequelize Initialization threw an error:", err);
+    console.error("Can't connect to /upload:", err);
   });
 
 export default app;

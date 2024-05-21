@@ -1,4 +1,5 @@
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
+//const apiUrl = import.meta.env.VITE_API_BASE_URL;
+const apiUrl = "http://127.0.0.1:3333";
 
 /**
  * postData sends a POST request to the API endpoint at the specifed path.
@@ -8,18 +9,25 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
  * @param {JSON} [body] - An optional body for the request.
  */
 async function postData(path = "", params = {}, body = {}) {
+  console.log(body);
   const URLparams = Object.keys(params).length
     ? new URLSearchParams(Object.entries(params))
     : "";
   URLparams.toString;
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  };
+  const options =
+    path === "/upload"
+      ? {
+          method: "POST",
+          body: body,
+        }
+      : {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
+          body: JSON.stringify(body),
+        };
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
   if (response) {
     const data = await response.json();
