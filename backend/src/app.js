@@ -257,7 +257,7 @@ sequelize
 
   app.get("/uploads", function (req, res, next) {
     let options = {
-      root: importPath,
+      root: uploadPath,
       dotfiles: 'deny',
       headers: {
         'x-timestamp': Date.now(),
