@@ -8,6 +8,7 @@ import TripPage from "./pages/TripPage.jsx";
 import AddTrip from "./pages/AddTrip.jsx";
 import EditTrip from "./pages/EditTrip.jsx";
 import ExperienceSearch from "./pages/ExperienceSearch";
+import AddExperience from "./pages/AddExperience";
 import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
 import { handleGoogleLogin } from "./utilities/LoginHandler.jsx";
@@ -44,7 +45,7 @@ const App = () => {
             <Route path="/experiences" element={<ExperienceSearch />} />
             <Route path="/experience/add" element={<AddExperience />} />
             {/* TODO Experience Edit page */}
-            <Route path="/trip/:id" component={TripPage} />
+            <Route path="/trip/:tripId" element={<TripPage />} />
             <Route path="/trip/:tripId" element={<TripPage />} />
             <Route path="/trip/add" element={<AddTrip />} />
             <Route path="/trip/edit/:tripId" element={<EditTrip />} />
