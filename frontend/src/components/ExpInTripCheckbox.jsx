@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Checkbox, Box } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import {
   addExperienceToTrip,
   removeExperienceFromTrip,
@@ -11,6 +12,8 @@ import {
 // an experience from a trip.
 export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
   const [expInTrip, setExpInTrip] = useState(false);
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setExpInTrip(evalExpInTrip(expId, tripExperiences));
@@ -26,7 +29,7 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
     // If exp in trip, we try to delete from trip
     if (expInTrip) {
       try {
-        const res = await removeExperienceFromTrip(tripId, expId);
+        const res = await removeExperienceFromTrip(tripId, expId, user.raw_jwt);
         if (res.status) {
           console.log(
             `Experience ${expId} removed from ${tripId} successfully.`
@@ -43,7 +46,7 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
     else {
       try {
         console.log("tripId: ", tripId, ", expId: ", expId);
-        const res = await addExperienceToTrip(tripId, expId);
+        const res = await addExperienceToTrip(tripId, expId, user.raw_jwt);
         if (res.status) {
           console.log(`Experience ${expId} added to ${tripId} successfully.`);
           setExpInTrip(!expInTrip);
