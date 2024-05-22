@@ -1,89 +1,42 @@
 import {
   findUser,
-  createUser as _createUser,
   updateUser as _updateUser,
   deleteUser as _deleteUser,
-  findAllUsers,
 } from "./../../common/models/User.js";
-
-// -----*** CREATE ***------
-
-// Create a new User
-export function createUser(req, res) {
-  const { body: payload } = req;
-
-  // Return Error if no Payload provided
-  if (!Object.keys(payload).length) {
-    return res.status(400).json({
-      status: false,
-      error: {
-        message: "Body is empty, can't create the user.",
-      },
-    });
-  }
-
-  // Returns a 200 status and Success message upon successful creation
-  _createUser(payload)
-    .then(() => {
-      return res.status(200).json({
-        status: true,
-        data: "Successfully created new user.",
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
-    });
-}
 
 // -----*** READ ***------
 
-// Return all Users in DB matching given parameters. If no parameters are given,
-// all users are returned. If no Users match given parameters, data is empty.
-export function getAllUsers(req, res) {
-  findAllUsers(req.query)
-    .then((users) => {
-      return res.status(200).json({
-        status: true,
-        data: users,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
-    });
-}
-
-// Find user by ID - This may not be needed
-export function getUser(req, res) {
-  const { body: payload } = req;
-
-  findUser(payload.id)
-    .then((user) => {
+// Find user calling the request via auth'd JWT.
+// If no match, returns a 404 with user not found message.
+export async function getUser(req, res) {
+  try {
+    const user = await findUser({ jwt_unique: req.auth.sub });
+    if (user) {
       return res.status(200).json({
         status: true,
         data: user.toJSON(),
       });
-    })
-    .catch((err) => {
-      return res.status(500).json({
+    } else {
+      return res.status(404).json({
         status: false,
-        error: err,
+        error: {
+          message: "User not found.",
+        },
       });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
     });
+  }
 }
 
 // -----*** UPDATE ***------
 
 // Update an existing User
-export function updateUser(req, res) {
+export async function updateUser(req, res) {
   const { body: payload } = req;
-
-  const userId = payload.id;
 
   // If the payload does not have any keys,
   // Return an error, as nothing can be updated
@@ -94,44 +47,40 @@ export function updateUser(req, res) {
         message: "Body is empty, can't update the user.",
       },
     });
+  } else if ("jwt_unique" in payload || "email" in payload) {
+    return res.status(400).json({
+      status: false,
+      error: { message: "Body contains disallowed keys." },
+    });
   }
 
-  // Returns a 200 status and Success message upon successful update
-  _updateUser({ id: userId }, payload)
-    .then(() => {
-      return res.status(200).json({
-        status: true,
-        data: "Successfully updated user.",
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+  try {
+    await _updateUser({ jwt_unique: req.auth.sub }, payload);
+    return res.status(200).json({
+      status: true,
+      data: "Successfully updated user.",
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
 
 // -----*** DELETE ***------
 
-// Delete exitisting User
-export function deleteUser(req, res) {
-  const userId = req.query.id;
-
-  // Returns a 200 status and number of deleted users upon succes
-  _deleteUser({ id: userId })
-    .then((numberOfEntriesDeleted) => {
-      return res.status(200).json({
-        status: true,
-        data: {
-          numberOfUsersDeleted: numberOfEntriesDeleted,
-        },
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+// Delete existing User
+export async function deleteUser(req, res) {
+  try {
+    await _deleteUser({ jwt_unique: req.auth.sub });
+    return res.status(200).json({
+      status: true,
+      data: "Successfully deleted user.",
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+    });
+  }
 }

@@ -1,65 +1,71 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Button, Paper, Stack, Box, Divider } from "@mui/material";
-import { getTripExperiences } from "../utilities/TripHandler";
-import { getUsers } from "../utilities/UserHandler";
+import { getTrip, getTripExperiences } from "../utilities/TripHandler";
 import ExperienceList from "../components/ExperienceList";
+import { UserContext } from "../contexts/UserContext";
 
-
-import { Link } from "react-router-dom";
-function TripPage({ trip }) {
+function TripPage() {
+  const [trip, setTrip] = useState(null);
   const [experiences, setExperiences] = useState(null);
-  const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
+
+  const { user } = useContext(UserContext);
+
+  const { tripId } = useParams();
 
   useEffect(() => {
-    // Retrieve Trip information from API
-    getTripExperiences(trip.id)
-      .then((result) => {
-        setExperiences(result);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    fetchTrip(tripId);
+    fetchTripExperiences(tripId);
+    console.log("trip experiences", experiences);
+  }, [user]);
 
-    // Retrieve User information from API
-    getUsers({ id: trip.user_id })
+  function fetchTrip(tripId) {
+    getTrip(tripId, user.raw_jwt)
       .then((result) => {
-        setUser(result.data[0]);
+        setTrip(result.data);
       })
       .catch((error) => {
         setError(error.message);
       });
-  }, []);
+  }
+
+  function fetchTripExperiences(tripId) {
+    getTripExperiences(tripId, user.raw_jwt)
+      .then((result) => {
+        setExperiences(result.data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }
 
   return (
     <div>
-      <Link to="/">
-        <button>Back</button>
-      </Link>
-      <div>
-        {error ? (
-          <div>Error: {error}</div>
-        ) : experiences && user ? (
-          experiences.length > 0 ? (
-            <Paper>
-              <Stack spacing={2}>
-                <Box component="h1">{trip.name}</Box>
-                <Box component="h3">{trip.description}</Box>
-                <Box component="cite">Created by {user.username}</Box>
-
-                <Divider orientation="horizontal" flexItem />
-                <ExperienceList experiences={experiences} />
-              </Stack>
-            </Paper>
-          ) : (
-            <Button variant="contained" href="/ExperienceSearch">
-              Help Me Find Experiences!
-            </Button>
-          )
-        ) : (
-          <div>Loading...</div>
-        )}
-      </div>
+      {trip && experiences ? (
+        <>
+          <Paper>
+            <Stack spacing={2}>
+              <Box component="h1">{trip.name}</Box>
+              <Box component="h3">{trip.description}</Box>
+              <Box component="cite">Created by {user.name}</Box>
+              <Divider orientation="horizontal" flexItem />
+              <ExperienceList experiences={experiences} />
+            </Stack>
+          </Paper>
+          {experiences.length === 0 && (
+            <>
+              <p>No experiences currently in trip!</p>
+              <Link to={`/trip/edit/${tripId}`}>
+                <Button onClick={() => handleFindExpClick} variant="contained">
+                  Add Experiences
+                </Button>
+              </Link>
+            </>
+          )}
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }

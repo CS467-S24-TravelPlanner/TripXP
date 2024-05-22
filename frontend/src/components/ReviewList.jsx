@@ -10,22 +10,14 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
-import { Link } from "react-router-dom";
-import ExpInTripCheckbox from "./ExpInTripCheckbox";
 
 /*
     Adapted from Material UI Documentation Examples
 */
 
-export default function ExperienceList({
-  experiences,
-  tripId = null,
-  tripExperiences = null,
-  experienceClick = null,
-}) {
+export default function ReviewList({ reviews }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [selectedExp, setSelectedExp] = React.useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -36,25 +28,15 @@ export default function ExperienceList({
     setPage(0);
   };
 
-  const handleExperienceClick = (experience) => {
-    if (experienceClick) {
-      experienceClick(experience);
-    }
-  };
-
   let columns = [
-    { id: "title", label: "Title", minWidth: 170 },
-    { id: "description", label: "Description", minWidth: 100 },
-    { id: "location", label: "Location", minWidth: 170 },
+    { id: "user_id", label: "User", minWidth: 100 },
+    { id: "review_text", label: "Review", minWidth: 150 },
     { id: "rating", label: "Rating", minWidth: 100 },
   ];
 
-  if (tripId) {
-    columns = [{ id: "inTrip", label: "In Trip", minWidth: 50 }, ...columns];
-  }
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "50%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -71,30 +53,19 @@ export default function ExperienceList({
             </TableRow>
           </TableHead>
           <TableBody>
-            {experiences
+            {reviews
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((experience) => {
+              .map((review) => {
                 return (
                   <TableRow
                     hover
                     role="button"
                     tabIndex={-1}
-                    key={experience.id}
-                    onClick={() => handleExperienceClick(experience)}
+                    key={review.id}
                   >
                     {columns.map((column) => {
-                      const value = experience[column.id];
-                      if (column.id === "inTrip") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <ExpInTripCheckbox
-                              expId={experience.id}
-                              tripId={tripId}
-                              tripExperiences={tripExperiences}
-                            />
-                          </TableCell>
-                        );
-                      }
+                      const value = review[column.id];
+
                       if (column.id === "rating") {
                         return (
                           <TableCell key={column.id} align={column.align}>
@@ -118,7 +89,7 @@ export default function ExperienceList({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={experiences.length}
+        count={reviews.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Experience.css";
 import dummyData from "../dummy/dummyData.js"; // Import dummy data
 import ReviewForm from "../ReviewForm/ReviewForm"; // Import ReviewForm component
 import RatingDisplay from "../RatingDisplay.jsx";
+import { createReview, getReviews } from "../../utilities/ReviewHandler.jsx";
+import ReviewList from "../ReviewList.jsx";
+
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState({
     /* Object to store form visibility for each experience */
   });
+
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+
+  useEffect(
+    () =>
+      async function fetchReviews() {
+        if (!reviewsLoaded) {
+          getReviews({ experience_id: experience.id }).then((results) => {
+            const reviewList = []
+            for (let i = 0; i < results.data.length; i++) {
+              reviewList.push(results.data[i]);
+            }
+            setReviews(reviewList);
+            setReviewsLoaded(true);
+          });
+        }
+      },
+    [reviewsLoaded]
+  );
 
   const handleWriteReviewClick = (experienceId) => {
     setShowReviewForm({
@@ -18,7 +42,18 @@ const Experience = ({ experience, closeExperience }) => {
 
   const handleReviewSubmit = (reviewData, experienceId) => {
     // Handle submitted review data (e.g., update experience data)
-    console.log("Submitted review:", reviewData);
+
+    if (reviewData && Object.keys(reviewData).length) {
+      const userId = 0; // TODO: Get actual User ID from login info
+
+      const reviewText = reviewData.review_text;
+      const rating = reviewData.rating;
+
+      createReview(experienceId, userId, reviewText, rating);
+
+      setReviewsLoaded(false);
+    }
+
     setShowReviewForm({ ...showReviewForm, [experienceId]: false }); // Close form after submit
   };
 
@@ -27,15 +62,16 @@ const Experience = ({ experience, closeExperience }) => {
   };
 
   return (
+    <div>
     <div className="experiences">
-      <button onClick={closeExperience}>Back to Experience Search</button>
+      <button onClick={closeExperience} style={{width: "100px", height: "65px", margin: "5px"}}>Close Experience</button>
 
       <div key={experience.id} className="experience">
         <h2>{experience.title}</h2>
         <p>{experience.description}</p>
         <p>{experience.location}</p>
         <img
-          src={experience.image_url}
+          src={apiUrl + "/uploads/?fileName=" + experience.image_url}
           alt={experience.title}
           className="experience-image"
         />
@@ -43,18 +79,17 @@ const Experience = ({ experience, closeExperience }) => {
         <h4 className="ratings-section">
           Rating:
           <RatingDisplay value={experience.rating} />
-          {/* For now, Review is not implemented, so this is removed for testing. */}
           {/* Display detailed reviews */}
           {/* <ul>
-              {experience.reviews.map((review) => (
-                <li key={review.id}>
-                  <p>
-                    <strong>{review.username}</strong>: {review.reviewText}
-                  </p>
-                  <p>Rating: {review.rating}</p>
-                </li>
-              ))}
-            </ul> */}
+            {reviews.map((review, i) => (
+              <li key={i}>
+                <p>
+                  <strong>{review.user_id}</strong>: {review.review_text}
+                </p>
+                <p>Rating: {review.rating}</p>
+              </li>
+            ))}
+          </ul> */}
         </h4>
 
         <button
@@ -74,6 +109,8 @@ const Experience = ({ experience, closeExperience }) => {
           />
         )}
       </div>
+    </div>
+    <ReviewList reviews={reviews} />
     </div>
   );
 };

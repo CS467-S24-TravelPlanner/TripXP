@@ -9,7 +9,7 @@ import {
 // -----*** CREATE ***------
 
 // Create a new Trip
-export function createTrip(req, res) {
+export async function createTrip(req, res) {
   const { body: payload } = req;
 
   // Return Error if no Payload provided
@@ -22,67 +22,75 @@ export function createTrip(req, res) {
     });
   }
 
-  // Returns a 200 status and Success message upon successful creation
-  _createTrip(payload)
-    .then((model) => {
-      return res.status(200).json({
-        status: true,
-        data: "Successfully created new trip.",
-        id: model.id,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+  payload["user_id"] = req.user.dataValues.id;
+
+  try {
+    const model = await _createTrip(payload);
+    return res.status(200).json({
+      status: true,
+      data: "Successfully created new trip.",
+      id: model.id,
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
 
 // -----*** READ ***------
 
 // Return all Trips in DB matching given parameters. If no parameters are given,
 // all trips are returned. If no Trips match given parameters, data is empty.
-export function getAllTrips(req, res) {
-  findAllTrips(req.query)
-    .then((trips) => {
-      return res.status(200).json({
-        status: true,
-        data: trips,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+export async function getAllTrips(req, res) {
+  try {
+    const trips = await findAllTrips({
+      ...req.query,
+      user_id: req.user.dataValues.id,
     });
+    return res.status(200).json({
+      status: true,
+      data: trips,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
 
 // Find trip by ID
-export function getTrip(req, res) {
-  findTrip(req.params.tripId)
-    .then((trip) => {
+export async function getTrip(req, res) {
+  try {
+    const trip = await findTrip(req.params.tripId);
+    if (trip.user_id == req.user.dataValues.id) {
       return res.status(200).json({
         status: true,
         data: trip.toJSON(),
       });
-    })
-    .catch((err) => {
-      return res.status(500).json({
+    } else {
+      return res.status(403).json({
         status: false,
-        error: err,
+        error: {
+          message: "This trip doesn't belong to you.",
+        },
       });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
     });
+  }
 }
 
 // -----*** UPDATE ***------
 
 // Update an existing Trip
-export function updateTrip(req, res) {
+export async function updateTrip(req, res) {
   const { body: payload } = req;
-
-  const tripId = payload.id;
 
   // If the payload does not have any keys,
   // Return an error, as nothing can be updated
@@ -95,42 +103,58 @@ export function updateTrip(req, res) {
     });
   }
 
-  // Returns a 200 status and Success message upon successful update
-  _updateTrip({ id: tripId }, payload)
-    .then(() => {
-      return res.status(200).json({
-        status: true,
-        data: "Successfully updated trip.",
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
+  try {
+    // Verify that the trip to be updated is owned by the user, else 403
+    const trip = await findTrip(req.params.tripId);
+    if (trip.user_id != req.user.dataValues.id) {
+      return res.status(403).json({
         status: false,
-        error: err,
+        error: {
+          message: "This trip doesn't belong to you.",
+        },
       });
+    }
+
+    // Update the trip
+    await _updateTrip({ id: req.params.tripId }, payload);
+    return res.status(200).json({
+      status: true,
+      data: "Successfully updated trip.",
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }
 
 // -----*** DELETE ***------
 
 // Delete exitisting Trip
-export function deleteTrip(req, res) {
-  const tripId = req.query.id;
-
-  // Returns a 200 status and number of deleted trips upon succes
-  _deleteTrip({ id: tripId })
-    .then((numberOfEntriesDeleted) => {
-      return res.status(200).json({
-        status: true,
-        data: {
-          numberOfTripsDeleted: numberOfEntriesDeleted,
+export async function deleteTrip(req, res) {
+  try {
+    const trip = await findTrip(req.params.tripId);
+    if (trip.user_id != req.user.dataValues.id) {
+      return res.status(403).json({
+        status: false,
+        error: {
+          message: "This trip doesn't belong to you.",
         },
       });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        status: false,
-        error: err,
-      });
+    }
+
+    const numberOfEntriesDeleted = await _deleteTrip({ id: req.params.tripId });
+    return res.status(200).json({
+      success: true,
+      data: {
+        numberOfTripsDeleted: numberOfEntriesDeleted,
+      },
     });
+  } catch (err) {
+    return res.status(500).json({
+      status: false,
+      error: err,
+    });
+  }
 }

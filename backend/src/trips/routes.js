@@ -27,9 +27,9 @@ router.post("/", createTrip);
 
 router.post("/:tripId/experience/:expId", createTripExperience);
 
-router.patch("/", updateTrip);
+router.patch("/:tripId", updateTrip);
 
-router.delete("/", deleteTrip);
+router.delete("/:tripId", deleteTrip);
 
 router.delete("/:tripId/experience/:expId", deleteTripExperience);
 

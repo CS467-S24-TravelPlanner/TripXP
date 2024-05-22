@@ -7,7 +7,7 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ username, rating, reviewText }); // Pass review data
+    onSubmit({review_text: reviewText, rating: rating }); // Pass review data
     setUsername(""); // Clear form data after submit
     setRating(0);
     setReviewText("");
@@ -17,7 +17,10 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
     <div className="review-form">
       <h2>Write a Review</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
+
+        {/* We may not need username field - pending complete Auth integration? */}
+
+        {/* <label htmlFor="username">Username:</label>
         <input
           type="text"
           id="username"
@@ -25,7 +28,7 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-        />
+        /> */}
 
         <label htmlFor="rating">Rating:</label>
         <input

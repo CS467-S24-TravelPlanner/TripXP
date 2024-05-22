@@ -52,6 +52,7 @@ export default function LoginAvatarMenu() {
           <MenuItem
             key="profile"
             onClick={() => {
+              handleCloseUserMenu();
               navigate("/profile");
             }}
           >
@@ -60,6 +61,7 @@ export default function LoginAvatarMenu() {
           <MenuItem
             key="logout"
             onClick={() => {
+              handleCloseUserMenu();
               setUser(false);
               navigate("/");
             }}

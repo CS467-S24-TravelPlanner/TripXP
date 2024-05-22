@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { editTrip, getTripExperiences } from "../utilities/TripHandler";
 import { useParams } from "react-router-dom";
 import TripDetails from "../components/TripDetails";
 import { getTrip } from "../utilities/TripHandler";
 import ExperienceList from "../components/ExperienceList";
 import { getExperiences } from "../utilities/ExperienceHandler";
+import { UserContext } from "../contexts/UserContext";
 
 const EditTrip = () => {
   const [trip, setTrip] = useState(false);
   const [tripExperiences, setTripExperiences] = useState(false);
   const [allExperiences, setAllExperiences] = useState(false);
+
+  const { user } = useContext(UserContext);
 
   let { tripId } = useParams();
 
@@ -21,12 +24,11 @@ const EditTrip = () => {
 
   const fetchTrip = async () => {
     try {
-      const res = await getTrip(tripId);
+      const res = await getTrip(tripId, user.raw_jwt);
       if (res.status) {
         setTrip({
           name: res.data.name,
           description: res.data.description,
-          user_id: res.data.user_id,
         });
       } else {
         console.error("Error fetching trip:", res.error);
@@ -38,7 +40,7 @@ const EditTrip = () => {
 
   const fetchTripExperiences = async () => {
     try {
-      const res = await getTripExperiences(tripId);
+      const res = await getTripExperiences(tripId, user.raw_jwt);
       if (res.status) {
         setTripExperiences(res.data);
       } else {
@@ -76,7 +78,7 @@ const EditTrip = () => {
   const handleDetailsSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await editTrip(tripId, { ...trip });
+      const res = await editTrip(tripId, { ...trip }, user.raw_jwt);
       if (res.status) {
         console.log(trip);
         console.log(res);
