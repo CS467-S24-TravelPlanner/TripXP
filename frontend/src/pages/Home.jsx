@@ -1,6 +1,5 @@
 // This is just a temporary HomePage as a placeholder
 import React from "react";
-import ResponsiveAppBar from "../components/Navbar/Navbar";
 
 function HomePage() {
   return (

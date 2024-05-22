@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import "./Navbar.css";
+import loginImg from "../../assets/user.png";
 
 import LOGO from "../../assets/icons8-airplane-emoji/LOGO.png";
 function ResponsiveAppBar() {
@@ -117,6 +118,16 @@ function ResponsiveAppBar() {
                     Trip Page
                   </Typography>
                 </MenuItem>
+                <MenuItem>
+                  <Typography
+                    textAlign="center"
+                    className="collaplse-menu-list"
+                    component="a"
+                    href="/contactUs"
+                  >
+                    Need Help?
+                  </Typography>
+                </MenuItem>
               </Menu>
             }
           </Box>
@@ -160,7 +171,7 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src={loginImg} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -207,6 +218,16 @@ function ResponsiveAppBar() {
                   href="/login"
                 >
                   {"Login/Logout"}
+                </Typography>
+              </MenuItem>
+              <MenuItem>
+                <Typography
+                  textAlign="center"
+                  className="collaplse-menu-list"
+                  component="a"
+                  href="/contactUs"
+                >
+                  Need Help?
                 </Typography>
               </MenuItem>
             </Menu>
