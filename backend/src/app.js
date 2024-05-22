@@ -2,9 +2,8 @@ import express from "express";
 import cors from "cors";
 import { expressjwt as jwt } from "express-jwt";
 import jwksRsa from "jwks-rsa";
-import multer from "multer";
-import path from "path";
-import { fileURLToPath } from 'url';
+import { initDb } from "./db.js";
+import { config } from "dotenv";
 
 // Routes for Experiences
 import ExperienceRoutes from "./experiences/routes.js";
@@ -18,45 +17,31 @@ import TripRoutes from "./trips/routes.js";
 // Routes for Reviews
 import ReviewRoutes from "./reviews/routes.js";
 
-import { uploadImage } from "./experiences/controllers/ImageController.js";
+// Routes for Uploads
+import UploadRoutes from "./uploadRoutes.js";
 
-// Sequelize model imports
-import { Experience } from "./common/models/Experience.js";
-import { User } from "./common/models/User.js";
-import { Trip } from "./common/models/Trip.js";
-import { TripExperience } from "./common/models/TripExperience.js";
-import { Review } from "./common/models/Review.js";
-
-import { Sequelize, Model, DataTypes } from "sequelize";
-
-import { config } from "dotenv";
+import userMiddleware from "./middleware/userMiddleware.js";
 if (process.env.NODE_ENV !== "production") {
   config();
 }
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-const __dirname = path.dirname(__filename); // get the name of the directory
-
-
 // parse json request body
 app.use(express.json());
 
+// Enable CORS with specific options
+const corsOptions = {
+  origin: process.env.FRONTEND_URL,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
 // enable cors
-app.use(cors());
+app.use(cors(corsOptions));
 
-
-// Array for JWT unprotected paths in Regex
-const unprotected = [
-  /\/uploads*/,
-  /\/experience*/,
-  /\//,
-  /\/upload*/,
-  /\/review/
-];
-
-// utilize express-jwt middleware to valide JWTs
+// express-jwt middleware to valide JWTs
 app.use(
   jwt({
     secret: jwksRsa.expressJwtSecret({
@@ -66,8 +51,7 @@ app.use(
     audience: process.env.GOOGLE_IDENTITY_CLIENT_ID,
     issuer: "https://accounts.google.com",
     algorithms: ["RS256"],
-  }).unless({
-    path: unprotected
+    credentialsRequired: false,
   })
 );
 
@@ -75,204 +59,30 @@ app.use(
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {
     return res.status(403).send({
-      success: false,
+      status: false,
       message: err.message,
     });
   }
   next();
 });
 
-// Connect to Production DB
-const sequelize = new Sequelize(process.env.DB_CONNECTION_STRING);
-
-// Verify DB Connection
-try {
-  await sequelize.authenticate();
-  console.log("Connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
-
-// Initializing the Models on sequelize
-Experience.init(
-  {
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    latitude: {
-      type: DataTypes.REAL,
-      allowNull: false,
-    },
-    longitude: {
-      type: DataTypes.REAL,
-      allowNull: false,
-    },
-    image_url: {
-      type: DataTypes.STRING,
-    },
-    rating: {
-      type: DataTypes.REAL,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING,
-    },
-    keywords: {
-      type: DataTypes.JSON,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-    },
-  },
-  { sequelize }
-);
-
-User.init(
-  {
-    jwt_unique: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-  },
-  { sequelize }
-);
-
-Trip.init(
-  {
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.STRING,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-    },
-  },
-  { sequelize }
-);
-
-TripExperience.init(
-  {
-    TripId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    ExperienceId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  },
-  { sequelize }
-);
-
-Review.init(
-  {
-    experience_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    user_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    review_text: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    rating: {
-      type: DataTypes.REAL,
-      allowNull: false,
-    },
-  },
-  { sequelize }
-);
-
-// Set the Many-to-Many relationship for Models.
-Experience.belongsToMany(Trip, { through: "TripExperience" });
-Trip.belongsToMany(Experience, { through: "TripExperience" });
-
-// Syncing the models that are defined on sequelize with DB tables
-sequelize
-  .sync()
+// Initialize the database and start the server
+initDb()
   .then(() => {
-    console.log("Sequelize Initialized");
+    // Middleware requiring DB
+    app.use(userMiddleware);
 
-    // Attaching Routes to the app.
+    // Attach routes to the app
     app.use("/experience", ExperienceRoutes);
     app.use("/user", UserRoutes);
     app.use("/trip", TripRoutes);
     app.use("/review", ReviewRoutes);
-
-    //app.use("/upload", ImageRoutes);
-    // app.use('/upload', express.static(__dirname));
-    // app.use('/uploads', express.static(__dirname));
-
-    //let path = process.env.RAILWAY_VOLUME_MOUNT_PATH
-
-    let storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, '/uploads/');
-      },
-      filename: function (req, file, cb) {
-        cb(null, new Date().toISOString() +  file.originalname);
-      },
-    });
-    
-    
-    let upload = multer({ storage: storage });
-    
-    app.post(
-      "/upload",
-      upload.single("uploaded_file"),
-      uploadImage
-    );
+    app.use("/", UploadRoutes);
 
     // healthcheck endpoint
     app.get("/", (req, res) => {
       res.status(200).send({ status: "ok" });
     });
-
-    app.get("/upload", (req, res) => {
-      res.status(200).send({ status: "ok" });
-    });
-
-
-  app.get("/uploads", function (req, res, next) {
-    let options = {
-      root: '/uploads',
-      dotfiles: 'deny',
-      headers: {
-        'x-timestamp': Date.now(),
-        'x-sent': true
-      }
-    }
-
-    let fileName = req.query.fileName
-    res.sendFile(fileName, options, function (err) {
-      if (err) {
-        next(err)
-      } else {
-        console.log('Sent:', fileName)
-      }
-    })
-  })
   })
   .catch((err) => {
     console.error("Can't connect to /upload:", err);
