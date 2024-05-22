@@ -50,10 +50,7 @@ export default function ExperienceList({
   ];
 
   if (tripId) {
-    columns = [
-      { id: "partOfTrip", label: "Part of Trip", minWidth: 50 },
-      ...columns,
-    ];
+    columns = [{ id: "inTrip", label: "In Trip", minWidth: 50 }, ...columns];
   }
 
   return (
@@ -87,10 +84,9 @@ export default function ExperienceList({
                   >
                     {columns.map((column) => {
                       const value = experience[column.id];
-                      if (column.id === "partOfTrip") {
+                      if (column.id === "inTrip") {
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            <p>{experience.id}</p>
                             <ExpInTripCheckbox
                               expId={experience.id}
                               tripId={tripId}

@@ -6,9 +6,9 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
  * @param {string} path - The relative path the request will be made to.
  * @param {JSON} [params] - An optional set of parameters for the request.
  * @param {JSON} [body] - An optional body for the request.
+ * @param {string} auth_token - The full JWT for authorization.
  */
-async function postData(path = "", params = {}, body = {}) {
-  console.log(body);
+async function postData(path = "", params = {}, body = {}, auth_token = null) {
   const URLparams = Object.keys(params).length
     ? new URLSearchParams(Object.entries(params))
     : "";
@@ -27,6 +27,9 @@ async function postData(path = "", params = {}, body = {}) {
 
           body: JSON.stringify(body),
         };
+
+  if (auth_token) options.headers["Authorization"] = `Bearer ${auth_token}`;
+
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
   if (response) {
     const data = await response.json();
@@ -39,8 +42,9 @@ async function postData(path = "", params = {}, body = {}) {
  * The return value is the response from the server in JSON format.
  * @param {string} path - The relative path the request will be made to.
  * @param {JSON} [params] - An optional set of parameters for the request.
+ * @param {string} auth_token - The full JWT for authorization.
  */
-async function getData(path = "", params = {}) {
+async function getData(path = "", params = {}, auth_token = null) {
   const URLparams = Object.keys(params).length
     ? new URLSearchParams(Object.entries(params))
     : "";
@@ -48,6 +52,12 @@ async function getData(path = "", params = {}) {
   const options = {
     method: "GET",
   };
+
+  if (auth_token) {
+    options["headers"] = {};
+    options.headers["Authorization"] = `Bearer ${auth_token}`;
+  }
+
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
   if (response) {
     const data = await response.json();
@@ -58,8 +68,9 @@ async function getData(path = "", params = {}) {
 /**
  * @param {string} path - The relative path the request will be made to.
  * @param {JSON} [body] - An optional body for the request.
+ * @param {string} auth_token - The full JWT for authorization.
  */
-async function patchData(path = "", body = {}) {
+async function patchData(path = "", body = {}, auth_token = null) {
   const options = {
     method: "PATCH",
     headers: {
@@ -67,6 +78,9 @@ async function patchData(path = "", body = {}) {
     },
     body: JSON.stringify(body),
   };
+
+  if (auth_token) options.headers["Authorization"] = `Bearer ${auth_token}`;
+
   const response = await fetch(apiUrl + path, options);
   if (response) {
     const data = await response.json();
@@ -75,12 +89,13 @@ async function patchData(path = "", body = {}) {
 }
 
 /**
- * deleteData sends a DELeTE request to the API endpoint at the specifed path.
+ * deleteData sends a DELETE request to the API endpoint at the specifed path.
  * The return value is the response from the server in JSON format.
  * @param {string} path - The relative path the request will be made to.
  * @param {JSON} [params] - An optional set of parameters for the request.
+ * @param {string} auth_token - The full JWT for authorization.
  */
-async function deleteData(path = "", params = {}) {
+async function deleteData(path = "", params = {}, auth_token = null) {
   const URLparams = Object.keys(params).length
     ? new URLSearchParams(Object.entries(params))
     : "";
@@ -88,6 +103,12 @@ async function deleteData(path = "", params = {}) {
   const options = {
     method: "DELETE",
   };
+
+  if (auth_token) {
+    options["headers"] = {};
+    options.headers["Authorization"] = `Bearer ${auth_token}`;
+  }
+
   const response = await fetch(apiUrl + path + "?" + URLparams, options);
   if (response) {
     const data = await response.json();
