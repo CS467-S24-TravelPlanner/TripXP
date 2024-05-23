@@ -29,10 +29,6 @@ const App = () => {
     google.accounts.id.prompt();
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <div>
       <UserContext.Provider value={{ user, setUser }}>

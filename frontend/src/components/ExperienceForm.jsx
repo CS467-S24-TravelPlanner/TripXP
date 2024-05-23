@@ -14,15 +14,12 @@ import {
 } from "@mui/material";
 import KeywordsList from "./KeywordsList";
 
-
 function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
 
-
-  const [image, setImage] = useState("")
-
+  const [image, setImage] = useState("");
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -37,14 +34,12 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
   };
 
   const handleImageChange = (e) => {
-    console.log(e.target.value)
     setImage(e.target.value);
   };
 
-
   const handleFakeSubmit = (e) => {
-    console.log(e.target)
-    e.preventDefault()
+    console.log(e.target);
+    e.preventDefault();
   };
 
   return (
@@ -97,14 +92,14 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
           <KeywordsList keywords={keywords} setKeywords={setKeywords} />
         </FormControl>
 
-        <FormControl sx={{ m: 1 }} >
+        <FormControl sx={{ m: 1 }}>
           <TextField
-          id="imageUpload"
-          label="Image Upload"
-          type="file"
-          name="uploaded_file"
-          value={image}
-          onChange={handleImageChange}
+            id="imageUpload"
+            label="Image Upload"
+            type="file"
+            name="uploaded_file"
+            value={image}
+            onChange={handleImageChange}
           />
         </FormControl>
 
