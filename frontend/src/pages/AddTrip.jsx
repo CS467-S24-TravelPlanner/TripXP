@@ -43,6 +43,7 @@ const AddTrip = () => {
   };
 
   return (
+    <div style={{ marginTop: "40px" }}>
     <>
       <h1>Add Trip</h1>
       <TripDetails
@@ -56,6 +57,7 @@ const AddTrip = () => {
         message={toast.message}
       />
     </>
+    </div>
   );
 };
 

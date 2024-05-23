@@ -29,7 +29,7 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <div style={{ textAlign: "center", marginTop: "10px" }}>
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
         <img
           src={user ? user.picture : userPicture}
           alt="User Picture"

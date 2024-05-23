@@ -2,7 +2,7 @@ import { Box, Button, TextField } from "@mui/material";
 
 const TripDetails = ({ trip, handleChange, handleSubmit }) => {
   return (
-    <div>
+    <div >
       <Box
         component="form"
         noValidate

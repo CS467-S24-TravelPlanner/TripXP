@@ -40,7 +40,7 @@ function TripPage() {
   }
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
       {trip && experiences ? (
         <>
           <Paper>
