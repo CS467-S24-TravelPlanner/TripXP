@@ -21,6 +21,7 @@ const Experience = ({ experience, closeExperience }) => {
       async function fetchReviews() {
         if (!reviewsLoaded) {
           getReviews({ experience_id: experience.id }).then((results) => {
+            console.log(results.data)
             const reviewList = []
             for (let i = 0; i < results.data.length; i++) {
               reviewList.push(results.data[i]);
@@ -79,17 +80,6 @@ const Experience = ({ experience, closeExperience }) => {
         <h4 className="ratings-section">
           Rating:
           <RatingDisplay value={experience.rating} />
-          {/* Display detailed reviews */}
-          {/* <ul>
-            {reviews.map((review, i) => (
-              <li key={i}>
-                <p>
-                  <strong>{review.user_id}</strong>: {review.review_text}
-                </p>
-                <p>Rating: {review.rating}</p>
-              </li>
-            ))}
-          </ul> */}
         </h4>
 
         <button

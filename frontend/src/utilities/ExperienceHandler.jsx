@@ -1,4 +1,5 @@
 import { postData, getData, patchData, deleteData } from "./ApiService.jsx";
+import { getReviews } from "./ReviewHandler.jsx";
 
 /**
  * createExperience adds a new Experience to the Database.
@@ -19,7 +20,7 @@ function createExperience(
   latitude,
   longitude,
   image_url = "",
-  rating = 0,
+  rating = 5,
   location = "",
   keywords = {},
   user_id
@@ -74,6 +75,23 @@ function editExperience(id, newData = {}) {
   return patchData("/experience", newExperience);
 }
 
+function updateRating(id, currentRating, newRating) {
+  getReviews({ experience_id: id }).then((results) => {
+    const reviewsList = results.data;
+    if (!reviewsList || !reviewsList.length) {
+      editExperience(id, { rating: newRating });
+    } else {
+      let updatedRating = parseInt(newRating);
+      for (let i = 0; i < reviewsList.length; i++) {
+        updatedRating += parseInt(reviewsList[i].rating);
+      }
+      updatedRating /= (reviewsList.length + 1)
+      editExperience(id, { rating: updatedRating });
+    }
+  })
+
+}
+
 /**
  * deleteExperience removes an existing Experience in the Database.
  * The return value is the response from the server in JSON format.
@@ -86,6 +104,7 @@ function deleteExperience(id) {
 export {
   createExperience,
   editExperience,
+  updateRating,
   getExperience,
   getExperiences,
   deleteExperience,
