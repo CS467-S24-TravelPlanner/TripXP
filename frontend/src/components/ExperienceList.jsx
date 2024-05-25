@@ -43,10 +43,10 @@ export default function ExperienceList({
   };
 
   let columns = [
-    { id: "title", label: "Title", minWidth: 170 },
-    { id: "description", label: "Description", minWidth: 100 },
+    { id: "title", label: "Title", minWidth: 180 },
+    { id: "description", label: "Description", minWidth: 225 },
     { id: "location", label: "Location", minWidth: 170 },
-    { id: "rating", label: "Rating", minWidth: 100 },
+    { id: "rating", label: "Rating", minWidth: 125 },
   ];
 
   if (tripId) {
@@ -55,7 +55,7 @@ export default function ExperienceList({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 440, minHeight: 440, minWidth: 850, maxWidth: 850 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
