@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/Home";
 import LoginForm from "./pages/Login.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import TripPage from "./pages/TripPage.jsx";
@@ -35,10 +34,10 @@ const App = () => {
         <Router>
           <NavBar />
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<ExperienceSearch />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/experiences" element={<ExperienceSearch />} />
+
             <Route path="/experience/add" element={<AddExperience />} />
             {/* TODO Experience Edit page */}
             <Route path="/trip/:tripId" element={<TripPage />} />

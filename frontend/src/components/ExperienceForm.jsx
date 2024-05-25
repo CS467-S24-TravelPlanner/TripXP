@@ -52,7 +52,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
       autoComplete="off"
       margin={10}
       padding={10}
-      border={"2px solid darkgray"}
+      border={"3px solid #364958"}
       onSubmit={handleSubmit}
     >
       <Stack spacing={3}>
@@ -103,7 +103,15 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
           />
         </FormControl>
 
-        <Button type="submit" variant="outlined">
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{
+            backgroundColor: "#364958",
+            color: "white",
+            borderRadius: "7px",
+          }}
+        >
           Create Experience
         </Button>
       </Stack>

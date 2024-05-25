@@ -2,13 +2,20 @@ import { Box, Button, TextField } from "@mui/material";
 
 const TripDetails = ({ trip, handleChange, handleSubmit }) => {
   return (
-    <div>
+    <div >
       <Box
         component="form"
         noValidate
+        alignItems="stretch"
         autoComplete="off"
+        display="block"
+        margin={10}
+        padding={10}
+        border={"3px solid #364958"}
         onSubmit={handleSubmit}
+        
       >
+        <div style={{ marginBottom: "36px"}}>
         <TextField
           required
           id="trip-name"
@@ -17,20 +24,26 @@ const TripDetails = ({ trip, handleChange, handleSubmit }) => {
           name="name"
           value={trip.name}
           onChange={handleChange}
+          sx={{ width: '100%' }}
         />
+        </div>
+        <div style={{ marginBottom: "36px" }}>
         <TextField
           required
           id="trip-desc"
           label="Trip Description"
           multiline
-          rows={4}
+          rows={5}
           inputProps={{ maxLength: 255 }}
           name="description"
           value={trip.description}
           onChange={handleChange}
+          sx={{ width: '100%' }}
+          
         />
-        <Button type="submit" variant="contained">
-          Submit
+        </div>
+        <Button type="submit" variant="contained" fullWidth  sx={{ backgroundColor: '#364958', color: 'white', borderRadius: '7px' }}>
+          Create Trip
         </Button>
       </Box>
     </div>

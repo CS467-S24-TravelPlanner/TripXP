@@ -5,6 +5,7 @@ import { getTrip, getTripExperiences } from "../utilities/TripHandler";
 import ExperienceList from "../components/ExperienceList";
 import { UserContext } from "../contexts/UserContext";
 
+
 function TripPage() {
   const [trip, setTrip] = useState(null);
   const [experiences, setExperiences] = useState(null);
@@ -39,7 +40,7 @@ function TripPage() {
   }
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "80px" }}>
       {trip && experiences ? (
         <>
           <Paper>

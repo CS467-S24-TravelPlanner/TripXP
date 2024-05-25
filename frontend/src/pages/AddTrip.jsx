@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import TripDetails from "../components/TripDetails";
 import { UserContext } from "../contexts/UserContext";
 import Toast from "../components/Toast";
+import "../index.css";
+import travelpic from "../assets/travelpic.jpg.jpg";
+
 
 const AddTrip = () => {
   const { user } = useContext(UserContext);
@@ -43,8 +46,12 @@ const AddTrip = () => {
   };
 
   return (
+    <div style={{ marginTop: "80px", display: "flex" }}>
+      <div style={{ flex: "1",height: "100%", borderRadius: "7px", border: "3px solid #364958",  boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)" }}>
     <>
-      <h1>Add Trip</h1>
+      <h1>Embark on a New Journey</h1>
+
+      <h2>Tell Us About Your Trip:</h2>
       <TripDetails
         trip={trip}
         handleChange={handleChange}
@@ -55,7 +62,28 @@ const AddTrip = () => {
         severity={toast.severity}
         message={toast.message}
       />
+      
     </>
+    </div>
+    <div style={{ 
+      flex: "1", 
+      position: "relative",
+      right: "0",
+      left: "0",
+      
+       }}>
+        <img src={travelpic} alt="Travel Pic" 
+        style={{ 
+          width: "100%",
+          height: "81.5%",
+          maxWidth: "100%",
+          objectFit: "cover",
+          borderRadius: "7px",
+          boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)"
+          
+           }} />
+      </div>
+    </div>
   );
 };
 

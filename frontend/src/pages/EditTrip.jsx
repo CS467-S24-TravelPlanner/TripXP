@@ -90,6 +90,7 @@ const EditTrip = () => {
 
   return (
     <>
+    <div style={{ textAlign: "center", marginTop: "80px" }}>
       <h1>Edit Trip</h1>
       {trip && (
         <TripDetails
@@ -108,7 +109,9 @@ const EditTrip = () => {
         // TODO Loading wheel insert
         <p>Loading...</p>
       )}
+      </div>
     </>
+    
   );
 };
 
