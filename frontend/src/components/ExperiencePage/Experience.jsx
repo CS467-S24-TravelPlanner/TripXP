@@ -63,7 +63,7 @@ const Experience = ({ experience, closeExperience }) => {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
     <div className="experiences">
       <button onClick={closeExperience} style={{width: "100px", height: "65px", margin: "5px"}}>Close Experience</button>
 
