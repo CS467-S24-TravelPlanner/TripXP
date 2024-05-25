@@ -1,17 +1,5 @@
 import { React, useState } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Stack,
-  OutlinedInput,
-  InputLabel,
-  MenuItem,
-  ListItemText,
-  Select,
-  Checkbox,
-} from "@mui/material";
+import { Box, Button, FormControl, TextField, Stack } from "@mui/material";
 import KeywordsList from "./KeywordsList";
 
 function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
@@ -98,6 +86,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
             label="Image Upload"
             type="file"
             name="uploaded_file"
+            InputLabelProps={{ shrink: true }}
             value={image}
             onChange={handleImageChange}
           />
