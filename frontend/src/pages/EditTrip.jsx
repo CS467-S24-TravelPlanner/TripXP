@@ -93,7 +93,7 @@ const EditTrip = () => {
 
   return (
     <>
-    <div style={{ textAlign: "center", marginTop: "40px" }}>
+    <div style={{ textAlign: "center", marginTop: "80px" }}>
       <h1>Edit Trip</h1>
       {trip && (
         <TripDetails

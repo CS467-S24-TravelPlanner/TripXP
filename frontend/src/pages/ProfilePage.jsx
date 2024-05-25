@@ -3,6 +3,7 @@ import userPicture from "../assets/user-solid.svg";
 import { getTrips } from "../utilities/TripHandler";
 import { Link } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
+import "../index.css";
 
 const ProfilePage = () => {
   const [trips, setTrips] = useState([]);
@@ -29,7 +30,7 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <div style={{ textAlign: "center", marginTop: "40px" }}>
+      <div style={{ textAlign: "center", marginTop: "80px" }}>
         <img
           src={user ? user.picture : userPicture}
           alt="User Picture"
@@ -43,43 +44,47 @@ const ProfilePage = () => {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        <h2>{user ? user.given_name + "'s " : ""}Trips</h2>
+        <h1>{user ? user.given_name + "'s " : ""}Trips</h1>
         <div
           style={{
+            marginTop: "100px",
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr))",
             gap: "20px",
+            
           }}
         >
           {trips.map((trip) => (
             <Link
               key={trip.id}
               to={`/trip/${trip.id}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              
             >
               <div
                 style={{
-                  border: "1px solid #ddd",
+                  marginBottom: "35px",
+                  border: "1px solid darkgray ",
                   borderRadius: "5px",
                   padding: "10px",
                   cursor: "pointer",
+                  
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = "#3498db";
-                  e.currentTarget.style.borderWidth = "3px";
+                  e.currentTarget.style.borderColor = "#364958";
+                  e.currentTarget.style.borderWidth = "2px";
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = "#ddd";
+                  e.currentTarget.style.borderColor = "darkgray";
                   e.currentTarget.style.borderWidth = "1px";
                 }}
               >
-                <h3
-                  style={{ margin: 0, textDecoration: "none", color: "black" }}
+                <h2
+                  style={{ margin: 0 }}
                 >
                   {trip.name}
-                </h3>
+                </h2>
                 <p
-                  style={{ margin: 0, textDecoration: "none", color: "black" }}
+                  style={{ margin: 0}}
                 >
                   {trip.description}
                 </p>

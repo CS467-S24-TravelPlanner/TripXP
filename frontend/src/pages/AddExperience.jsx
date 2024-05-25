@@ -63,14 +63,25 @@ function AddExperience() {
     navigate("/profile", { replace: true });
   }
 
-  return experience ? (
-    <Experience experience={experience} closeExperience={handleClose} />
-  ) : (
-    <ExperienceForm
-      handleSubmit={handleSubmit}
-      keywords={keywords}
-      setKeywords={setKeywords}
-    />
+  return (
+    <div>
+      {experience ? (
+        <>
+          
+          <Experience experience={experience} closeExperience={handleClose} />
+        </>
+      ) : (
+        <>
+          <h1 style={{ marginTop: "80px" }}>Share your Travel Adventure</h1>
+          <h2>Tell us about your Experience:</h2>
+          <ExperienceForm
+            handleSubmit={handleSubmit}
+            keywords={keywords}
+            setKeywords={setKeywords}
+          />
+        </>
+      )}
+    </div>
   );
 }
 

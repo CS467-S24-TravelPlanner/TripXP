@@ -57,17 +57,19 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
       autoComplete="off"
       margin={10}
       padding={10}
-      border={"2px solid darkgray"}
+      border={"3px solid #364958"}
       onSubmit={handleSubmit}
     >
       <Stack spacing={3}>
-        <FormControl fullWidth={true} variant="filled" display="inline">
+        
+        <FormControl fullWidth={true} variant="filled" display="inline" >
           <TextField
             id="titleInput"
             label="Title"
             type="text"
             onChange={handleTitleChange}
             value={title}
+            
           />
         </FormControl>
 
@@ -98,9 +100,9 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
         </FormControl>
 
         <FormControl sx={{ m: 1 }} >
-          <TextField
+          <TextField 
           id="imageUpload"
-          label="Image Upload"
+          label=""
           type="file"
           name="uploaded_file"
           value={image}
@@ -108,7 +110,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
           />
         </FormControl>
 
-        <Button type="submit" variant="outlined">
+        <Button type="submit" variant="outlined" sx={{ backgroundColor: '#364958', color: 'white', borderRadius: '7px' }}>
           Create Experience
         </Button>
       </Stack>
