@@ -23,8 +23,7 @@ function createReview(experienceId, userId, reviewText, rating) {
     let currentRating = res.data.rating;
     updateRating(experienceId, currentRating, rating);
     return postData("/review", {}, newReview);
-  })
-  
+  });
 }
 
 /**

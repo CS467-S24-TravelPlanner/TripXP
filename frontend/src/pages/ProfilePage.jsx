@@ -10,14 +10,12 @@ const ProfilePage = () => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    console.log(user);
     fetchTrips();
   }, [user]);
 
   const fetchTrips = async () => {
     try {
       const response = await getTrips(user.user_id, user.raw_jwt);
-      console.log(response);
       if (response.status) {
         setTrips(response.data);
       } else {

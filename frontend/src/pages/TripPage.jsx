@@ -17,7 +17,6 @@ function TripPage() {
   useEffect(() => {
     fetchTrip(tripId);
     fetchTripExperiences(tripId);
-    console.log("trip experiences", experiences);
   }, [user]);
 
   function fetchTrip(tripId) {

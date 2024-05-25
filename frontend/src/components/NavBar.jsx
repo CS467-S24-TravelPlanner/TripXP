@@ -13,9 +13,6 @@ const pages = [
 
 function ResponsiveAppBar() {
   const navigate = useNavigate();
-  const handleLinkClick = (event) => {
-    console.log(event.target.id);
-  };
 
   return (
     

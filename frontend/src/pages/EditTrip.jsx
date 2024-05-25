@@ -57,7 +57,6 @@ const EditTrip = () => {
       if (res.status) {
         if (res.data.length) {
           setAllExperiences(res.data);
-          console.log(res.data);
         }
       } else {
         console.error("Error fetching experiences list:", res.error);
@@ -80,8 +79,6 @@ const EditTrip = () => {
     try {
       const res = await editTrip(tripId, { ...trip }, user.raw_jwt);
       if (res.status) {
-        console.log(trip);
-        console.log(res);
         console.log(`Trip updated successfully.`);
       } else {
         console.error("Error updating trip:", res.error);

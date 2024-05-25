@@ -19,7 +19,6 @@ export function createTripExperience(tripexperience) {
 // Utilize sequelize eager loading to inner join and query for experiences
 // associated with TripId provided in query.
 export async function findAllTripExperiences(query) {
-  console.log(query);
   return Experience.findAll({
     include: {
       model: Trip,

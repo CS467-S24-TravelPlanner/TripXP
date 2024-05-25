@@ -31,7 +31,7 @@ const LoginForm = () => {
   }, [divRef.current]);
 
   const handleLogin = () => {
-    console.log("Logging in with:", { username, password });
+    console.log("Logging in with: ", username);
   };
 
   const handleClear = () => {
@@ -39,12 +39,8 @@ const LoginForm = () => {
     setPassword("");
   };
 
-  const responseGoogleTrue = (response) => {
-    console.log("Login:" + response);
-  };
-  const responseGooglefalse = (response) => {
-    console.log("Login:" + response);
-  };
+  const responseGoogleTrue = (response) => {};
+  const responseGooglefalse = (response) => {};
 
   return (
     <Paper
