@@ -42,14 +42,12 @@ function SearchMap({ expList, expClick }) {
 
   // Search state variables
   const [searchLocation, setSearchLocation] = useState(null); // Coordinates of the search location
-  const [searchRadius, setSearchRadius] = useState(1000); // Search radius in meters
+  const [searchRadius, setSearchRadius] = useState(160934); // Search radius in meters (def 100 miles)
   const [searchBounds, setSearchBounds] = useState(null); // Search Area on Map
 
   // The list of Experiences meeting search parameters
   const [filteredExpList, setFilteredExpList] = useState(expList.data);
-
   const [keywords, setKeywords] = useState([]);
-
   const [selectedExp, setSelectedExp] = useState(null);
 
   // Map loading utility function - returns isLoaded bool and Error, if applicable
@@ -111,7 +109,7 @@ function SearchMap({ expList, expClick }) {
   // Update search area radius
   const handleDistanceChange = (e, val) => {
     if (val) {
-      setSearchRadius(val * 1000);
+      setSearchRadius(val * 1609.34); // Convert miles to meters
     }
   };
 
@@ -153,13 +151,13 @@ function SearchMap({ expList, expClick }) {
           <Box minWidth="34%" maxWidth="34%"></Box>
           <Box minWidth="33%" maxWidth="33%">
             <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
-              Within {searchRadius / 1000} Km
+              Within {Math.floor(searchRadius / 1609.34)} miles
             </InputLabel>
             <Slider
-              defaultValue={0}
+              defaultValue={searchRadius / 1609.34}
               valueLabelDisplay="auto"
               shiftStep={100}
-              step={25}
+              step={50}
               marks
               min={0}
               max={500}
@@ -262,7 +260,7 @@ function SearchMap({ expList, expClick }) {
                       center={center}
                       options={{
                         strokeColor: "#FF0000",
-                        strokeOpacity: 0.8,
+                        strokeOpacity: 0.6,
                         strokeWeight: 2,
                         fillColor: "#FF0000",
                         fillOpacity: 0.15,
