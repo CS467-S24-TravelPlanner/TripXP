@@ -5,6 +5,10 @@ import ReviewForm from "../ReviewForm/ReviewForm"; // Import ReviewForm componen
 import RatingDisplay from "../RatingDisplay.jsx";
 import { createReview, getReviews } from "../../utilities/ReviewHandler.jsx";
 import ReviewList from "../ReviewList.jsx";
+import {
+  Paper,
+  Stack
+} from "@mui/material";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -63,8 +67,8 @@ const Experience = ({ experience, closeExperience }) => {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "40px" }}>
-    <div className="experiences">
+    <Paper sx={{ textAlign: "center", marginTop: "40px" }}>
+      <Stack className="experiences" sx={{alignItems: "center"}}>
       <button onClick={closeExperience} style={{width: "100px", height: "65px", margin: "5px"}}>Close Experience</button>
 
       <div key={experience.id} className="experience">
@@ -78,7 +82,7 @@ const Experience = ({ experience, closeExperience }) => {
         />
 
         <h4 className="ratings-section">
-          Rating:
+          Average Rating:
           <RatingDisplay value={experience.rating} />
         </h4>
 
@@ -99,9 +103,9 @@ const Experience = ({ experience, closeExperience }) => {
           />
         )}
       </div>
-    </div>
     <ReviewList reviews={reviews} />
-    </div>
+    </Stack>
+    </Paper>
   );
 };
 
