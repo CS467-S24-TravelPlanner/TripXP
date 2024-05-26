@@ -67,7 +67,7 @@ export default function ExperienceList({
                   align="center"
                   style={{ minWidth: column.minWidth }}
                   sx={{
-                    backgroundColor: "#7b9173",
+                    backgroundColor: "#bfc8ad",
                     fontSize: "1.15em",
                     borderBottom: "solid black 2px",
                   }}
@@ -109,7 +109,7 @@ export default function ExperienceList({
                             align={column.align}
                             sx={{
                               backgroundColor:
-                                i % 2 === 0 ? "white" : "#d6f5cb",
+                                i % 2 === 0 ? "white" : "#ebece8",
                             }}
                           >
                             <RatingDisplay value={value} />
@@ -122,7 +122,7 @@ export default function ExperienceList({
                             align={column.align}
                             sx={{
                               backgroundColor:
-                                i % 2 === 0 ? "white" : "#d6f5cb",
+                                i % 2 === 0 ? "white" : "#ebece8",
                             }}
                           >
                             {value}
@@ -144,7 +144,7 @@ export default function ExperienceList({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{ backgroundColor: "#7b9173", borderTop: "solid black 2px" }}
+        sx={{ backgroundColor: "#bfc8ad", borderTop: "solid black 2px" }}
       />
     </Paper>
   );

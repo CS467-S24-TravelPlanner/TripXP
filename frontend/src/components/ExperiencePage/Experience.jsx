@@ -7,15 +7,15 @@ import { createReview, getReviews } from "../../utilities/ReviewHandler.jsx";
 import ReviewList from "../ReviewList.jsx";
 import {
   Paper,
-  Stack
+  Stack,
+  Button,
+  Typography
 } from "@mui/material";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Experience = ({ experience, closeExperience }) => {
-  const [showReviewForm, setShowReviewForm] = useState({
-    /* Object to store form visibility for each experience */
-  });
+  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const [reviews, setReviews] = useState([]);
   const [reviewsLoaded, setReviewsLoaded] = useState(false);
@@ -59,22 +59,22 @@ const Experience = ({ experience, closeExperience }) => {
       setReviewsLoaded(false);
     }
 
-    setShowReviewForm({ ...showReviewForm, [experienceId]: false }); // Close form after submit
+    setShowReviewForm(false); // Close form after submit
   };
 
-  const handleReviewCancel = (experienceId) => {
-    setShowReviewForm({ ...showReviewForm, [experienceId]: false });
+  const handleReviewCancel = () => {
+    setShowReviewForm(false);
   };
 
   return (
     <Paper sx={{ textAlign: "center", marginTop: "40px" }}>
-      <Stack className="experiences" sx={{alignItems: "center"}}>
-      <button onClick={closeExperience} style={{width: "100px", height: "65px", margin: "5px"}}>Close Experience</button>
+      <Stack className="experiences" sx={{alignItems: "center", m:2}}>
+      <Button onClick={closeExperience} sx={{width: "100px", height: "65px", margin: "5px"}}>Close Experience</Button>
 
-      <div key={experience.id} className="experience">
-        <h2>{experience.title}</h2>
-        <p>{experience.description}</p>
-        <p>{experience.location}</p>
+        <Typography variant="h3">{experience.title}</Typography>
+        <Typography variant="h5" sx={{marginBottom:2}}>{experience.location}</Typography>
+        <Typography variant="cite" sx={{marginBottom:2}}>{experience.description}</Typography>
+        
         <img
           src={apiUrl + "/uploads/?fileName=" + experience.image_url}
           alt={experience.title}
@@ -86,15 +86,22 @@ const Experience = ({ experience, closeExperience }) => {
           <RatingDisplay value={experience.rating} />
         </h4>
 
-        <button
-          className="write-review-btn"
+          <Button
+          type="button"
+          variant="outlined"
           onClick={() => handleWriteReviewClick(experience.id)}
+          sx={{
+            backgroundColor: "#364958",
+            color: "white",
+            borderRadius: "7px",
+            margin: "5px",
+          }}
         >
           Write a Review
-        </button>
-        <button className="add-to-trip-btn">Add to Trip</button>
+        </Button>
+        {/* <button className="add-to-trip-btn">Add to Trip</button> */}
 
-        {showReviewForm[experience.id] && ( // Conditionally render ReviewForm for specific experience
+        {showReviewForm && ( // Conditionally render ReviewForm for specific experience
           <ReviewForm
             onSubmit={(reviewData) =>
               handleReviewSubmit(reviewData, experience.id)
@@ -102,7 +109,6 @@ const Experience = ({ experience, closeExperience }) => {
             onCancel={() => handleReviewCancel(experience.id)}
           />
         )}
-      </div>
     <ReviewList reviews={reviews} />
     </Stack>
     </Paper>
