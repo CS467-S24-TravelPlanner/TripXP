@@ -55,16 +55,22 @@ export default function ExperienceList({
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 440, minHeight: 440, minWidth: 850, maxWidth: 850 }}>
+      <TableContainer
+        sx={{ maxHeight: 440, minHeight: 440, minWidth: 850, maxWidth: 850 }}
+      >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow >
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align="center"
                   style={{ minWidth: column.minWidth }}
-                  sx={{backgroundColor: "#7b9173", fontSize: "1.15em", borderBottom: "solid black 2px" }}
+                  sx={{
+                    backgroundColor: "#7b9173",
+                    fontSize: "1.15em",
+                    borderBottom: "solid black 2px",
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -82,7 +88,6 @@ export default function ExperienceList({
                     tabIndex={-1}
                     key={experience.id}
                     onClick={() => handleExperienceClick(experience)}
-                    
                   >
                     {columns.map((column) => {
                       const value = experience[column.id];
@@ -99,13 +104,27 @@ export default function ExperienceList({
                       }
                       if (column.id === "rating") {
                         return (
-                          <TableCell key={column.id} align={column.align} sx={{backgroundColor: i % 2 === 0 ? "white" : "#d6f5cb"}}>
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{
+                              backgroundColor:
+                                i % 2 === 0 ? "white" : "#d6f5cb",
+                            }}
+                          >
                             <RatingDisplay value={value} />
                           </TableCell>
                         );
                       } else {
                         return (
-                          <TableCell key={column.id} align={column.align} sx={{backgroundColor: i % 2 === 0 ? "white" : "#d6f5cb"}}>
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            sx={{
+                              backgroundColor:
+                                i % 2 === 0 ? "white" : "#d6f5cb",
+                            }}
+                          >
                             {value}
                           </TableCell>
                         );
@@ -125,7 +144,7 @@ export default function ExperienceList({
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{backgroundColor: "#7b9173", borderTop: "solid black 2px"}}
+        sx={{ backgroundColor: "#7b9173", borderTop: "solid black 2px" }}
       />
     </Paper>
   );
