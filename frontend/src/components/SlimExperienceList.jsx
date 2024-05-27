@@ -141,13 +141,10 @@ function CollapsibleRow({
           "& > *": { borderBottom: "unset" },
           backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
         }}
+        onClick={() => handleCollapseClick()}
       >
         <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => handleCollapseClick()}
-          >
+          <IconButton aria-label="expand row" size="small">
             {openIndex === i ? (
               <KeyboardArrowRightIcon />
             ) : (
