@@ -80,6 +80,34 @@ function SearchMap({ expList, expClick }) {
     setBounds(mapRef.current.getBounds());
   };
 
+  // Try to get user location from browser
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        const tempCircle = new google.maps.Circle({
+          center: userLocation,
+          radius: searchRadius,
+        });
+        setSearchBounds(tempCircle.getBounds());
+        setSearchLocation(userLocation);
+        setCenter(userLocation);
+        getNamedLoc(userLocation);
+      });
+    } else {
+      setSearchLocation(center);
+    }
+  }, [navigator.geolocation]);
+
+  const getNamedLoc = async (location) => {
+    const results = await getLocation(location.lat, location.lng);
+    document.getElementById("searchBox").value =
+      results.results[0].formatted_address;
+  };
+
   // Handles search functionality
   const onPlacesChanged = () => {
     // Retrieve latitude and longitude of Search Location
