@@ -1,5 +1,7 @@
 import * as React from "react";
+import { useRef } from "react";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -8,10 +10,18 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Collapse,
+  Box,
+  Chip,
+  Typography,
+  Stack,
+  Button,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
 import { Link } from "react-router-dom";
 import ExpInTripCheckbox from "./ExpInTripCheckbox";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 /*
     Adapted from Material UI Documentation Examples
@@ -25,6 +35,7 @@ export default function SlimExperienceList({
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [openIndex, setOpenIndex] = React.useState(null);
   const [selectedExp, setSelectedExp] = React.useState(null);
 
   const handleChangePage = (event, newPage) => {
@@ -36,15 +47,9 @@ export default function SlimExperienceList({
     setPage(0);
   };
 
-  const handleExperienceClick = (experience) => {
-    if (experienceClick) {
-      experienceClick(experience);
-    }
-  };
-
   let columns = [
-    { id: "title", label: "Title", maxWidth: "70%" },
-    { id: "rating", label: "Rating", maxWidth: "30%" },
+    { id: "title", label: "Title", width: "70%", maxWidth: "70%" },
+    { id: "rating", label: "Rating", width: "30%", maxWidth: "30%" },
   ];
 
   if (tripId) {
@@ -53,15 +58,24 @@ export default function SlimExperienceList({
 
   return (
     <>
-      <TableContainer sx={{ flex: 1 }}>
+      <TableContainer sx={{ flex: 1, flexBasis: 0 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+              <TableCell
+                sx={{
+                  backgroundColor: "#bfc8ad",
+                  borderBottom: "solid black 2px",
+                  width: "5%",
+                  maxWidth: "5%",
+                }}
+              />
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align="left"
                   style={{
+                    width: column.width,
                     maxWidth: column.maxWidth,
                   }}
                   sx={{
@@ -80,55 +94,14 @@ export default function SlimExperienceList({
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((experience, i) => {
                 return (
-                  <TableRow
-                    hover
-                    role="button"
-                    tabIndex={-1}
+                  <CollapsibleRow
                     key={experience.id}
-                    onClick={() => handleExperienceClick(experience)}
-                  >
-                    {columns.map((column) => {
-                      const value = experience[column.id];
-                      if (column.id === "inTrip") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <ExpInTripCheckbox
-                              expId={experience.id}
-                              tripId={tripId}
-                              tripExperiences={tripExperiences}
-                            />
-                          </TableCell>
-                        );
-                      }
-                      if (column.id === "rating") {
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{
-                              backgroundColor:
-                                i % 2 === 0 ? "white" : "#ebece8",
-                            }}
-                          >
-                            <RatingDisplay value={value} />
-                          </TableCell>
-                        );
-                      } else {
-                        return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{
-                              backgroundColor:
-                                i % 2 === 0 ? "white" : "#ebece8",
-                            }}
-                          >
-                            {value}
-                          </TableCell>
-                        );
-                      }
-                    })}
-                  </TableRow>
+                    experience={experience}
+                    experienceClick={experienceClick}
+                    i={i}
+                    openIndex={openIndex}
+                    setOpenIndex={setOpenIndex}
+                  />
                 );
               })}
           </TableBody>
@@ -145,5 +118,89 @@ export default function SlimExperienceList({
         sx={{ backgroundColor: "#bfc8ad", borderTop: "solid black 2px" }}
       />
     </>
+  );
+}
+
+function CollapsibleRow({
+  experience,
+  i,
+  experienceClick,
+  openIndex,
+  setOpenIndex,
+}) {
+  const handleCollapseClick = () => {
+    if (openIndex === i) {
+      setOpenIndex(null);
+      return;
+    }
+    setOpenIndex(i);
+  };
+
+  return (
+    <React.Fragment>
+      <TableRow
+        sx={{
+          "& > *": { borderBottom: "unset" },
+          backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
+        }}
+      >
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => handleCollapseClick()}
+          >
+            {openIndex === i ? (
+              <KeyboardArrowRightIcon />
+            ) : (
+              <KeyboardArrowDownIcon />
+            )}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {experience.title}
+        </TableCell>
+        <TableCell align="right">
+          <RatingDisplay value={experience.rating} />
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={openIndex === i} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <p>
+                <b>{experience.location}</b>
+              </p>
+              <p>{experience.description}</p>
+              <Stack
+                direction="row"
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexWrap: "nowrap",
+                }}
+              >
+                {experience.keywords && (
+                  <Stack direction="row" spacing={1} sx={{ maxWidth: "80%" }}>
+                    {experience.keywords.map((keyword, i) => (
+                      <Chip key={i} label={keyword} variant="outlined" />
+                    ))}
+                  </Stack>
+                )}
+                <Box sx={{ alignSelf: "flex-end" }}>
+                  <Button
+                    variant="text"
+                    sx={{ alignSelf: "flex-end" }}
+                    onClick={() => experienceClick(experience)}
+                  >
+                    Learn more
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
   );
 }

@@ -196,7 +196,7 @@ function SearchMap({ expList, expClick }) {
       >
         <h1>Search for Experiences</h1>
         <Grid container spacing={1} sx={{ height: "100%" }}>
-          <Grid item xs={8} sx={{ display: "flex" }}>
+          <Grid item xs={7} sx={{ display: "flex" }}>
             <Paper
               sx={{ flex: 1, p: 1, display: "flex", flexDirection: "column" }}
             >
@@ -262,11 +262,12 @@ function SearchMap({ expList, expClick }) {
               </GoogleMap>
             </Paper>
           </Grid>
-          <Grid item xs={4} sx={{ display: "flex" }}>
+          <Grid item xs={5} sx={{ display: "flex" }}>
             <Paper
               sx={{
                 flex: 1,
                 maxWidth: "100%",
+                maxHeight: "100%",
                 p: 1,
                 display: "flex",
                 flexDirection: "column",
