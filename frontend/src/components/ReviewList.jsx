@@ -46,6 +46,11 @@ export default function ReviewList({ reviews }) {
                   key={column.id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
+                  sx={{
+                    backgroundColor: "#bfc8ad",
+                    fontSize: "1.15em",
+                    borderBottom: "solid black 2px",
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -55,13 +60,17 @@ export default function ReviewList({ reviews }) {
           <TableBody>
             {reviews
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((review) => {
+              .map((review, i) => {
                 return (
                   <TableRow
                     hover
                     role="button"
                     tabIndex={-1}
                     key={review.id}
+                    sx={{
+                      backgroundColor:
+                        i % 2 === 0 ? "white" : "#ebece8",
+                    }}
                   >
                     {columns.map((column) => {
                       const value = review[column.id];
@@ -94,6 +103,7 @@ export default function ReviewList({ reviews }) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{ backgroundColor: "#bfc8ad", borderTop: "solid black 2px" }}
       />
     </Paper>
   );
