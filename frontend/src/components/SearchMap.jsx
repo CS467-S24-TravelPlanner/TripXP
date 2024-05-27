@@ -15,7 +15,7 @@ import {
   InputLabel,
   Slider,
 } from "@mui/material";
-import { getCoordinates } from "../utilities/LocationService";
+import { getCoordinates, getLocation } from "../utilities/LocationService";
 import KeywordsList from "./KeywordsList";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -33,6 +33,20 @@ const mapContainerStyle = {
 const defaultCenter = {
   lat: 38.4947704, // default latitude
   lng: -98.421832, // default longitude
+};
+
+// Circle default options
+const circleOptions = {
+  strokeColor: "#FF0000",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: "#FF0000",
+  fillOpacity: 0.1,
+  clickable: false,
+  draggable: false,
+  editable: false,
+  visible: true,
+  zIndex: 1,
 };
 
 function SearchMap({ expList, expClick }) {
@@ -58,9 +72,10 @@ function SearchMap({ expList, expClick }) {
 
   // Use this when a reference of the map instance is needed
   const mapRef = useRef();
+  const circleRef = useRef();
 
   // onLoad callback to get instance of Map and supply inital bounds
-  const onLoad = (map) => {
+  const mapOnLoad = (map) => {
     mapRef.current = map;
     setBounds(mapRef.current.getBounds());
   };
@@ -86,12 +101,17 @@ function SearchMap({ expList, expClick }) {
 
   // Create a circular search area on map
   const addSearchArea = (center, radius) => {
+    if (circleRef.current) {
+      circleRef.current.setMap(null);
+    }
     const newCircle = new google.maps.Circle({
+      ...circleOptions,
       center: center,
       radius: radius,
+      map: mapRef.current,
     });
+    circleRef.current = newCircle;
     setSearchBounds(newCircle.getBounds());
-    setSearchRadius(radius);
     setCenter(center);
   };
 
@@ -118,7 +138,7 @@ function SearchMap({ expList, expClick }) {
     if (isLoaded) {
       addSearchArea(center, searchRadius);
     }
-  }, [searchRadius]);
+  }, [searchRadius, center, isLoaded]);
 
   // Remove and/or remove any Experience Markers after search area or keywords change
   useEffect(() => {
@@ -154,7 +174,7 @@ function SearchMap({ expList, expClick }) {
               Within {Math.floor(searchRadius / 1609.34)} miles
             </InputLabel>
             <Slider
-              defaultValue={searchRadius / 1609.34}
+              value={searchRadius / 1609.34}
               valueLabelDisplay="auto"
               shiftStep={100}
               step={50}
@@ -197,7 +217,7 @@ function SearchMap({ expList, expClick }) {
             p={2}
           >
             <GoogleMap
-              onLoad={onLoad}
+              onLoad={mapOnLoad}
               onBoundsChanged={onBoundsChanged}
               mapContainerStyle={mapContainerStyle}
               zoom={
@@ -245,37 +265,6 @@ function SearchMap({ expList, expClick }) {
                     );
                   }
                 })}
-              </div>
-              <div>
-                {searchLocation ? (
-                  <div>
-                    <MarkerF
-                      position={searchLocation}
-                      icon={{
-                        path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
-                        scale: 4,
-                      }}
-                    />
-                    <Circle
-                      center={center}
-                      options={{
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 0.6,
-                        strokeWeight: 2,
-                        fillColor: "#FF0000",
-                        fillOpacity: 0.15,
-                        clickable: false,
-                        draggable: false,
-                        editable: false,
-                        visible: true,
-                        radius: searchRadius,
-                        zIndex: 1,
-                      }}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
               </div>
             </GoogleMap>
           </Box>
