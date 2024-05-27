@@ -21,6 +21,14 @@ function KeywordsList({ keywords, setKeywords }) {
         width: 250,
       },
     },
+    anchorOrigin: {
+      vertical: "bottom",
+      horizontal: "left",
+    },
+    transformOrigin: {
+      vertical: "top",
+      horizontal: "left",
+    },
   };
 
   const handleKeywordsChange = (e) => {
