@@ -82,6 +82,10 @@ function SearchMap({ expList, expClick }) {
 
   // Try to get user location from browser
   useEffect(() => {
+    useBrowserLocation();
+  }, [navigator.geolocation, isLoaded]);
+
+  const useBrowserLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const userLocation = {
@@ -100,7 +104,7 @@ function SearchMap({ expList, expClick }) {
     } else {
       setSearchLocation(center);
     }
-  }, [navigator.geolocation]);
+  };
 
   const getNamedLoc = async (location) => {
     const results = await getLocation(location.lat, location.lng);
