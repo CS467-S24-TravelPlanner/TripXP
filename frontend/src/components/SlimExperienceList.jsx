@@ -48,8 +48,8 @@ export default function SlimExperienceList({
   };
 
   let columns = [
-    { id: "title", label: "Title", width: "70%", maxWidth: "70%" },
-    { id: "rating", label: "Rating", width: "30%", maxWidth: "30%" },
+    { id: "title", label: "Title" },
+    { id: "rating", label: "Rating", minWidth: "30%" },
   ];
 
   if (tripId) {
@@ -66,8 +66,7 @@ export default function SlimExperienceList({
                 sx={{
                   backgroundColor: "#bfc8ad",
                   borderBottom: "solid black 2px",
-                  width: "5%",
-                  maxWidth: "5%",
+                  minWidth: "10%",
                 }}
               />
               {columns.map((column) => (
@@ -75,8 +74,7 @@ export default function SlimExperienceList({
                   key={column.id}
                   align="left"
                   style={{
-                    width: column.width,
-                    maxWidth: column.maxWidth,
+                    minWidth: column.minWidth,
                   }}
                   sx={{
                     backgroundColor: "#bfc8ad",
@@ -181,16 +179,20 @@ function CollapsibleRow({
                 }}
               >
                 {experience.keywords && (
-                  <Stack direction="row" spacing={1} sx={{ maxWidth: "80%" }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ flexWrap: "wrap", flexGrow: 2, rowGap: 1 }}
+                  >
                     {experience.keywords.map((keyword, i) => (
                       <Chip key={i} label={keyword} variant="outlined" />
                     ))}
                   </Stack>
                 )}
-                <Box sx={{ alignSelf: "flex-end" }}>
+                <Box>
                   <Button
                     variant="text"
-                    sx={{ alignSelf: "flex-end" }}
+                    sx={{ whiteSpace: "nowrap" }}
                     onClick={() => experienceClick(experience)}
                   >
                     Learn more
