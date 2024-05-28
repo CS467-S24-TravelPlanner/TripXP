@@ -10,7 +10,10 @@ export function getKeywords() {
     const keywords = [
         "beach", "swimming", "hiking", "wildlife", "food", "music",
         "family-friendly", "pet-friendly", "romantic", "adventure",
-        "relaxing"
+        "relaxing", "outdoor", "tour", "scenic", "learning", "interactive",
+        "entertainment", "theater", "behind-the-scenes", "culture", "history",
+        "photography", "luxury", "boating", "exclusive", "biking",
+        "nature", "cooking", "art", "wellness", "drinks"
     ]
 
     return keywords;

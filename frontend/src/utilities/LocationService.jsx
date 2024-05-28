@@ -23,6 +23,27 @@ export async function getCoordinates(location) {
 }
 
 /**
+ * getLocation takes coordinates and returns the corresponding location.
+ * @param {number} lat - The latitude of the location.
+ * @param {number} lng - The longitude of the location.
+ */
+export async function getLocation(lat, lng) {
+  const options = {
+    method: "GET",
+  };
+  const response = await fetch(
+    API_URL_BASE + "geocode/json?latlng=" + lat + "," + lng + "&key=" + API_KEY,
+    options
+  );
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    console.log("Error with your request: " + JSON.stringify(response));
+  }
+}
+
+/**
  * haversineDistance takes two sets of coordinates and returns
  * the distance between them, accounting for Earth's curvature.
  * @param point1 The first location, as a set of coordinates.

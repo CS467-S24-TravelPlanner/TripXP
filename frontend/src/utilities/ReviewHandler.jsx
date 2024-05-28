@@ -1,4 +1,5 @@
 import { postData, getData, patchData, deleteData } from "./ApiService.jsx";
+import { updateRating, getExperience } from "./ExperienceHandler.jsx";
 
 /**
  * createReview adds a new Review to the Database.
@@ -18,7 +19,11 @@ function createReview(experienceId, userId, reviewText, rating) {
 
   console.log(newReview);
 
-  return postData("/review", {}, newReview);
+  getExperience(experienceId).then((res) => {
+    let currentRating = res.data.rating;
+    updateRating(experienceId, currentRating, rating);
+    return postData("/review", {}, newReview);
+  });
 }
 
 /**

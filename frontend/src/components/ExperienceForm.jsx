@@ -1,28 +1,13 @@
 import { React, useState } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Stack,
-  OutlinedInput,
-  InputLabel,
-  MenuItem,
-  ListItemText,
-  Select,
-  Checkbox,
-} from "@mui/material";
+import { Box, Button, FormControl, TextField, Stack } from "@mui/material";
 import KeywordsList from "./KeywordsList";
-
 
 function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
 
-
-  const [image, setImage] = useState("")
-
+  const [image, setImage] = useState("");
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -37,14 +22,12 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
   };
 
   const handleImageChange = (e) => {
-    console.log(e.target.value)
     setImage(e.target.value);
   };
 
-
   const handleFakeSubmit = (e) => {
-    console.log(e.target)
-    e.preventDefault()
+    console.log(e.target);
+    e.preventDefault();
   };
 
   return (
@@ -57,7 +40,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
       autoComplete="off"
       margin={10}
       padding={10}
-      border={"2px solid darkgray"}
+      border={"3px solid #364958"}
       onSubmit={handleSubmit}
     >
       <Stack spacing={3}>
@@ -97,18 +80,27 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
           <KeywordsList keywords={keywords} setKeywords={setKeywords} />
         </FormControl>
 
-        <FormControl sx={{ m: 1 }} >
+        <FormControl sx={{ m: 1 }}>
           <TextField
-          id="imageUpload"
-          label="Image Upload"
-          type="file"
-          name="uploaded_file"
-          value={image}
-          onChange={handleImageChange}
+            id="imageUpload"
+            label="Image Upload"
+            type="file"
+            name="uploaded_file"
+            InputLabelProps={{ shrink: true }}
+            value={image}
+            onChange={handleImageChange}
           />
         </FormControl>
 
-        <Button type="submit" variant="outlined">
+        <Button
+          type="submit"
+          variant="outlined"
+          sx={{
+            backgroundColor: "#364958",
+            color: "white",
+            borderRadius: "7px",
+          }}
+        >
           Create Experience
         </Button>
       </Stack>

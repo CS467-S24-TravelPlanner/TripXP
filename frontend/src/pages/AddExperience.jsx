@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useContext } from "react";
 import ExperienceForm from "../components/ExperienceForm";
 import {
   createExperience,
@@ -8,18 +8,19 @@ import { getCoordinates } from "../utilities/LocationService";
 import Experience from "../components/ExperiencePage/Experience";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../utilities/ImageHandler";
+import { UserContext } from "../contexts/UserContext";
 
 function AddExperience() {
   const [experience, setExperience] = useState(null);
 
   const [keywords, setKeywords] = useState([]);
 
+  const { user } = useContext(UserContext);
+
   let navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    console.log(e.target.imageUpload.files[0]);
 
     const formData = {
       title: e.target.titleInput.value,
@@ -30,7 +31,6 @@ function AddExperience() {
     };
     getCoordinates(formData.location).then(async (response) => {
 
-      console.log(formData.image);
       uploadImage(formData).then(async (imgRes) => {
         const locationData = response.results[0];
         const formattedAddress = locationData.formatted_address;
@@ -46,7 +46,7 @@ function AddExperience() {
           5,
           formattedAddress,
           formData.keywords,
-          1
+          user.user_id ? user.user_id : 1
         ).then((response) => {
           const expId = response.id;
 
@@ -63,14 +63,25 @@ function AddExperience() {
     navigate("/profile", { replace: true });
   }
 
-  return experience ? (
-    <Experience experience={experience} closeExperience={handleClose} />
-  ) : (
-    <ExperienceForm
-      handleSubmit={handleSubmit}
-      keywords={keywords}
-      setKeywords={setKeywords}
-    />
+  return (
+    <div>
+      {experience ? (
+        <>
+          
+          <Experience experience={experience} closeExperience={handleClose} />
+        </>
+      ) : (
+        <>
+          <h1 style={{ marginTop: "80px" }}>Share your Travel Adventure</h1>
+          <h2>Tell us about your Experience:</h2>
+          <ExperienceForm
+            handleSubmit={handleSubmit}
+            keywords={keywords}
+            setKeywords={setKeywords}
+          />
+        </>
+      )}
+    </div>
   );
 }
 

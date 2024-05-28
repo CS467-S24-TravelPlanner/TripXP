@@ -3,9 +3,7 @@ import {
   useLoadScript,
   MarkerF,
   StandaloneSearchBox,
-  Circle,
 } from "@react-google-maps/api";
-import ExperienceList from "./ExperienceList";
 import { React, useEffect, useState, useRef } from "react";
 import {
   Box,
@@ -14,9 +12,11 @@ import {
   FilledInput,
   InputLabel,
   Slider,
+  Paper,
 } from "@mui/material";
-import { getCoordinates } from "../utilities/LocationService";
+import { getCoordinates, getLocation } from "../utilities/LocationService";
 import KeywordsList from "./KeywordsList";
+import SlimExperienceList from "./SlimExperienceList";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
@@ -35,6 +35,20 @@ const defaultCenter = {
   lng: -98.421832, // default longitude
 };
 
+// Circle default options
+const circleOptions = {
+  strokeColor: "#FF0000",
+  strokeOpacity: 0.8,
+  strokeWeight: 2,
+  fillColor: "#FF0000",
+  fillOpacity: 0.1,
+  clickable: false,
+  draggable: false,
+  editable: false,
+  visible: true,
+  zIndex: 1,
+};
+
 function SearchMap({ expList, expClick }) {
   // Map state
   const [bounds, setBounds] = useState(null); // Can be used to search by moving map, not implemented
@@ -42,14 +56,12 @@ function SearchMap({ expList, expClick }) {
 
   // Search state variables
   const [searchLocation, setSearchLocation] = useState(null); // Coordinates of the search location
-  const [searchRadius, setSearchRadius] = useState(1000); // Search radius in meters
+  const [searchRadius, setSearchRadius] = useState(160934); // Search radius in meters (def 100 miles)
   const [searchBounds, setSearchBounds] = useState(null); // Search Area on Map
 
   // The list of Experiences meeting search parameters
   const [filteredExpList, setFilteredExpList] = useState(expList.data);
-
   const [keywords, setKeywords] = useState([]);
-
   const [selectedExp, setSelectedExp] = useState(null);
 
   // Map loading utility function - returns isLoaded bool and Error, if applicable
@@ -60,11 +72,44 @@ function SearchMap({ expList, expClick }) {
 
   // Use this when a reference of the map instance is needed
   const mapRef = useRef();
+  const circleRef = useRef();
 
   // onLoad callback to get instance of Map and supply inital bounds
-  const onLoad = (map) => {
+  const mapOnLoad = (map) => {
     mapRef.current = map;
     setBounds(mapRef.current.getBounds());
+  };
+
+  // Try to get user location from browser
+  useEffect(() => {
+    useBrowserLocation();
+  }, [navigator.geolocation, isLoaded]);
+
+  const useBrowserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        const tempCircle = new google.maps.Circle({
+          center: userLocation,
+          radius: searchRadius,
+        });
+        setSearchBounds(tempCircle.getBounds());
+        setSearchLocation(userLocation);
+        setCenter(userLocation);
+        getNamedLoc(userLocation);
+      });
+    } else {
+      setSearchLocation(center);
+    }
+  };
+
+  const getNamedLoc = async (location) => {
+    const results = await getLocation(location.lat, location.lng);
+    document.getElementById("searchBox").value =
+      results.results[0].formatted_address;
   };
 
   // Handles search functionality
@@ -88,12 +133,17 @@ function SearchMap({ expList, expClick }) {
 
   // Create a circular search area on map
   const addSearchArea = (center, radius) => {
+    if (circleRef.current) {
+      circleRef.current.setMap(null);
+    }
     const newCircle = new google.maps.Circle({
+      ...circleOptions,
       center: center,
       radius: radius,
+      map: mapRef.current,
     });
+    circleRef.current = newCircle;
     setSearchBounds(newCircle.getBounds());
-    setSearchRadius(radius);
     setCenter(center);
   };
 
@@ -111,7 +161,7 @@ function SearchMap({ expList, expClick }) {
   // Update search area radius
   const handleDistanceChange = (e, val) => {
     if (val) {
-      setSearchRadius(val * 1000);
+      setSearchRadius(val * 1609.34); // Convert miles to meters
     }
   };
 
@@ -120,7 +170,7 @@ function SearchMap({ expList, expClick }) {
     if (isLoaded) {
       addSearchArea(center, searchRadius);
     }
-  }, [searchRadius]);
+  }, [searchRadius, center, isLoaded]);
 
   // Remove and/or remove any Experience Markers after search area or keywords change
   useEffect(() => {
@@ -139,150 +189,143 @@ function SearchMap({ expList, expClick }) {
     return <div>Loading maps</div>;
   } else {
     return (
-      <Stack margin={3}>
+      <Box
+        margin={3}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "85vh",
+          width: "70vw",
+        }}
+      >
         <h1>Search for Experiences</h1>
-        <Stack
-          direction="row"
-          width="100%"
-          alignItems="center"
-          alignContent="center"
-        >
-          <Box minWidth="33%" maxWidth="33%">
-            <KeywordsList keywords={keywords} setKeywords={setKeywords} />
-          </Box>
-          <Box minWidth="34%" maxWidth="34%"></Box>
-          <Box minWidth="33%" maxWidth="33%">
-            <InputLabel id="distance-label" size="small" sx={{ m: 2 }}>
-              Within {searchRadius / 1000} Km
-            </InputLabel>
-            <Slider
-              defaultValue={0}
-              valueLabelDisplay="auto"
-              shiftStep={100}
-              step={25}
-              marks
-              min={0}
-              max={500}
-              onChange={handleDistanceChange}
-            />
-          </Box>
-        </Stack>
-        <StandaloneSearchBox onPlacesChanged={onPlacesChanged}>
-          <FilledInput
-            id="searchBox"
-            label="Search for Experiences by Location"
-            type="text"
-            placeholder="Search for Experiences by Location"
-            sx={{ m: 1, width: "100%" }}
-          />
-        </StandaloneSearchBox>
-
-        <Grid
-          container={true}
-          direction="column"
-          alignItems="center"
-          justify="center"
-        >
-          <ExperienceList
-            experienceClick={expClick}
-            experiences={filteredExpList}
-          />
-
-          <Box
-            component="section"
-            height={500}
-            width={700}
-            my={4}
-            display="flex"
-            alignItems="center"
-            gap={4}
-            p={2}
-          >
-            <GoogleMap
-              onLoad={onLoad}
-              onBoundsChanged={onBoundsChanged}
-              mapContainerStyle={mapContainerStyle}
-              zoom={
-                searchLocation
-                  ? searchRadius < 50001
-                    ? 9
-                    : searchRadius < 100000
-                    ? 8
-                    : searchRadius < 200000
-                    ? 7
-                    : searchRadius < 400000
-                    ? 6
-                    : 5
-                  : 3
-              }
-              center={center}
+        <Grid container spacing={1} sx={{ height: "100%" }}>
+          <Grid item xs={7} sx={{ display: "flex" }}>
+            <Paper
+              sx={{ flex: 1, p: 1, display: "flex", flexDirection: "column" }}
             >
-              <div>
-                {filteredExpList.map((e, i) => {
-                  if (
-                    !searchBounds ||
-                    searchBounds.contains({
-                      lat: e.latitude,
-                      lng: e.longitude,
-                    })
-                  ) {
-                    return (
-                      <MarkerF
-                        position={{ lat: e.latitude, lng: e.longitude }}
-                        icon={{
-                          path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                          scale: 5,
-                        }}
-                        key={i}
-                        clickable={true}
-                        onClick={() => {
-                          if (!selectedExp) {
-                            setSelectedExp(e);
-                          } else {
-                            setSelectedExp(null);
-                          }
-                        }}
-                        label={e == selectedExp ? e.title : ""}
-                      />
-                    );
-                  }
-                })}
-              </div>
-              <div>
-                {searchLocation ? (
-                  <div>
-                    <MarkerF
-                      position={searchLocation}
-                      icon={{
-                        path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
-                        scale: 4,
-                      }}
-                    />
-                    <Circle
-                      center={center}
-                      options={{
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: "#FF0000",
-                        fillOpacity: 0.15,
-                        clickable: false,
-                        draggable: false,
-                        editable: false,
-                        visible: true,
-                        radius: searchRadius,
-                        zIndex: 1,
-                      }}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-            </GoogleMap>
-          </Box>
+              <StandaloneSearchBox onPlacesChanged={onPlacesChanged}>
+                <FilledInput
+                  id="searchBox"
+                  label="Search for Experiences by Location"
+                  type="text"
+                  placeholder="Search for Experiences by Location"
+                  sx={{ marginBottom: 1, width: "100%", Height: "3.5rem" }}
+                />
+              </StandaloneSearchBox>
+              <GoogleMap
+                onLoad={mapOnLoad}
+                onBoundsChanged={onBoundsChanged}
+                mapContainerStyle={mapContainerStyle}
+                zoom={
+                  searchLocation
+                    ? searchRadius < 50001
+                      ? 9
+                      : searchRadius < 100000
+                      ? 8
+                      : searchRadius < 200000
+                      ? 7
+                      : searchRadius < 400000
+                      ? 6
+                      : 5
+                    : 3
+                }
+                center={center}
+              >
+                <div>
+                  {filteredExpList.map((e, i) => {
+                    if (
+                      !searchBounds ||
+                      searchBounds.contains({
+                        lat: e.latitude,
+                        lng: e.longitude,
+                      })
+                    ) {
+                      return (
+                        <MarkerF
+                          position={{ lat: e.latitude, lng: e.longitude }}
+                          icon={{
+                            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                            scale: 5,
+                          }}
+                          key={i}
+                          clickable={true}
+                          onClick={() => {
+                            if (!selectedExp) {
+                              setSelectedExp(e);
+                            } else {
+                              setSelectedExp(null);
+                            }
+                          }}
+                          label={e == selectedExp ? e.title : ""}
+                        />
+                      );
+                    }
+                  })}
+                </div>
+              </GoogleMap>
+            </Paper>
+          </Grid>
+          <Grid item xs={5} sx={{ display: "flex" }}>
+            <Paper
+              sx={{
+                flex: 1,
+                maxWidth: "100%",
+                maxHeight: "100%",
+                p: 1,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Stack
+                direction="row"
+                width="100%"
+                height="3.5rem"
+                alignItems="left"
+                alignContent="left"
+                sx={{ marginBottom: 1 }}
+              >
+                <Box minWidth="33%" maxWidth="33%" maxHeight="3rem">
+                  <KeywordsList keywords={keywords} setKeywords={setKeywords} />
+                </Box>
+                <Stack
+                  direction="column"
+                  minWidth="67%"
+                  maxWidth="67%"
+                  alignItems="left"
+                  alignContent="left"
+                >
+                  <Box>
+                    <InputLabel
+                      id="distance-label"
+                      size="small"
+                      sx={{ display: "inline" }}
+                    >
+                      Within {Math.floor(searchRadius / 1609.34)} miles
+                    </InputLabel>
+                  </Box>
+                  <Slider
+                    value={searchRadius / 1609.34}
+                    valueLabelDisplay="auto"
+                    shiftStep={100}
+                    step={50}
+                    marks
+                    min={0}
+                    max={500}
+                    onChange={handleDistanceChange}
+                    sx={{ width: "90%", ml: "5%", mr: "5%" }}
+                  />
+                </Stack>
+              </Stack>
+
+              <SlimExperienceList
+                experienceClick={expClick}
+                experiences={filteredExpList}
+              />
+            </Paper>
+          </Grid>
         </Grid>
-      </Stack>
+      </Box>
     );
   }
 }

@@ -45,7 +45,6 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
     // If exp not in trip, we try to add to trip
     else {
       try {
-        console.log("tripId: ", tripId, ", expId: ", expId);
         const res = await addExperienceToTrip(tripId, expId, user.raw_jwt);
         if (res.status) {
           console.log(`Experience ${expId} added to ${tripId} successfully.`);

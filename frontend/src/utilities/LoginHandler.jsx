@@ -41,7 +41,6 @@ async function handleGoogleLogin(res, userSetter) {
 function decodeJwt(credential) {
   try {
     const decoded = jwtDecode(credential);
-    console.log(decoded);
     return decoded;
   } catch (err) {
     console.error("JWT Decode failure: ", err);
