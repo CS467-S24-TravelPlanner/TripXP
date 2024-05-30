@@ -1,40 +1,70 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import "./ReviewForm.css";
-import { Rating, Box, FormControl, TextField, Button, Stack, Typography } from "@mui/material";
+import {
+  Rating,
+  Box,
+  FormControl,
+  TextField,
+  Button,
+  Stack,
+  Typography,
+} from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import { createReview } from "../../utilities/ReviewHandler";
 
-const ReviewForm = ({ onSubmit, onCancel }) => {
-  const [username, setUsername] = useState("");
+const ReviewForm = ({ experienceId, closeReviewForm, reloadReviews }) => {
+  const { user } = useContext(UserContext);
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit({ review_text: reviewText, rating: rating }); // Pass review data
-    setUsername(""); // Clear form data after submit
-    setRating(0);
-    setReviewText("");
+    if (user) {
+      try {
+        const res = await createReview(
+          experienceId,
+          user.user_id,
+          reviewText,
+          rating
+        );
+        if (res.status) {
+          console.log("Review submitted successfully!");
+        } else {
+          console.error(res.error);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      alert("You must be logged in to submit a review.");
+    }
+    closeReviewForm();
+    reloadReviews();
   };
 
   return (
-    <Box className="review-form"
-    component="form"
-    alignItems="stretch"
-    display="block"
-    noValidate
-    autoComplete="off"
-    margin={3}
-    padding={2}
-    border={"1px solid #364958"}
-    onSubmit={handleSubmit}>
-
-      <Typography variant="h4" gutterBottom >
+    <Box
+      className="review-form"
+      component="form"
+      alignItems="stretch"
+      display="block"
+      noValidate
+      autoComplete="off"
+      margin={3}
+      padding={2}
+      border={"1px solid #364958"}
+      onSubmit={handleSubmit}
+    >
+      <Typography variant="h4" gutterBottom>
         Write a Review
       </Typography>
 
-        <FormControl sx={{m:3}}>
-          <Stack direction="row"  sx={{alignContent: "center"}}>
-            <Typography variant="h6"  sx={{paddingRight:2}}>Rating: </Typography>
+      <FormControl sx={{ m: 3 }}>
+        <Stack direction="row" sx={{ alignContent: "center" }}>
+          <Typography variant="h6" sx={{ paddingRight: 2 }}>
+            Rating:{" "}
+          </Typography>
           <Rating
             name="rating"
             value={rating}
@@ -42,24 +72,24 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
             emptyIcon={
               <StarIcon style={{ opacity: 0.35 }} fontSize="inherit" />
             }
-            onChange={(e) => setRating(parseInt(e.target.value))}
+            onChange={(e, newValue) => setRating(newValue)}
           />
-          </Stack>
-        </FormControl>
+        </Stack>
+      </FormControl>
 
-        <FormControl fullWidth={true} variant="filled" display="inline">
-          <TextField
-            id="reviewText"
-            label="Review Text"
-            type="text"
-            onChange={(e) => setReviewText(e.target.value)}
-            value={reviewText}
-            multiline
-            rows={4}
-          />
-          </FormControl>
+      <FormControl fullWidth={true} variant="filled" display="inline">
+        <TextField
+          id="reviewText"
+          label="Review Text"
+          type="text"
+          onChange={(e) => setReviewText(e.target.value)}
+          value={reviewText}
+          multiline
+          rows={4}
+        />
+      </FormControl>
 
-            <Stack direction="row" m={3}>
+      <Stack direction="row" m={3}>
         <Button
           type="submit"
           variant="outlined"
@@ -74,7 +104,7 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
         <Button
           type="button"
           variant="outlined"
-          onClick={onCancel}
+          onClick={closeReviewForm}
           sx={{
             backgroundColor: "#364958",
             color: "white",
@@ -83,7 +113,7 @@ const ReviewForm = ({ onSubmit, onCancel }) => {
         >
           Cancel
         </Button>
-        </Stack>
+      </Stack>
     </Box>
   );
 };
