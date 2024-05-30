@@ -16,14 +16,11 @@ function createReview(experienceId, userId, reviewText, rating) {
     review_text: reviewText,
     rating: rating,
   };
-
-  console.log(newReview);
-
   getExperience(experienceId).then((res) => {
     let currentRating = res.data.rating;
     updateRating(experienceId, currentRating, rating);
-    return postData("/review", {}, newReview);
   });
+  return postData("/review", {}, newReview);
 }
 
 /**
