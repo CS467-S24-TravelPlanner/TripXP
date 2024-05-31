@@ -9,18 +9,33 @@ import Experience from "../components/ExperiencePage/Experience";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../utilities/ImageHandler";
 import { UserContext } from "../contexts/UserContext";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 function AddExperience() {
   const [experience, setExperience] = useState(null);
-
   const [keywords, setKeywords] = useState([]);
 
   const { user } = useContext(UserContext);
+  const showSnackbar = useSnackbar();
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    if (!user) {
+      showSnackbar("Please log in to create an experience.", "error");
+      return;
+    }
+
+    if (
+      e.target.titleInput.value === "" ||
+      e.target.descriptionInput.value === "" ||
+      e.target.locationInput.value === "" ||
+      e.target.imageUpload.files.length === 0
+    ) {
+      showSnackbar("Please fill out all fields.", "error");
+      return;
+    }
 
     const formData = {
       title: e.target.titleInput.value,
@@ -29,34 +44,44 @@ function AddExperience() {
       keywords: keywords,
       image: e.target.imageUpload.files[0],
     };
-    getCoordinates(formData.location).then(async (response) => {
 
-      uploadImage(formData).then(async (imgRes) => {
-        const locationData = response.results[0];
-        const formattedAddress = locationData.formatted_address;
-        const coordinates = locationData.geometry.location;
-        const filepath = imgRes.filename;
+    try {
+      const response = await getCoordinates(formData.location);
+      const imgRes = await uploadImage(formData);
 
-        createExperience(
-          formData.title,
-          formData.description,
-          coordinates.lat,
-          coordinates.lng,
-          filepath,
-          5,
-          formattedAddress,
-          formData.keywords,
-          user.user_id ? user.user_id : 1
-        ).then((response) => {
-          const expId = response.id;
+      const locationData = response.results[0];
+      const formattedAddress = locationData.formatted_address;
+      const coordinates = locationData.geometry.location;
+      const filepath = imgRes.filename;
 
-          getExperience(expId).then((response) => {
-            const exp = response.data;
-            setExperience(exp);
-          });
-        });
-      });
-    });
+      const createExpResponse = await createExperience(
+        formData.title,
+        formData.description,
+        coordinates.lat,
+        coordinates.lng,
+        filepath,
+        5,
+        formattedAddress,
+        formData.keywords,
+        user.user_id ? user.user_id : 1
+      );
+
+      if (!createExpResponse.status) {
+        showSnackbar("Error creating experience.", "error");
+        console.error("Error creating experience:", createExpResponse.message);
+        return;
+      }
+
+      showSnackbar("Experience created successfully!", "success");
+      const expId = createExpResponse.id;
+
+      const expResponse = await getExperience(expId);
+      const exp = expResponse.data;
+      setExperience(exp);
+    } catch (error) {
+      console.error("Error creating or fetching new experience:", error);
+      showSnackbar("An error occurred. Please try again.", "error");
+    }
   }
 
   function handleClose() {
@@ -67,7 +92,6 @@ function AddExperience() {
     <div>
       {experience ? (
         <>
-          
           <Experience experience={experience} closeExperience={handleClose} />
         </>
       ) : (
