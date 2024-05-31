@@ -11,6 +11,7 @@ import AddExperience from "./pages/AddExperience";
 import NavBar from "./components/NavBar.jsx";
 import { UserContext } from "./contexts/UserContext.js";
 import { handleGoogleLogin } from "./utilities/LoginHandler.jsx";
+import { SnackbarProvider } from "./contexts/SnackbarContext";
 
 const App = () => {
   const [user, setUser] = useState(false);
@@ -30,23 +31,24 @@ const App = () => {
 
   return (
     <div>
-      <UserContext.Provider value={{ user, setUser }}>
-        <Router>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<ExperienceSearch />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/profile" element={<ProfilePage />} />
-
-            <Route path="/experience/add" element={<AddExperience />} />
-            {/* TODO Experience Edit page */}
-            <Route path="/trip/:tripId" element={<TripPage />} />
-            <Route path="/trip/:tripId" element={<TripPage />} />
-            <Route path="/trip/add" element={<AddTrip />} />
-            <Route path="/trip/edit/:tripId" element={<EditTrip />} />
-          </Routes>
-        </Router>
-      </UserContext.Provider>
+      <SnackbarProvider>
+        <UserContext.Provider value={{ user, setUser }}>
+          <Router>
+            <NavBar />
+            <Routes>
+              <Route path="/" element={<ExperienceSearch />} />
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/experience/add" element={<AddExperience />} />
+              {/* TODO Experience Edit page */}
+              <Route path="/trip/:tripId" element={<TripPage />} />
+              <Route path="/trip/:tripId" element={<TripPage />} />
+              <Route path="/trip/add" element={<AddTrip />} />
+              <Route path="/trip/edit/:tripId" element={<EditTrip />} />
+            </Routes>
+          </Router>
+        </UserContext.Provider>
+      </SnackbarProvider>
     </div>
   );
 };
