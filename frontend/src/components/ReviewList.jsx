@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
+import timeAgo from "../utilities/TimeAgo";
 
 /*
     Adapted from Material UI Documentation Examples
@@ -29,14 +30,13 @@ export default function ReviewList({ reviews }) {
   };
 
   let columns = [
-    { id: "user_id", label: "User", minWidth: 100 },
+    { id: "createdAt", label: "Added", minWidth: 100 },
     { id: "review_text", label: "Review", minWidth: 150 },
     { id: "rating", label: "Rating", minWidth: 100 },
   ];
 
-
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden"}}>
+    <Paper sx={{ width: "80%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -68,8 +68,7 @@ export default function ReviewList({ reviews }) {
                     tabIndex={-1}
                     key={review.id}
                     sx={{
-                      backgroundColor:
-                        i % 2 === 0 ? "white" : "#ebece8",
+                      backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
                     }}
                   >
                     {columns.map((column) => {
@@ -79,6 +78,12 @@ export default function ReviewList({ reviews }) {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             <RatingDisplay value={value} />
+                          </TableCell>
+                        );
+                      } else if (column.id === "createdAt") {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {timeAgo(value)}
                           </TableCell>
                         );
                       } else {
