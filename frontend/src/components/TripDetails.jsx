@@ -8,12 +8,6 @@ const TripDetails = ({ trip, handleChange, handleSubmit }) => {
         noValidate
         alignItems="stretch"
         autoComplete="off"
-        display="block"
-        margin={10}
-        padding={10}
-        border={"3px solid #364958"}
-        backgroundColor="rgba(238,232,217)"
-        borderRadius="7px"
         onSubmit={handleSubmit}
       >
         <div style={{ marginBottom: "3rem" }}>
@@ -26,7 +20,7 @@ const TripDetails = ({ trip, handleChange, handleSubmit }) => {
             value={trip.name}
             onChange={handleChange}
             sx={{ width: "100%" }}
-            backgroundColor
+            variant="filled"
           />
         </div>
         <div style={{ marginBottom: "3rem" }}>
@@ -41,6 +35,7 @@ const TripDetails = ({ trip, handleChange, handleSubmit }) => {
             value={trip.description}
             onChange={handleChange}
             sx={{ width: "100%" }}
+            variant="filled"
           />
         </div>
         <Button

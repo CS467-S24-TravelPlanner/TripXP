@@ -193,7 +193,7 @@ function SearchMap({
   } else {
     return (
       <Box
-        margin={3}
+        marginTop="3rem"
         sx={{
           display: "flex",
           flexDirection: "column",

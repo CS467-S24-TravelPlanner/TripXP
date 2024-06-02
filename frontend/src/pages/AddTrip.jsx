@@ -51,26 +51,27 @@ const AddTrip = () => {
   };
 
   return (
-    <Box position="relative" width="90%" height="100%" mx="auto" mt="4rem">
+    <Box position="relative" width="90%" height="90%" mx="auto" mt="5rem">
       <Box
         component="img"
         src={randomPic} // Replace with your image path
         alt="Background"
         width="100%"
+        maxHeight="90%"
         borderRadius="7px"
         boxShadow="0 4px 20px rgba(0, 0.1, 1, 0.5)"
       />
       <Box
         position="absolute"
-        top="5%"
+        top="10%"
         left="5%" // Adjust as needed to position the floating box on the left
         transform="translateY(-50%)" // Center vertically
-        height="90%"
         width="45%" // 40% of the image width
         borderRadius="7px"
         border="3px solid #364958"
         boxShadow="0 4px 20px rgba(0, 0.1, 1, 0.5)"
         bgcolor="rgba(238,232,217, 0.9)"
+        padding="2rem"
       >
         <h1>Embark on a New Journey</h1>
         <h2>Tell Us About Your Trip:</h2>
