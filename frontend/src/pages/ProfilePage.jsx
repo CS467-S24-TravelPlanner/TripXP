@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 import "../index.css";
 import { CircularProgress } from "@mui/material";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 const ProfilePage = () => {
+  const showSnackbar = useSnackbar();
   const [trips, setTrips] = useState([]);
   const [tripsLoading, setTripsLoading] = useState(true);
   const { user } = useContext(UserContext);
@@ -22,9 +24,11 @@ const ProfilePage = () => {
         setTrips(response.data);
         setTripsLoading(false);
       } else {
+        showSnackbar("Server error fetching trips.", "error");
         console.error("Error fetching trips:", response.error);
       }
     } catch (error) {
+      showSnackbar("Error fetching trips.", "error");
       console.error("Error fetching trips:", error);
     }
   };
