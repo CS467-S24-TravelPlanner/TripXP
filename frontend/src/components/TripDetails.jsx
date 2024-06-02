@@ -12,6 +12,7 @@ const TripDetails = ({ trip, handleChange, handleSubmit }) => {
         margin={10}
         padding={10}
         border={"3px solid #364958"}
+        backgroundColor="rgba(238,232,217)"
         borderRadius="7px"
         onSubmit={handleSubmit}
       >
