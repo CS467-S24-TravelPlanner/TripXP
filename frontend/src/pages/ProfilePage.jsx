@@ -18,6 +18,9 @@ const ProfilePage = () => {
   }, [user]);
 
   const fetchTrips = async () => {
+    if (!user) {
+      return;
+    }
     try {
       const response = await getTrips(user.user_id, user.raw_jwt);
       if (response.status) {
