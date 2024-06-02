@@ -12,8 +12,10 @@ import {
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { createReview } from "../../utilities/ReviewHandler";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const ReviewForm = ({ experienceId, closeReviewForm, reloadReviews }) => {
+  const showSnackbar = useSnackbar();
   const { user } = useContext(UserContext);
   const [rating, setRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
@@ -29,15 +31,17 @@ const ReviewForm = ({ experienceId, closeReviewForm, reloadReviews }) => {
           rating
         );
         if (res.status) {
-          console.log("Review submitted successfully!");
+          showSnackbar("Review submitted successfully!", "success");
         } else {
+          showSnackbar("Server error submitting review.", "error");
           console.error(res.error);
         }
       } catch (error) {
-        console.log(error);
+        showSnackbar("Error submitting review.", "error");
+        console.error("Error submitting review:", error);
       }
     } else {
-      alert("You must be logged in to submit a review.");
+      showSnackbar("Please log in to submit a review.", "error");
     }
     closeReviewForm();
     reloadReviews();
@@ -89,7 +93,7 @@ const ReviewForm = ({ experienceId, closeReviewForm, reloadReviews }) => {
         />
       </FormControl>
 
-      <Stack direction="row" m={3}>
+      <Stack direction="row-reverse" mt={3} useFlexGap sx={{ gap: ".5rem" }}>
         <Button
           type="submit"
           variant="outlined"
