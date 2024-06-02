@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Experience.css";
 import ReviewForm from "../ReviewForm/ReviewForm"; // Import ReviewForm component
 import RatingDisplay from "../RatingDisplay.jsx";
 import { getReviews } from "../../utilities/ReviewHandler.jsx";
 import ReviewList from "../ReviewList.jsx";
 import { Paper, Stack, Button, Typography } from "@mui/material";
+import { UserContext } from "../../contexts/UserContext";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -13,6 +14,8 @@ const Experience = ({ experience, closeExperience }) => {
 
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
+
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (reviewsLoading) {
@@ -56,19 +59,21 @@ const Experience = ({ experience, closeExperience }) => {
           <RatingDisplay value={experience.rating} />
         </h4>
 
-        <Button
-          type="button"
-          variant="outlined"
-          onClick={() => setShowReviewForm(!showReviewForm)}
-          sx={{
-            backgroundColor: "#364958",
-            color: "white",
-            borderRadius: "7px",
-            margin: "5px",
-          }}
-        >
-          Write a Review
-        </Button>
+        {user && (
+          <Button
+            type="button"
+            variant="outlined"
+            onClick={() => setShowReviewForm(!showReviewForm)}
+            sx={{
+              backgroundColor: "#364958",
+              color: "white",
+              borderRadius: "7px",
+              margin: "5px",
+            }}
+          >
+            Write a Review
+          </Button>
+        )}
 
         {showReviewForm && (
           <ReviewForm
