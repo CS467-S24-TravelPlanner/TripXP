@@ -184,7 +184,7 @@ function SearchMap({
       }
       setFilteredExpList(newExpList);
     }
-  }, [searchBounds, keywords]);
+  }, [searchBounds, keywords, mapOnLoad, expList.data]);
 
   if (loadError) {
     return <div>Error loading maps</div>;
