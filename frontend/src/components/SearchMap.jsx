@@ -31,10 +31,10 @@ const mapContainerStyle = {
 
 // Circle default options
 const circleOptions = {
-  strokeColor: "#FF0000",
-  strokeOpacity: 0.8,
+  strokeColor: "#000",
+  strokeOpacity: 0.4,
   strokeWeight: 2,
-  fillColor: "#FF0000",
+  fillColor: "#550",
   fillOpacity: 0.1,
   clickable: false,
   draggable: false,
