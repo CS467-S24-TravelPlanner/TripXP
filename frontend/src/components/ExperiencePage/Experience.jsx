@@ -13,6 +13,7 @@ const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [experienceImage, setExperienceImage] = useState(null);
 
   const { user } = useContext(UserContext);
 
@@ -21,6 +22,30 @@ const Experience = ({ experience, closeExperience }) => {
       fetchReviews();
     }
   }, [reviewsLoading]);
+
+  useEffect(() => {
+    if (experience.image_url) {
+      fetchImage();
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(experienceImage);
+  }, [experienceImage]);
+
+  const fetchImage = async () => {
+    try {
+      const res = await fetch(
+        apiUrl + "/uploads/?fileName=" + experience.image_url
+      );
+      if (!res.ok) {
+        throw new Error("Error fetching image");
+      }
+      setExperienceImage(URL.createObjectURL(await res.blob()));
+    } catch (error) {
+      console.error("Error fetching image:", error);
+    }
+  };
 
   const fetchReviews = async () => {
     getReviews({ experience_id: experience.id }).then((results) => {
@@ -49,18 +74,20 @@ const Experience = ({ experience, closeExperience }) => {
           {experience.description}
         </Typography>
 
-        <img
-          src={apiUrl + "/uploads/?fileName=" + experience.image_url}
-          alt={experience.title}
-          className="experience-image"
-        />
+        {experienceImage && (
+          <img
+            src={experienceImage}
+            alt={experience.title}
+            className="experience-image"
+          />
+        )}
 
         <h4 className="ratings-section">
           Average Rating:
           <RatingDisplay value={experience.rating} />
         </h4>
 
-        {user && (
+        {user && !showReviewForm && (
           <Button
             type="button"
             variant="outlined"
