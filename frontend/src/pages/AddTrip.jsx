@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { createTrip } from "../utilities/TripHandler";
 import { useNavigate } from "react-router-dom";
 import TripDetails from "../components/TripDetails";
 import "../index.css";
-import travelpic from "../assets/travelpic.jpg.jpg";
 import { useSnackbar } from "../contexts/SnackbarContext.jsx";
 import { UserContext } from "../contexts/UserContext";
+import { Box } from "@mui/material";
+
+const NUM_PICS = 6;
 
 const AddTrip = () => {
   const showSnackbar = useSnackbar();
@@ -15,6 +17,10 @@ const AddTrip = () => {
     name: "",
     description: "",
   });
+
+  const randomPic = useMemo(() => {
+    return `/travelpics/${Math.floor(Math.random() * NUM_PICS) + 1}.jpg`;
+  }, []);
 
   const handleChange = (e) => {
     // TODO data validation
@@ -45,49 +51,71 @@ const AddTrip = () => {
   };
 
   return (
-    <div style={{ marginTop: "80px", display: "flex" }}>
-      <div
-        style={{
-          flex: "1",
-          height: "100%",
-          borderRadius: "7px",
-          border: "3px solid #364958",
-          boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)",
-        }}
+    <Box position="relative" width="90%" height="100%" mx="auto" mt="4rem">
+      <Box
+        component="img"
+        src={randomPic} // Replace with your image path
+        alt="Background"
+        width="100%"
+        borderRadius="7px"
+        boxShadow="0 4px 20px rgba(0, 0.1, 1, 0.5)"
+      />
+      <Box
+        position="absolute"
+        top="5%"
+        left="5%" // Adjust as needed to position the floating box on the left
+        transform="translateY(-50%)" // Center vertically
+        height="90%"
+        width="45%" // 40% of the image width
+        borderRadius="7px"
+        border="3px solid #364958"
+        boxShadow="0 4px 20px rgba(0, 0.1, 1, 0.5)"
+        bgcolor="rgba(238,232,217, 0.9)"
       >
-        <>
-          <h1>Embark on a New Journey</h1>
-
-          <h2>Tell Us About Your Trip:</h2>
-          <TripDetails
-            trip={trip}
-            handleChange={handleChange}
-            handleSubmit={handleSubmit}
-          />
-        </>
-      </div>
-      <div
-        style={{
-          flex: "1",
-          position: "relative",
-          right: "0",
-          left: "0",
-        }}
-      >
-        <img
-          src={travelpic}
-          alt="Travel Pic"
-          style={{
-            width: "100%",
-            height: "81.5%",
-            maxWidth: "100%",
-            objectFit: "cover",
-            borderRadius: "7px",
-            boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)",
-          }}
+        <h1>Embark on a New Journey</h1>
+        <h2>Tell Us About Your Trip:</h2>
+        <TripDetails
+          trip={trip}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
+    // <img src="/travelpics/1.jpg" alt="background">
+    //   <div
+    //     style={{
+    //       width: "80vw",
+    //       height: "80vh",
+    //       marginTop: "80px",
+    //       display: "inline-block",
+    //       backgroundImage: "url(/travelpics/1.jpg)",
+    //       backgroundRepeat: "no-repeat",
+    //       backgroundPosition: "center",
+    //     }}
+    //   >
+    //     <div
+    //       style={{
+    //         float: "left",
+    //         width: "30%",
+    //         height: "80%",
+    //         borderRadius: "7px",
+    //         border: "3px solid #364958",
+    //         boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)",
+    //       }}
+    //     >
+    //       <>
+    //         <h1>Embark on a New Journey</h1>
+
+    //         <h2>Tell Us About Your Trip:</h2>
+    //         <TripDetails
+    //           trip={trip}
+    //           handleChange={handleChange}
+    //           handleSubmit={handleSubmit}
+    //         />
+    //       </>
+    //     </div>
+    //   </div>
+    // </img>
   );
 };
 
