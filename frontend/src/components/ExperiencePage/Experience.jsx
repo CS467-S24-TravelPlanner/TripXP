@@ -11,7 +11,6 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Experience = ({ experience, closeExperience }) => {
   const [showReviewForm, setShowReviewForm] = useState(false);
-
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(true);
 
@@ -31,20 +30,22 @@ const Experience = ({ experience, closeExperience }) => {
   };
 
   return (
-    <Paper sx={{ textAlign: "center", marginTop: "40px" }}>
+    <Paper sx={{ textAlign: "center", marginTop: "4rem", padding: "2rem" }}>
       <Stack className="experiences" sx={{ alignItems: "center", m: 2 }}>
-        <Button
-          onClick={closeExperience}
-          sx={{ width: "100px", height: "65px", margin: "5px" }}
+        <Stack
+          direction="row-reverse"
+          sx={{ width: "100%", alignItems: "flex-end", mb: "3rem" }}
         >
-          Close Experience
-        </Button>
+          <Button onClick={closeExperience} variant="outlined" sx={{}}>
+            Return to Experience List ↩
+          </Button>
+        </Stack>
 
         <Typography variant="h3">{experience.title}</Typography>
         <Typography variant="h5" sx={{ marginBottom: 2 }}>
           {experience.location}
         </Typography>
-        <Typography variant="cite" sx={{ marginBottom: 2 }}>
+        <Typography variant="cite" sx={{ marginBottom: 2, width: "90%" }}>
           {experience.description}
         </Typography>
 

@@ -36,7 +36,7 @@ export default function ReviewList({ reviews }) {
   ];
 
   return (
-    <Paper sx={{ width: "80%", overflow: "hidden" }}>
+    <Paper sx={{ width: "100%", overflow: "hidden", mt: "2rem" }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
