@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -16,7 +17,7 @@ import timeAgo from "../utilities/TimeAgo";
     Adapted from Material UI Documentation Examples
 */
 
-export default function ReviewList({ reviews }) {
+export default function ReviewList({ reviews, reviewsLoading }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -58,45 +59,53 @@ export default function ReviewList({ reviews }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {reviews
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((review, i) => {
-                return (
-                  <TableRow
-                    hover
-                    role="button"
-                    tabIndex={-1}
-                    key={review.id}
-                    sx={{
-                      backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
-                    }}
-                  >
-                    {columns.map((column) => {
-                      const value = review[column.id];
+            {reviewsLoading ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center">
+                  <CircularProgress sx={{ m: "2rem " }} />
+                </TableCell>
+              </TableRow>
+            ) : (
+              reviews
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((review, i) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="button"
+                      tabIndex={-1}
+                      key={review.id}
+                      sx={{
+                        backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
+                      }}
+                    >
+                      {columns.map((column) => {
+                        const value = review[column.id];
 
-                      if (column.id === "rating") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <RatingDisplay value={value} />
-                          </TableCell>
-                        );
-                      } else if (column.id === "createdAt") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {timeAgo(value)}
-                          </TableCell>
-                        );
-                      } else {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {value}
-                          </TableCell>
-                        );
-                      }
-                    })}
-                  </TableRow>
-                );
-              })}
+                        if (column.id === "rating") {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              <RatingDisplay value={value} />
+                            </TableCell>
+                          );
+                        } else if (column.id === "createdAt") {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {timeAgo(value)}
+                            </TableCell>
+                          );
+                        } else {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {value}
+                            </TableCell>
+                          );
+                        }
+                      })}
+                    </TableRow>
+                  );
+                })
+            )}
           </TableBody>
         </Table>
       </TableContainer>

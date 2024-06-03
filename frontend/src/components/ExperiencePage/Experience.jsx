@@ -110,7 +110,7 @@ const Experience = ({ experience, closeExperience }) => {
             reloadReviews={() => setReviewsLoading(true)}
           />
         )}
-        <ReviewList reviews={reviews} />
+        <ReviewList reviews={reviews} reviewsLoading={reviewsLoading} />
       </Stack>
     </Paper>
   );
