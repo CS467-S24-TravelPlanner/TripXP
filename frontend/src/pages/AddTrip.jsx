@@ -32,6 +32,10 @@ const AddTrip = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!trip.name || !trip.description) {
+      showSnackbar("Please fill out all fields.", "error");
+      return;
+    }
     if (!user) {
       showSnackbar("Please log in to create a trip.", "error");
       return;
@@ -54,7 +58,7 @@ const AddTrip = () => {
     <Box position="relative" width="90%" height="90%" mx="auto" mt="5rem">
       <Box
         component="img"
-        src={randomPic} // Replace with your image path
+        src={randomPic}
         alt="Background"
         width="100%"
         maxHeight="90%"
@@ -64,9 +68,9 @@ const AddTrip = () => {
       <Box
         position="absolute"
         top="10%"
-        left="5%" // Adjust as needed to position the floating box on the left
+        left="5%"
         transform="translateY(-50%)" // Center vertically
-        width="45%" // 40% of the image width
+        width="45%"
         borderRadius="7px"
         border="3px solid #364958"
         boxShadow="0 4px 20px rgba(0, 0.1, 1, 0.5)"
