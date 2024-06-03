@@ -29,18 +29,12 @@ const mapContainerStyle = {
   position: "relative",
 };
 
-// Center of the map when it loads
-const defaultCenter = {
-  lat: 38.4947704, // default latitude
-  lng: -98.421832, // default longitude
-};
-
 // Circle default options
 const circleOptions = {
-  strokeColor: "#FF0000",
-  strokeOpacity: 0.8,
+  strokeColor: "#000",
+  strokeOpacity: 0.4,
   strokeWeight: 2,
-  fillColor: "#FF0000",
+  fillColor: "#550",
   fillOpacity: 0.1,
   clickable: false,
   draggable: false,
@@ -49,21 +43,29 @@ const circleOptions = {
   zIndex: 1,
 };
 
-function SearchMap({ expList, expClick }) {
-  // Map state
-  const [bounds, setBounds] = useState(null); // Can be used to search by moving map, not implemented
-  const [center, setCenter] = useState(defaultCenter);
-
-  // Search state variables
-  const [searchLocation, setSearchLocation] = useState(null); // Coordinates of the search location
-  const [searchRadius, setSearchRadius] = useState(160934); // Search radius in meters (def 100 miles)
-  const [searchBounds, setSearchBounds] = useState(null); // Search Area on Map
-
-  // The list of Experiences meeting search parameters
-  const [filteredExpList, setFilteredExpList] = useState(expList.data);
-  const [keywords, setKeywords] = useState([]);
-  const [selectedExp, setSelectedExp] = useState(null);
-
+function SearchMap({
+  expList,
+  expClick,
+  bounds,
+  setBounds,
+  center,
+  setCenter,
+  searchLocation,
+  setSearchLocation,
+  searchRadius,
+  setSearchRadius,
+  searchBounds,
+  setSearchBounds,
+  expListLoading,
+  filteredExpList,
+  setFilteredExpList,
+  keywords,
+  setKeywords,
+  selectedExp,
+  setSelectedExp,
+  circleRef,
+}) {
+  // This component is a controlled component, and all state is passed down as props
   // Map loading utility function - returns isLoaded bool and Error, if applicable
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
@@ -72,11 +74,13 @@ function SearchMap({ expList, expClick }) {
 
   // Use this when a reference of the map instance is needed
   const mapRef = useRef();
-  const circleRef = useRef();
 
   // onLoad callback to get instance of Map and supply inital bounds
   const mapOnLoad = (map) => {
     mapRef.current = map;
+    if (circleRef.current) {
+      circleRef.current.setMap(map);
+    }
     setBounds(mapRef.current.getBounds());
   };
 
@@ -181,7 +185,7 @@ function SearchMap({ expList, expClick }) {
       }
       setFilteredExpList(newExpList);
     }
-  }, [searchBounds, keywords]);
+  }, [searchBounds, keywords, mapOnLoad, expList.data]);
 
   if (loadError) {
     return <div>Error loading maps</div>;
@@ -190,7 +194,7 @@ function SearchMap({ expList, expClick }) {
   } else {
     return (
       <Box
-        margin={3}
+        marginTop="3rem"
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -317,10 +321,10 @@ function SearchMap({ expList, expClick }) {
                   />
                 </Stack>
               </Stack>
-
               <SlimExperienceList
                 experienceClick={expClick}
                 experiences={filteredExpList}
+                loading={expListLoading}
               />
             </Paper>
           </Grid>

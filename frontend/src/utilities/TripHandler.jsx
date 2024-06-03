@@ -75,12 +75,11 @@ async function getTripExperiences(tripId, auth_token) {
 function editTrip(id, newData = {}, auth_token) {
   const oldTrip = getTrip(id, auth_token);
 
-  // TODO more security likely needed here to ensure id can't be overwritten
   const newTrip = Object.keys(newData).length
     ? { ...oldTrip, ...newData }
     : oldTrip;
 
-  return patchData("/trip", newTrip, auth_token);
+  return patchData("/trip/" + id, newTrip, auth_token);
 }
 
 /**

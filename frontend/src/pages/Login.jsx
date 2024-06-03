@@ -44,7 +44,7 @@ const LoginForm = () => {
 
   return (
     <Paper
-      sx={{ maxWidth: 400, margin: "auto", marginTop: 4, padding: 2 }}
+      sx={{ maxWidth: 400, margin: "auto", marginTop: "5rem", padding: 2 }}
       elevation={3}
     >
       <form noValidate autoComplete="off">

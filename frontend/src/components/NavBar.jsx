@@ -15,41 +15,63 @@ function ResponsiveAppBar() {
   const navigate = useNavigate();
 
   return (
-    
-    <AppBar position="fixed" sx={{ 
-      height: "66px",
-      backgroundColor: "#90B494" }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Link to="/">
-            <img src={"./logo.png"} width={95} height={71} />
+    <AppBar
+      position="fixed"
+      sx={{
+        height: "5rem",
+        backgroundColor: "#90B494",
+      }}
+    >
+      <Container>
+        <Toolbar
+          disableGutters
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link to="/" style={{ display: "block" }}>
+            <Box
+              component="img"
+              src="/logo.png"
+              sx={{
+                display: "block",
+                height: "5rem",
+                "&:hover": { cursor: "pointer" },
+              }}
+            />
           </Link>
 
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {pages.map((page, i) => (
               <Button
                 id={i}
                 key={page.linkName}
                 onClick={() => navigate(page.url)}
-                sx={{ 
+                sx={{
                   my: 2,
                   mr: 5,
                   color: "#364958",
                   display: "block",
-                  position: 'relative',
-                  "&:hover": { 
+                  position: "relative",
+                  "&:hover": {
                     textDecoration: "underline",
-                  }, 
+                  },
                 }}
                 className="navButton"
               >
-                
                 {page.linkName}
               </Button>
             ))}
           </Box>
           <Box>
-            <LoginAvatarMenu/>
+            <LoginAvatarMenu />
           </Box>
         </Toolbar>
       </Container>

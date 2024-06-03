@@ -41,6 +41,7 @@ function ExperienceForm({ handleSubmit, keywords, setKeywords }) {
       margin={10}
       padding={10}
       border={"3px solid #364958"}
+      borderRadius="7px"
       onSubmit={handleSubmit}
     >
       <Stack spacing={3}>
