@@ -39,10 +39,6 @@ const EditTrip = () => {
     fetchTripExperiences();
   }, [editTrip]);
 
-  useEffect(() => {
-    console.log(trip);
-  }, [trip]);
-
   const fetchTrip = async () => {
     try {
       const res = await getTrip(tripId, user.raw_jwt);
@@ -163,7 +159,7 @@ const EditTrip = () => {
                 <Stack spacing={2} sx={{ padding: "2rem" }}>
                   <Box component="h1">{trip.name}</Box>
                   <Box component="h3">{trip.description}</Box>
-                  <Box component="cite">Created by {user.username}</Box>
+                  <Box component="cite">Created by {user.name}</Box>
                   <Divider orientation="horizontal" flexItem />
                   <ExperienceList experiences={tripExperiences} />
                 </Stack>
