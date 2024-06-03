@@ -15,6 +15,7 @@ function ExperienceSearch() {
 
   // Current experience list
   const [expList, setExpList] = useState({ data: [] });
+  const [expListLoading, setExpListLoading] = useState(true);
 
   // Map state
   const [bounds, setBounds] = useState(null); // Can be used to search by moving map, not implemented
@@ -38,6 +39,7 @@ function ExperienceSearch() {
     // Get all experiences from the DB
     getExperiences().then((results) => {
       setExpList(results);
+      setExpListLoading(false);
     });
   }, []);
 
@@ -70,6 +72,7 @@ function ExperienceSearch() {
       setSearchRadius={setSearchRadius}
       searchBounds={searchBounds}
       setSearchBounds={setSearchBounds}
+      expListLoading={expListLoading}
       filteredExpList={filteredExpList}
       setFilteredExpList={setFilteredExpList}
       keywords={keywords}

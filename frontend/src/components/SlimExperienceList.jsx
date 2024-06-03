@@ -1,8 +1,6 @@
 import * as React from "react";
-import { useRef } from "react";
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -13,13 +11,11 @@ import {
   Collapse,
   Box,
   Chip,
-  Typography,
   Stack,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
-import { Link } from "react-router-dom";
-import ExpInTripCheckbox from "./ExpInTripCheckbox";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
@@ -31,6 +27,7 @@ export default function SlimExperienceList({
   experiences,
   tripId = null,
   tripExperiences = null,
+  loading,
   experienceClick = null,
 }) {
   const [page, setPage] = React.useState(0);
@@ -88,20 +85,28 @@ export default function SlimExperienceList({
             </TableRow>
           </TableHead>
           <TableBody>
-            {experiences
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((experience, i) => {
-                return (
-                  <CollapsibleRow
-                    key={experience.id}
-                    experience={experience}
-                    experienceClick={experienceClick}
-                    i={i}
-                    openIndex={openIndex}
-                    setOpenIndex={setOpenIndex}
-                  />
-                );
-              })}
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={3} align="center" sx={{ border: "none" }}>
+                  <CircularProgress sx={{ m: "2rem " }} />
+                </TableCell>
+              </TableRow>
+            ) : (
+              experiences
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((experience, i) => {
+                  return (
+                    <CollapsibleRow
+                      key={experience.id}
+                      experience={experience}
+                      experienceClick={experienceClick}
+                      i={i}
+                      openIndex={openIndex}
+                      setOpenIndex={setOpenIndex}
+                    />
+                  );
+                })
+            )}
           </TableBody>
         </Table>
       </TableContainer>

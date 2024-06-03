@@ -56,6 +56,7 @@ function SearchMap({
   setSearchRadius,
   searchBounds,
   setSearchBounds,
+  expListLoading,
   filteredExpList,
   setFilteredExpList,
   keywords,
@@ -320,10 +321,10 @@ function SearchMap({
                   />
                 </Stack>
               </Stack>
-
               <SlimExperienceList
                 experienceClick={expClick}
                 experiences={filteredExpList}
+                loading={expListLoading}
               />
             </Paper>
           </Grid>
