@@ -5,7 +5,6 @@ import LoginForm from "./pages/Login.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import TripPage from "./pages/TripPage.jsx";
 import AddTrip from "./pages/AddTrip.jsx";
-import EditTrip from "./pages/EditTrip.jsx";
 import ExperienceSearch from "./pages/ExperienceSearch";
 import AddExperience from "./pages/AddExperience";
 import NavBar from "./components/NavBar.jsx";
@@ -40,11 +39,8 @@ const App = () => {
               <Route path="/login" element={<LoginForm />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/experience/add" element={<AddExperience />} />
-              {/* TODO Experience Edit page */}
-              <Route path="/trip/:tripId" element={<TripPage />} />
               <Route path="/trip/:tripId" element={<TripPage />} />
               <Route path="/trip/add" element={<AddTrip />} />
-              <Route path="/trip/edit/:tripId" element={<EditTrip />} />
             </Routes>
           </Router>
         </UserContext.Provider>

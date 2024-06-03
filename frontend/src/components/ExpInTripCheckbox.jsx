@@ -2,6 +2,7 @@ import * as React from "react";
 import { Checkbox, Box } from "@mui/material";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useSnackbar } from "../contexts/SnackbarContext";
 import {
   addExperienceToTrip,
   removeExperienceFromTrip,
@@ -14,6 +15,8 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
   const [expInTrip, setExpInTrip] = useState(false);
 
   const { user } = useContext(UserContext);
+
+  const showSnackbar = useSnackbar();
 
   useEffect(() => {
     setExpInTrip(evalExpInTrip(expId, tripExperiences));
@@ -31,14 +34,14 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
       try {
         const res = await removeExperienceFromTrip(tripId, expId, user.raw_jwt);
         if (res.status) {
-          console.log(
-            `Experience ${expId} removed from ${tripId} successfully.`
-          );
+          showSnackbar("Experience removed from trip.", "success");
           setExpInTrip(!expInTrip);
         } else {
+          showSnackbar("Error removing experience from trip.", "error");
           console.error(`Error removing experience from trip:`, res.error);
         }
       } catch (error) {
+        showSnackbar("Error removing experience from trip.", "error");
         console.error("removeExperienceFromTrip error:", error);
       }
     }
@@ -47,26 +50,18 @@ export default function ExpInTripCheckbox({ expId, tripId, tripExperiences }) {
       try {
         const res = await addExperienceToTrip(tripId, expId, user.raw_jwt);
         if (res.status) {
-          console.log(`Experience ${expId} added to ${tripId} successfully.`);
+          showSnackbar("Experience added to trip.", "success");
           setExpInTrip(!expInTrip);
         } else {
+          showSnackbar("Error adding experience to trip.", "error");
           console.error(`Error adding experience to trip:`, res.error);
         }
       } catch (error) {
+        showSnackbar("Error adding experience to trip.", "error");
         console.error("addExperienceToTrip error:", error);
       }
     }
   };
 
-  return (
-    <Box
-      sx={{
-        width: 100,
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <Checkbox checked={expInTrip} onChange={addOrDelFromTrip} />
-    </Box>
-  );
+  return <Checkbox checked={expInTrip} onChange={addOrDelFromTrip} />;
 }

@@ -10,12 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 import RatingDisplay from "./RatingDisplay";
-import { Link } from "react-router-dom";
 import ExpInTripCheckbox from "./ExpInTripCheckbox";
-
-/*
-    Adapted from Material UI Documentation Examples
-*/
 
 export default function ExperienceList({
   experiences,
@@ -43,20 +38,26 @@ export default function ExperienceList({
   };
 
   let columns = [
-    { id: "title", label: "Title", minWidth: 180 },
-    { id: "description", label: "Description", minWidth: 225 },
-    { id: "location", label: "Location", minWidth: 170 },
-    { id: "rating", label: "Rating", minWidth: 125 },
+    { id: "title", label: "Title", minWidth: "25%" },
+    { id: "description", label: "Description", minWidth: "40%" },
+    { id: "location", label: "Location", minWidth: "15%" },
+    { id: "rating", label: "Rating", minWidth: "15%" },
   ];
 
   if (tripId) {
-    columns = [{ id: "inTrip", label: "In Trip", minWidth: 50 }, ...columns];
+    columns = [{ id: "checkbox", label: "", minWidth: "5%" }, ...columns];
   }
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "100%" }}>
       <TableContainer
-        sx={{ maxHeight: 440, minHeight: 440, minWidth: 850, maxWidth: 850 }}
+        sx={{
+          maxHeight: 440,
+          minHeight: 440,
+          minWidth: 850,
+          width: "100%",
+          maxWidth: "50vw",
+        }}
       >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -88,10 +89,14 @@ export default function ExperienceList({
                     tabIndex={-1}
                     key={experience.id}
                     onClick={() => handleExperienceClick(experience)}
+                    sx={{
+                      cursor: "pointer",
+                      backgroundColor: i % 2 === 0 ? "white" : "#ebece8",
+                    }}
                   >
                     {columns.map((column) => {
                       const value = experience[column.id];
-                      if (column.id === "inTrip") {
+                      if (column.id === "checkbox") {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             <ExpInTripCheckbox
@@ -104,27 +109,13 @@ export default function ExperienceList({
                       }
                       if (column.id === "rating") {
                         return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{
-                              backgroundColor:
-                                i % 2 === 0 ? "white" : "#ebece8",
-                            }}
-                          >
+                          <TableCell key={column.id} align={column.align}>
                             <RatingDisplay value={value} />
                           </TableCell>
                         );
                       } else {
                         return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                            sx={{
-                              backgroundColor:
-                                i % 2 === 0 ? "white" : "#ebece8",
-                            }}
-                          >
+                          <TableCell key={column.id} align={column.align}>
                             {value}
                           </TableCell>
                         );

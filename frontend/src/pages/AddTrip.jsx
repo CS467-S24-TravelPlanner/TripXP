@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo } from "react";
 import { createTrip } from "../utilities/TripHandler";
 import { useNavigate } from "react-router-dom";
-import TripDetails from "../components/TripDetails";
+import TripDetails from "../components/UpdateTripDetails.jsx";
 import "../index.css";
 import { useSnackbar } from "../contexts/SnackbarContext.jsx";
 import { UserContext } from "../contexts/UserContext";
@@ -23,7 +23,6 @@ const AddTrip = () => {
   }, []);
 
   const handleChange = (e) => {
-    // TODO data validation
     setTrip({
       ...trip,
       [e.target.name]: e.target.value,
@@ -44,7 +43,7 @@ const AddTrip = () => {
       const res = await createTrip(trip.name, trip.description, user.raw_jwt);
       if (res.status) {
         showSnackbar("Trip created successfully!", "success");
-        navigate(`/trip/edit/${res.id}`);
+        navigate(`/trip/${res.id}`);
       } else {
         showSnackbar("Error creating trip.", "error");
         console.error("Error creating trip:", res.message);
@@ -86,41 +85,6 @@ const AddTrip = () => {
         />
       </Box>
     </Box>
-    // <img src="/travelpics/1.jpg" alt="background">
-    //   <div
-    //     style={{
-    //       width: "80vw",
-    //       height: "80vh",
-    //       marginTop: "80px",
-    //       display: "inline-block",
-    //       backgroundImage: "url(/travelpics/1.jpg)",
-    //       backgroundRepeat: "no-repeat",
-    //       backgroundPosition: "center",
-    //     }}
-    //   >
-    //     <div
-    //       style={{
-    //         float: "left",
-    //         width: "30%",
-    //         height: "80%",
-    //         borderRadius: "7px",
-    //         border: "3px solid #364958",
-    //         boxShadow: "0 4px 20px rgba(0, 0.1, 1, 0.5)",
-    //       }}
-    //     >
-    //       <>
-    //         <h1>Embark on a New Journey</h1>
-
-    //         <h2>Tell Us About Your Trip:</h2>
-    //         <TripDetails
-    //           trip={trip}
-    //           handleChange={handleChange}
-    //           handleSubmit={handleSubmit}
-    //         />
-    //       </>
-    //     </div>
-    //   </div>
-    // </img>
   );
 };
 
