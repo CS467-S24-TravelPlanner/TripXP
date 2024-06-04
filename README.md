@@ -1,4 +1,4 @@
-# Crowd-Sources Travel Planner (working title: TripXP)
+# TripXP, a Crowd-Sourced Travel Planner
 **Course:** CS467 Capstone Project, Spring 2024 Capstone
 
 **Group Members:** Anthony Clary, Hannah Rummel, Chase Smith, Akash Verma
