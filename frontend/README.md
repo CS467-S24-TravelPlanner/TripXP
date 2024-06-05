@@ -7,9 +7,19 @@
 * Make sure that you're within the `frontend` directory when working on the API.
 * We are utilizing [Vite](https://vitejs.dev/) as frontend tooling. It will be installed as a dependency when you run `npm install`.
   * Vite provides an intuitive CLI and features fast hot module replacement for the dev server. In essence, the dev server will monitor the `src` directory for changes and live reload as needed to assist with development. The dev server is run with `npm run dev`.
-* Make sure that you create a local `.env` file and configure it to your needs❗ You will need to create one when you first clone the repo. A sample is provided as `.env.sample`
-  * See the group discord's [#secrets](https://discordapp.com/channels/1225842180912971926/1230529347765538877) channel if you need the secret variables for your local `.env`
+* Make sure that you create a local `.env` file and configure it to your needs❗ You will need to create one when you first clone the repo. See the example below for the minimum env variable requirements. NOTE: ALL variables must be prefixed with `VITE_` as shown.
+```
+# URL API is being served from
+VITE_API_BASE_URL='http://localhost:3003'
 
+# Google Maps; See https://developers.google.com/maps/documentation/javascript/get-api-key
+VITE_GOOGLE_API_KEY='INSERT GOOGLE API KEY HERE (SEE ABOVE)'
+
+# Google Identity; See https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id
+VITE_GOOGLE_IDENTITY_CLIENT_ID='INSERT GOOGLE IDENTITY CLIENT ID (SEE ABOVE)'
+```
+
+* Run the following commands to start the local Vite development server. 
 ```
 git clone git@github.com:alclary/travelplanner.git
 cd travelplanner/frontend
