@@ -227,7 +227,7 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Read Existing User
 
 - To read User(s), send a GET request using the path '/user'.
-- The GET request must include the JWT of the user in the authorization header. 
+- The request must include the JWT of the user in the authorization header. 
 - A request with no parameters will return all Users.
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
 - A 404 status code, status bool, and message indicating "User not found."
@@ -241,7 +241,7 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
   "data": [
     {
       "id": 3,
-      "jwt_unique": '111258085555415515495'
+      "jwt_unique": "111258085555415515495"
       "username": "TestUserName3",
       "email": "TotallyFakeEmail@gmail.com",
       "createdAt": "2024-04-21T04:08:58.000Z",
@@ -254,7 +254,7 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Update Existing User
 
 - To update an existing User, send a PATCH request using the path '/user'.
-- The PATCH request must include the JWT of the user in the authorization header. 
+- The request must include the JWT of the user in the authorization header. 
 - At this time only the username key may be updated. 
 - No parameters are required.
 - The updatedAt field will be updated automatically with current timestamp.
@@ -282,7 +282,7 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Delete Existing User
 
 - To delete an existing User, send a DELETE request using the path '/user'.
-- The DELETE request must include the JWT of the user in the authorization header. 
+- The request must include the JWT of the user in the authorization header. 
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
 - A 500 status code, status bool, and error message is returned upon error.
 
@@ -300,14 +300,15 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Create a new Trip
 
 - To create a new Trip, send a POST request using the path '/trip'.
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - No parameters are required.
 - The body of the request should include the following:
   - name: STRING - Cannot be NULL
   - description: STRING
-  - user_id: INTEGER
 - The Primary Key id will be created automatically
+- A user_id field will automatically be added to the trip based on the authorized user. 
 - Timestamps will be added automatically to the createdAt and updatedAt fields
-- A 200 status code, status bool, and success message will be returned upon successful creation.
+- A 200 status code, status bool, success message, and the trip's ID will be returned upon successful creation.
 - A 400 status code, status bool, and failure message are returned if the body of the request is empty.
 - A 500 status code, status bool, and error message is returned upon error.
 
@@ -317,15 +318,29 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 {
   "name": "Third Test Trip",
   "description": "A really awesome trip.",
-  "user_id": 1
+}
+```
+
+##### EXAMPLE - Response to Trip Creation
+
+```json
+{
+  "status": true,
+  "data": "Successfully created new trip.",
+  "id": 27,
 }
 ```
 
 #### Add an Experience to a Trip
 
 - To add an Experience to a Trip, send a POST request using the path '/trip/:tripId/experience/:expId'
+- The tripId parameter represents the ID of the Trip you wish to add the experience to.
+- The expId parameter represent the ID of the Experience you wish to add to the trip.
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - Timestamps will be added automatically to the createdAt and updatedAt fields
 - A 200 status code, status bool, and success message will be returned upon successful creation.
+- A 400 status code, status bool, and error message if the tripId and/or expID parameters above are not provided correctly. 
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
 - A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE - POST Request Sent to path '/trip/2/experience/3'
@@ -340,7 +355,9 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Read an Existing Trip
 
 - To read a specific existing Trip, send a GET request using the path '/trip/:tripId'.
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
 - A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE #1 - Response to GET Request Sent to '/trip/1'
@@ -361,10 +378,10 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 }
 ```
 
-#### Read All Existing Trips
+#### Read All Existing For the Authenticate User
 
-- To read all existing Trip(s), send a GET request using the path '/trip.
-- TODO: this will ultimately be all existing Trip belonging to the current user!
+- To read all existing Trip(s) for the user based on the JWT, send a GET request using the path '/trip.
+- The request must include the JWT of the user associated with the trips in the authorization header. 
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
 - A 500 status code, status bool, and error message is returned upon error.
 
@@ -396,8 +413,12 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Read all Experiences in Existing Trip
 
 - To read all Experiences included in a Trip, send a GET request using the path '/trip/:tripId/experience'.
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - The returned data includes a list of the Experience objects.
 - If a Trip has no Experiences, data will be empty.
+- A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
+- A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE #1 - Response to GET Request Sent to '/trip/1/experience'
 
@@ -446,11 +467,13 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Update Existing Trip
 
 - To update an existing Trip, send a PATCH request using the path '/trip/:tripId'.
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - Only key/value pairs that you want to update are required, any values that will remain
   the same do not need to be included.
 - The updatedAt field will be updated automatically with current timestamp.
 - A 200 status code, status bool, and success message will be returned upon successful update.
 - A 400 status code, status bool, and failure message are returned if the body of the request is empty.
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
 - A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE - Request Body to Update Trip Sent to '/trip/3'
@@ -473,7 +496,9 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Delete Existing Trip
 
 - To delete an existing Trip, send a DELETE request using the path '/trip/:tripId'
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
 - A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE - Response to DELETE Request to path '/trip/3'
@@ -490,7 +515,9 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
 #### Remove an Experience from an Existing Trip
 
 - To remove an Experience from a Trip, send a DELETE request using the path '/trip/:tripId/experience/:expId'
+- The request must include the JWT of the user associated with the trip in the authorization header. 
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
+- A 403 status code, status bool, and error message, "This trip doesn't belong to you," if the trip is not associated with the JWT in the header.
 - A 500 status code, status bool, and error message is returned upon error.
 
 ##### EXAMPLE - Response to DELETE Request to path '/trip/2/experience/2'
