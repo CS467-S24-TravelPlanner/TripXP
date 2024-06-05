@@ -23,11 +23,6 @@ TripXP is a crowd-sourced travel web application that empowers users to craft pe
   * Token based authorization aided by [jwks-rsa](https://www.npmjs.com/package/jwks-rsa) and [express-jwt](https://www.npmjs.com/package/express-jwt) packages.​
   * File uploads facilitated by [multer](https://www.npmjs.com/package/multer) middleware.​
 
-* **CI/CD​**​
-  * Version control and pull request review via git and GitHub. ​
-  * Automated testing and deployment via Railway and GitHub actions. ​
-  * All hosting via [Railway](https://railway.app/) instances. ​
-
 ## Repo, Development, and CI/CD
 The fullstack application is organized within this monorepo. [backend](/backend) is the working directory for the NodeJS application, to serve our Express.js RESTful API. [frontend](/frontend) is the working directory for the client-side React application. **Please see the `README.md` files in those respective directories** for dev and deployment instructions for the respective parts of the stack. 
 
