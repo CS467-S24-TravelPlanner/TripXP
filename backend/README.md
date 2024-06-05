@@ -27,6 +27,11 @@ npm run dev
 
 ## Using the API
 
+### JWT Authentication and Authorization
+- Bearer Token Authorization via a valid JWT in the Authorization header is required for endpoints listed below. The JWT must be valid and issued by Google Identity Services (i.e. Google Sign On). 
+  - All /trip endpoints
+  - All /user endpoints
+
 ### Experiences
 
 #### Create a new Experience
@@ -74,9 +79,9 @@ npm run dev
 }
 ```
 
-#### Read Existing Experience(s)
+#### Read All Existing Experience Matching Parameters
 
-- To read Experience(s), send a GET request using the path '/experience'.
+- To read Experiences, send a GET request using the path '/experience'.
 - The provided parameters will be used to generate an SQL query and all
   Experiences matching the query will be returned.
 - This means, for instance, that providing a User ID as a parameter will
@@ -85,7 +90,7 @@ npm run dev
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE #1 - Response to GET Request Sent to '/experience?id=1'
+##### EXAMPLE #1 - Response to GET Request Sent to '/'
 
 ```json
 {
@@ -104,12 +109,13 @@ npm run dev
       "user_id": 1,
       "createdAt": "2024-04-20T08:33:12.000Z",
       "updatedAt": "2024-04-20T08:33:12.000Z"
-    }
+    },
+    { ... ALL OTHER EXPERIENCES }
   ]
 }
 ```
 
-##### EXAMPLE #2 - Respnonse to GET Request Sent to 'experience?title=Test%20Experience%202'
+##### EXAMPLE #2 - Response to GET Request Sent to 'experience?title=Test%20Experience%202'
 
 ```json
 {
@@ -128,6 +134,37 @@ npm run dev
       "user_id": 2,
       "createdAt": "2024-04-20T11:53:41.000Z",
       "updatedAt": "2024-04-20T11:53:41.000Z"
+    }
+  ]
+}
+```
+
+#### Read a Specific Experience based on ID
+
+- To read Experiences, send a GET request using the path '/experience/:ExperienceID'.
+- The INTEGER named by 'ExperienceID' as a URL parameter will search for that experience ID in the database.
+- A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 500 status code, status bool, and error message is returned upon error.
+
+##### EXAMPLE #1 - Response to GET Request Sent to '/experience1'
+
+```json
+{
+  "status": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Test Experience 1",
+      "description": "A sentence describing the experience.",
+      "latitude": 12.3456,
+      "longitude": -23.4567,
+      "image_url": "/path/to/image.jpg",
+      "rating": 4.73,
+      "location": "A super cool place.",
+      "keywords": null,
+      "user_id": 1,
+      "createdAt": "2024-04-20T08:33:12.000Z",
+      "updatedAt": "2024-04-20T08:33:12.000Z"
     }
   ]
 }
@@ -185,47 +222,18 @@ npm run dev
 
 #### Create a new User
 
-- To create a new User, send a POST request using the path '/user'.
-- No parameters are required.
-- The body of the request should include the following:
-  - username: STRING - Cannot be NULL
-  - email: STRING - Cannot be NULL
-- The Primary Key id will be created automatically
-- Timestamps will be added automatically to the createdAt and updatedAt fields
-- A 200 status code, status bool, and success message will be returned upon successful creation.
-- A 400 status code, status bool, and failure message are returned if the body of the request is empty.
-- A 500 status code, status bool, and error message is returned upon error.
+A new user is created when a new, valid JWT is provided as Bearer Token in the authorization header of any request to this API. The JWT must be obtained from Google Sign-in. 
 
-##### EXAMPLE - Request body
-
-```json
-{
-  "username": "TestUserName3",
-  "email": "TotallyFakeEmail@gmail.com"
-}
-```
-
-##### EXAMPLE - Response
-
-```json
-{
-  "status": true,
-  "data": "Successfully created new user."
-}
-```
-
-#### Read Existing User(s)
+#### Read Existing User
 
 - To read User(s), send a GET request using the path '/user'.
-- The provided parameters will be used to generate an SQL query and all
-  Users matching the query will be returned.
-- This means, for instance, that providing an email address as a parameter will
-  return all the Users with that email.
+- The GET request must include the JWT of the user in the authorization header. 
 - A request with no parameters will return all Users.
 - A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 404 status code, status bool, and message indicating "User not found."
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE #1 - Response to GET Request Sent to '/user?id=3'
+##### EXAMPLE #1 - Response to GET Request Sent to '/user'
 
 ```json
 {
@@ -233,6 +241,7 @@ npm run dev
   "data": [
     {
       "id": 3,
+      "jwt_unique": '111258085555415515495'
       "username": "TestUserName3",
       "email": "TotallyFakeEmail@gmail.com",
       "createdAt": "2024-04-21T04:08:58.000Z",
@@ -245,21 +254,19 @@ npm run dev
 #### Update Existing User
 
 - To update an existing User, send a PATCH request using the path '/user'.
-- The body of the PATCH request must include the id of the User.
-- Only key/value pairs that you want to update are required, any values that will remain
-  the same do not need to be included.
+- The PATCH request must include the JWT of the user in the authorization header. 
+- At this time only the username key may be updated. 
 - No parameters are required.
 - The updatedAt field will be updated automatically with current timestamp.
 - A 200 status code, status bool, and success message will be returned upon successful update.
 - A 400 status code, status bool, and failure message are returned if the body of the request is empty.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - Request Body to Update User Email
+##### EXAMPLE - Request Body to Update Username
 
 ```json
 {
-  "id": 3,
-  "email": "UpdatedTotallyFakeEmail@gmail.com"
+  "username": "ChoosenUserName123"
 }
 ```
 
@@ -274,19 +281,17 @@ npm run dev
 
 #### Delete Existing User
 
-- To delete an existing User, send a DELETE request using the path '/user',
-  providing the id of the User as a parameter named 'id'.
+- To delete an existing User, send a DELETE request using the path '/user'.
+- The DELETE request must include the JWT of the user in the authorization header. 
 - A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
 - A 500 status code, status bool, and error message is returned upon error.
 
-##### EXAMPLE - Response to DELETE Request to path '/user?id=3'
+##### EXAMPLE - Response to DELETE Request to path '/user'
 
 ```json
 {
   "status": true,
-  "data": {
-    "numberOfUsersDeleted": 1
-  }
+  "data": "Successfully deleted user."
 }
 ```
 
