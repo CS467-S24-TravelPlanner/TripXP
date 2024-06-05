@@ -7,10 +7,23 @@
 ## Development
 
 - Make sure that you're within the `backend` directory when working on the API.
-- Make sure that you create a local `.env` file and configure it to your needs❗ You will need to create one when you first clone the repo. A sample is provided as `.env.sample`
-  - See the group discord's [#secrets](https://discordapp.com/channels/1225842180912971926/1230529347765538877) channel if you need the secret variables for your local `.env`
 - No special tooling is required at this time. `npm intall` will install [nodemon](https://www.npmjs.com/package/nodemon) as a dev dependency. nodemon is useful for automatically restarting the node application any time that a file changes in the directory.
+- Make sure that you create a local `.env` file (in the root of the /backend dir) and configure it with the minimum variables as follows:
+```
+# DB connection via sequelize; See Sequelize Docs for format and supported DBs.
+DB_CONNECTION_STRING='postgres://user:pass@example.com:5432/dbname'
 
+# Google Identity for JWT validation; See https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid#get_your_google_api_client_id
+GOOGLE_IDENTITY_CLIENT_ID='INSERT GOOGLE IDENTITY CLIENT ID (SEE ABOVE)'
+
+# For Multer file uploads; specify the folder for experience image uploads on the API server (e.g. absolute path from root)
+RAILWAY_VOLUME_MOUNT_PATH='/uploads'
+
+# Specify the address that your frontend is being served from. Required for CORS support. 
+FRONTEND_URL='http://localhost:5173'
+```
+
+- Run the following commands to start the sever:
 ```
 git clone git@github.com:alclary/travelplanner.git
 cd travelplanner/backend
