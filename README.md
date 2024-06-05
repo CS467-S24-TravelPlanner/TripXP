@@ -10,6 +10,8 @@
 ## App
 TripXP is a crowd-sourced travel web application that empowers users to craft personalized trips, expeditions, or adventures and share those experiences with a multitude of other travelers. With users as the primary contributors to this catalog of travel ideas, community is the backbone of the app’s interactivity. Contributors share their experiences to the larger community, and can store those experiences in private groupings called ‘trips’. With user-curated trips created based on their specific interests and passions, the catalog is supported by a large number of quality experiences.
 
+![tripXP_demo](https://github.com/CS467-S24-TravelPlanner/TripXP/assets/9044153/43b4a125-1f7c-4a6b-bb6b-606eb5f7aae4)
+
 ## Stack
 * **Frontend**​
   * [React](https://react.dev/) single page application, utilizing React Router and Context. ​
