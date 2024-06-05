@@ -543,3 +543,162 @@ A new user is created when a new, valid JWT is provided as Bearer Token in the a
   }
 }
 ```
+
+### Reviews
+
+#### Create a New Review
+
+- To create a new Review, send a POST request using the path '/review'.
+- No parameters are required.
+- The body of the request should include the following fields:
+  - `title`: STRING - Cannot be NULL
+  - `content`: STRING - Cannot be NULL
+  - `rating`: REAL - Cannot be NULL
+  - `experience_id`: INTEGER - Cannot be NULL
+  - `user_id`: INTEGER - Cannot be NULL
+- The Primary Key `id` will be created automatically.
+- Timestamps will be added automatically to the `createdAt` and `updatedAt` fields.
+- A 200 status code, status bool, and success message will be returned upon successful creation.
+- A 400 status code, status bool, and failure message will be returned if the body of the request is empty.
+- A 500 status code, status bool, and error message will be returned upon error.
+
+##### EXAMPLE - Request Body
+
+```json
+{
+  "title": "Amazing Experience!",
+  "content": "I had a wonderful time at this place. Highly recommend it!",
+  "rating": 4.8,
+  "experience_id": 3,
+  "user_id": 5
+}
+```
+
+##### EXAMPLE - Response
+
+```json
+{
+  "status": true,
+  "data": "Successfully created new review."
+}
+```
+
+#### Read All Existing Reviews Matching Parameters
+
+- To read Reviews, send a GET request using the path '/review'.
+- The provided parameters will be used to generate an SQL query, and all Reviews matching the query will be returned.
+- A request with no parameters will return all Reviews.
+- A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 500 status code, status bool, and error message will be returned upon error.
+
+##### EXAMPLE #1 - Response to GET Request Sent to '/review'
+
+```json
+{
+  "status": true,
+  "data": [
+    {
+      "id": 1,
+      "title": "Fantastic Place!",
+      "content": "Had an unforgettable time here!",
+      "rating": 5.0,
+      "experience_id": 1,
+      "user_id": 1,
+      "createdAt": "2024-05-01T10:45:12.000Z",
+      "updatedAt": "2024-05-01T10:45:12.000Z"
+    },
+    { ... ALL OTHER REVIEWS }
+  ]
+}
+```
+
+##### EXAMPLE #2 - Response to GET Request Sent to 'review?title=Amazing%20Experience!'
+
+```json
+{
+  "status": true,
+  "data": [
+    {
+      "id": 2,
+      "title": "Amazing Experience!",
+      "content": "I had a wonderful time at this place. Highly recommend it!",
+      "rating": 4.8,
+      "experience_id": 3,
+      "user_id": 5,
+      "createdAt": "2024-05-02T11:53:41.000Z",
+      "updatedAt": "2024-05-02T11:53:41.000Z"
+    }
+  ]
+}
+```
+
+#### Read a Specific Review based on ID
+
+- To read a specific Review, send a GET request using the path '/review'.
+- The INTEGER named by 'id' as a URL query parameter will search for that review ID in the database.
+- A 200 status code, status bool, and the retrieved data will be returned upon success.
+- A 500 status code, status bool, and error message will be returned upon error.
+
+##### EXAMPLE - Response to GET Request Sent to '/review?id=1'
+
+```json
+{
+  "status": true,
+  "data": {
+    "id": 1,
+    "title": "Fantastic Place!",
+    "content": "Had an unforgettable time here!",
+    "rating": 5.0,
+    "experience_id": 1,
+    "user_id": 1,
+    "createdAt": "2024-05-01T10:45:12.000Z",
+    "updatedAt": "2024-05-01T10:45:12.000Z"
+  }
+}
+```
+
+#### Update an Existing Review
+
+- To update an existing Review, send a PATCH request using the path '/review'.
+- The body of the PATCH request must include the id of the Review.
+- Only key/value pairs that you want to update are required, any values that will remain the same do not need to be included.
+- The updatedAt field will be updated automatically with the current timestamp.
+- A 200 status code, status bool, and success message will be returned upon successful update.
+- A 400 status code, status bool, and failure message will be returned if the body of the request is empty.
+- A 500 status code, status bool, and error message will be returned upon error.
+
+##### EXAMPLE - Request Body to Update Review Rating
+
+```json
+{
+  "id": 2,
+  "rating": 4.9
+}
+```
+
+##### EXAMPLE - Response to Update of Review
+
+```json
+{
+  "status": true,
+  "data": "Successfully updated Review."
+}
+```
+
+#### Delete an Existing Review
+
+- To delete an existing Review, send a DELETE request using the path '/review', providing the id of the Review as a query parameter named 'id'.
+- A 200 status code, status bool, and number of entries deleted will be returned upon successful deletion.
+- A 500 status code, status bool, and error message will be returned upon error.
+
+##### EXAMPLE - Response to DELETE Request to path '/review?id=2'
+
+```json
+{
+  "status": true,
+  "data": {
+    "numberOfReviewsDeleted": 1
+  }
+}
+```
+
