@@ -29,3 +29,7 @@ TripXP is a crowd-sourced travel web application that empowers users to craft pe
 The fullstack application is organized within this monorepo. [backend](/backend) is the working directory for the NodeJS application, to serve our Express.js RESTful API. [frontend](/frontend) is the working directory for the client-side React application. **Please see the `README.md` files in those respective directories** for dev and deployment instructions for the respective parts of the stack. 
 
 CI/CD is facilitated via a combination of Github Actions and [Railway](https://railway.app/). 
+
+If you would like to deploy your own instance on Railway, you can utilize our project template: 
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/PQ_rwp)
